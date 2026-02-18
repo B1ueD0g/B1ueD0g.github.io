@@ -117,7 +117,7 @@ push 后会触发：
 ## 9. 首次上线检查（只需确认一次）
 
 1. GitHub 仓库 `Settings -> Pages` 选择 `GitHub Actions`
-2. `Custom domain` 填 `BlueDog.fun`
+2. `Custom domain` 填 `bluedog.website`
 3. DNS 生效后勾选 `Enforce HTTPS`
 
 ---
@@ -132,4 +132,3 @@ push 后会触发：
 
 3. 文章不显示  
 确认 Front Matter 里 `draft: false`。
-

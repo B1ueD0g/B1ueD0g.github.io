@@ -32,9 +32,9 @@ Hugo + PaperMod + Pagefind + GitHub Pages。
    - `npx -y pagefind --site public`
 3. 自动发布到 GitHub Pages
 
-## 域名 BlueDog.fun 配置
+## 域名 bluedog.website 配置
 
-仓库已加入 `static/CNAME`，内容为 `BlueDog.fun`。  
+仓库已加入 `static/CNAME`，内容为 `bluedog.website`。  
 你需要在域名 DNS 侧添加以下记录（根域方案）：
 
 - `A` 记录到 `185.199.108.153`
@@ -52,5 +52,5 @@ Hugo + PaperMod + Pagefind + GitHub Pages。
 GitHub 仓库侧：
 
 - `Settings -> Pages -> Source` 选 `GitHub Actions`
-- 填写 `Custom domain: BlueDog.fun`
+- 填写 `Custom domain: bluedog.website`
 - DNS 生效后勾选 `Enforce HTTPS`
