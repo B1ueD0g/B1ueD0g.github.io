@@ -21,9 +21,8 @@ cd "/Users/bluedog/Desktop/工作文件/自己的一些事情/Blog"
 - 文章 Markdown：`content/posts/`
 - About 页面：`content/about/index.md`
 - 成果物页面：`content/projects/`
-- 图片与附件：`static/uploads/`
-  - 图片建议放：`static/uploads/images/`
-  - 文件建议放：`static/uploads/files/`
+
+说明：图片不走本地目录，使用 PicGo 上传后直接外链引用。
 
 ---
 
@@ -42,23 +41,20 @@ tags: ["tag1", "tag2"]
 ---
 ```
 
-3. 正文中引用图片/附件示例：
+3. 插入 PicGo 外链图片示例：
 
 ```md
-![示例图片](/uploads/images/demo.png)
-[下载附件](/uploads/files/demo.pdf)
+![示例图片](https://your-cdn.example.com/2026/demo.png)
 ```
 
 ---
 
-## 4. 上传图片/附件
+## 4. 图片工作流（PicGo）
 
-直接把文件复制到：
-
-- 图片：`static/uploads/images/`
-- 附件：`static/uploads/files/`
-
-然后在 Markdown 中用 `/uploads/...` 路径引用。
+1. 截图或选择图片
+2. 在 PicGo 上传到你的 GitHub 图床
+3. 复制外链
+4. 粘贴到文章 Markdown
 
 ---
 
@@ -78,9 +74,7 @@ tags: ["tag1", "tag2"]
 
 1. 删除文章文件（例如）：
    - `content/posts/old-post.md`
-2. 如果该文章对应图片不再需要，也可删除：
-   - `static/uploads/images/old-image.png`
-3. 提交并 push 后，线上会自动同步删除。
+2. 提交并 push 后，线上会自动同步删除。
 
 ---
 
@@ -103,7 +97,7 @@ hugo server -D
 cd "/Users/bluedog/Desktop/工作文件/自己的一些事情/Blog"
 git add .
 git commit -m "update blog content"
-git push origin main
+git push
 ```
 
 push 后会触发：
@@ -127,8 +121,8 @@ push 后会触发：
 1. 页面没更新  
 检查 Actions 是否成功，失败就看日志。
 
-2. 图片 404  
-确认文件在 `static/uploads/...`，并且文章里路径是 `/uploads/...`。
+2. 图片不显示  
+确认 Markdown 里是完整外链，且图片仓库/图床仍可公开访问。
 
 3. 文章不显示  
 确认 Front Matter 里 `draft: false`。

@@ -2,27 +2,19 @@
 
 Hugo + PaperMod + Pagefind + GitHub Pages。
 
-## 固定内容目录（你后续只用这两个）
+## 固定内容目录
 
 - 文章 Markdown：`content/posts/`
-- 图片与附件：`static/uploads/`
-
-推荐细分：
-
-- 图片：`static/uploads/images/`
-- 文件：`static/uploads/files/`
+- About 页面：`content/about/index.md`
+- 成果物页：`content/projects/`
 
 在文章中的引用写法：
 
 ```md
-![配图](/uploads/images/example.png)
-[附件下载](/uploads/files/example.pdf)
+![配图](https://your-cdn.example.com/2026/example.png)
 ```
 
-## About 与成果物
-
-- About 页面：`content/about/index.md`
-- 成果物页：`content/projects/`
+图片建议通过 PicGo 上传后，直接粘贴外链。
 
 ## 部署流程
 
