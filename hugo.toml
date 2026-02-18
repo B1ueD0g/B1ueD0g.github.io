@@ -6,7 +6,14 @@ theme = "PaperMod"
 enableRobotsTXT = true
 buildDrafts = false
 buildFuture = false
-paginate = 10
+
+[pagination]
+pagerSize = 10
+
+[markup]
+[markup.goldmark]
+[markup.goldmark.renderer]
+unsafe = true
 
 [outputs]
 home = ["HTML", "RSS", "JSON"]
