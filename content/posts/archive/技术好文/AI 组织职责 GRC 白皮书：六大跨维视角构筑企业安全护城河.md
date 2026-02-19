@@ -22,6 +22,14 @@ keywords:
 - 治理实践
 - 技术好文
 - BlueDog
+cover:
+  image: /branding/banner-logo.webp
+  alt: AI 组织职责 GRC 白皮书：六大跨维视角构筑企业安全护城河 - BlueDog
+  caption: ''
+  relative: false
+  hidden: true
+  hiddenInList: true
+  hiddenInSingle: true
 ---
 在生成式 AI 热潮席卷全球之际，企业若想把握创新红利，首先要守住治理、风险与合规（GRC）底线。CSA 最新发布的《AI 组织职责 -从治理、风险管理、合规与文化》正是业界首份从**组织职责**维度系统阐述 AI GRC 的权威指南，为 CISO、CIO、CTO 乃至董事会提供了一张“施工图”与“检查表”。白皮书将勾勒落地路径，来助力企业在数字化丛林中构筑属于自己的安全护城河。
 

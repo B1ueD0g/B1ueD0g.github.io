@@ -22,6 +22,14 @@ keywords:
 - 标准解读
 - 好文翻译
 - BlueDog
+cover:
+  image: /branding/banner-logo.webp
+  alt: 增强云安全：Kubernetes 安全的四个关键实践 - BlueDog
+  caption: ''
+  relative: false
+  hidden: true
+  hiddenInList: true
+  hiddenInSingle: true
 ---
 原文地址：https://cloudsecurityalliance.org/blog/2023/07/19/enhancing-cloud-security-four-vital-practices-for-kubernetes-security/
 

@@ -40,6 +40,22 @@ ShowToc = true
 DateFormat = "2006-01-02"
 searchQuickTags = ["零信任", "AI安全", "数据安全", "漏洞研究", "云安全", "实操指南", "标准解读"]
 
+[params.analytics]
+enabled = false
+provider = "plausible"
+
+[params.analytics.plausible]
+domain = "bluedog.website"
+script = "https://plausible.io/js/script.js"
+
+[params.analytics.umami]
+websiteId = ""
+script = "https://cloud.umami.is/script.js"
+
+[params.monitoring]
+uptimeBaseURL = "https://bluedog.website"
+uptimePaths = ["/", "/posts/", "/about/", "/search/", "/404.html"]
+
 [params.assets]
 favicon = "/branding/favicon.ico"
 favicon16x16 = "/branding/favicon-16x16.png"

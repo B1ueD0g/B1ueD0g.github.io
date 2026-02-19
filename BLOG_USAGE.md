@@ -8,10 +8,13 @@
 
 ## 1. 目录约定
 
-- 个人主页：`content/about/index.md`
+- 个人主页配置：`content/about/index.md`
+- 个人主页结构化数据：`data/about.yaml`
 - 已发布归档：`content/posts/archive/`
 - 待发布归档：`content/posts/pending/`（默认 `draft: true`）
 - 样式文件：`assets/css/extended/custom.css`
+- 元数据规范化：`scripts/normalize_post_metadata.py`
+- 元数据质检：`scripts/check_metadata_quality.py`
 
 ---
 
@@ -41,6 +44,14 @@ keywords:
   - "技术实践"
   - "零信任"
   - "BlueDog"
+cover:
+  image: "/branding/banner-logo.webp"
+  alt: "BlueDog Blog Cover"
+  caption: ""
+  relative: false
+  hidden: true
+  hiddenInList: true
+  hiddenInSingle: true
 ---
 
 正文...
@@ -63,6 +74,12 @@ keywords:
 
 ```bash
 python3 scripts/normalize_post_metadata.py --apply
+```
+
+质检（CI 同款）：
+
+```bash
+python3 scripts/check_metadata_quality.py
 ```
 
 ---
@@ -112,7 +129,8 @@ push 后会自动构建并发布到 GitHub Pages。
 
 ## 8. About Me 修改
 
-- 文件：`content/about/index.md`
+- 结构化内容：`data/about.yaml`
+- 页面开关与描述：`content/about/index.md`
 - 社交链接：`hugo.toml` 里的 `[[params.socialIcons]]`
 
 ---
@@ -123,3 +141,13 @@ push 后会自动构建并发布到 GitHub Pages。
 - `static/CNAME` 内容为 `bluedog.website`
 - GitHub Pages `Custom domain` 为 `bluedog.website`
 - 勾选 `Enforce HTTPS`
+
+---
+
+## 10. 统计与可用性监控
+
+- 统计开关：`hugo.toml` -> `params.analytics`
+  - `enabled = true/false`
+  - `provider = "plausible"` 或 `"umami"`
+- 404 页面已支持统计事件上报
+- 定时可用性检测工作流：`.github/workflows/uptime-check.yml`

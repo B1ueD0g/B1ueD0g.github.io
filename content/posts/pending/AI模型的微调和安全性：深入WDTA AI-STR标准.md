@@ -16,6 +16,14 @@ keywords:
 - 标准解读
 - 待发文章归档
 - BlueDog
+cover:
+  image: /branding/banner-logo.webp
+  alt: AI模型的微调和安全性：深入WDTA AI-STR标准 - BlueDog
+  caption: ''
+  relative: false
+  hidden: true
+  hiddenInList: true
+  hiddenInSingle: true
 ---
 ## 引言
 

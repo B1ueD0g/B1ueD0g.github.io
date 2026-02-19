@@ -14,6 +14,14 @@ keywords:
 - 网络工具
 - 技术好文
 - BlueDog
+cover:
+  image: /branding/banner-logo.webp
+  alt: V2rayN 使用教程快速入门 - BlueDog
+  caption: ''
+  relative: false
+  hidden: true
+  hiddenInList: true
+  hiddenInSingle: true
 ---
 ## 界面预览
 

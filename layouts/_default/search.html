@@ -1,5 +1,33 @@
 {{- define "main" }}
 {{- $quickTags := site.Params.searchQuickTags | default (slice "零信任" "AI安全" "数据安全" "漏洞研究" "标准解读") -}}
+{{- $posts := where site.RegularPages "Section" "posts" -}}
+{{- $posts = where $posts "Params.hiddenInHomeList" "!=" "true" -}}
+{{- $posts = $posts.ByDate.Reverse -}}
+{{- $years := slice -}}
+{{- range $posts -}}
+  {{- $years = $years | append (.Date.Format "2006") -}}
+{{- end -}}
+{{- $years = uniq $years -}}
+{{- $filterTags := $quickTags -}}
+{{- range first 18 site.Taxonomies.tags.ByCount -}}
+  {{- if not (in $filterTags .Name) -}}
+    {{- $filterTags = $filterTags | append .Name -}}
+  {{- end -}}
+{{- end -}}
+{{- if gt (len $filterTags) 16 -}}
+  {{- $filterTags = first 16 $filterTags -}}
+{{- end -}}
+{{- $searchMeta := slice -}}
+{{- range $posts -}}
+  {{- $searchMeta = $searchMeta | append (dict
+    "title" .Title
+    "permalink" .Permalink
+    "relPermalink" .RelPermalink
+    "year" (.Date.Format "2006")
+    "date" (.Date.Format site.Params.DateFormat)
+    "tags" (.Params.tags | default (slice))
+  ) -}}
+{{- end -}}
 <header class="page-header">
   <h1>{{ .Title }}</h1>
 </header>
@@ -8,7 +36,7 @@
 <script src="{{ "pagefind/pagefind-ui.js" | relURL }}" defer></script>
 
 <section class="search-guide" aria-label="search-guide">
-  <p class="search-guide-text">输入关键词后按回车，可直接跳转到第一条结果。</p>
+  <p class="search-guide-text">输入关键词后按回车可跳转首条结果，也可以按年份和标签筛选。</p>
   <div class="search-guide-tags">
     <span>Suggested Tags:</span>
     {{- range $quickTags }}
@@ -17,10 +45,28 @@
   </div>
 </section>
 
+<section class="search-filters" aria-label="search-filters">
+  <div class="search-filter-row">
+    <span>Year:</span>
+    <button type="button" data-filter-year="" class="is-active">All</button>
+    {{- range $years }}
+    <button type="button" data-filter-year="{{ . }}">{{ . }}</button>
+    {{- end }}
+  </div>
+  <div class="search-filter-row">
+    <span>Tag:</span>
+    <button type="button" data-filter-tag="" class="is-active">All</button>
+    {{- range $filterTags }}
+    <button type="button" data-filter-tag="{{ . }}">#{{ . }}</button>
+    {{- end }}
+  </div>
+</section>
+
 <div id="search"></div>
 <div id="search-empty" class="search-empty" hidden>
   <p>没有找到结果，试试更短的关键词，或点击上方推荐标签。</p>
 </div>
+<textarea id="search-meta-json" hidden>{{ $searchMeta | jsonify }}</textarea>
 
 <script>
   window.addEventListener("DOMContentLoaded", function () {
@@ -36,13 +82,52 @@
         search_label: "站内搜索"
       }
     });
+    void searchUI;
+    var searchRoot = document.getElementById("search");
+    var filterState = { year: "", tag: "" };
+
+    function normalizePath(raw) {
+      if (!raw) return "";
+      try {
+        var url = new URL(raw, window.location.origin);
+        return url.pathname.endsWith("/") ? url.pathname : url.pathname + "/";
+      } catch (error) {
+        return "";
+      }
+    }
+
+    var metaMap = {};
+    var metadataScript = document.getElementById("search-meta-json");
+    if (metadataScript) {
+      try {
+        var metadata = JSON.parse(metadataScript.value || metadataScript.textContent || "[]");
+        if (Array.isArray(metadata) === false) metadata = [];
+        metadata.forEach(function (item) {
+          var keys = [item.permalink, item.relPermalink];
+          keys.forEach(function (key) {
+            var normalized = normalizePath(key);
+            if (normalized) {
+              metaMap[normalized] = item;
+            }
+          });
+        });
+      } catch (error) {
+        metaMap = {};
+      }
+    }
 
     function getSearchInput() {
       return document.querySelector("#search input");
     }
 
     function getFirstResultLink() {
-      return document.querySelector("#search .pagefind-ui__result-link");
+      var results = searchRoot ? searchRoot.querySelectorAll(".pagefind-ui__result") : [];
+      for (var i = 0; i < results.length; i++) {
+        if (results[i].style.display === "none") continue;
+        var link = results[i].querySelector(".pagefind-ui__result-link");
+        if (link) return link;
+      }
+      return null;
     }
 
     function setInputQuery(value) {
@@ -68,13 +153,88 @@
       return true;
     }
 
-    function updateEmptyState() {
+    function getResultCounts() {
+      if (!searchRoot) return { total: 0, visible: 0 };
+      var rows = searchRoot.querySelectorAll(".pagefind-ui__result");
+      var visible = 0;
+      rows.forEach(function (row) {
+        if (row.style.display !== "none") visible += 1;
+      });
+      return { total: rows.length, visible: visible };
+    }
+
+    function updateEmptyState(visibleCount, totalCount) {
       var input = getSearchInput();
       var empty = document.getElementById("search-empty");
       if (!input || !empty) return;
       var keyword = input.value.trim();
-      var hasResult = Boolean(document.querySelector("#search .pagefind-ui__result"));
-      empty.hidden = !(keyword && !hasResult);
+      if (!keyword) {
+        empty.hidden = true;
+        return;
+      }
+
+      var counts = getResultCounts();
+      var total = typeof totalCount === "number" ? totalCount : counts.total;
+      var visible = typeof visibleCount === "number" ? visibleCount : counts.visible;
+      if (total === 0) {
+        empty.innerHTML = "<p>没有找到结果，试试更短关键词，或点击推荐标签。</p>";
+        empty.hidden = false;
+        return;
+      }
+      if (visible === 0) {
+        empty.innerHTML = "<p>没有符合筛选条件的结果，请切换 Year/Tag 过滤器。</p>";
+        empty.hidden = false;
+        return;
+      }
+      empty.hidden = true;
+    }
+
+    function syncFilterButtons() {
+      document.querySelectorAll("[data-filter-year]").forEach(function (button) {
+        var value = button.getAttribute("data-filter-year") || "";
+        button.classList.toggle("is-active", value === filterState.year);
+      });
+      document.querySelectorAll("[data-filter-tag]").forEach(function (button) {
+        var value = button.getAttribute("data-filter-tag") || "";
+        button.classList.toggle("is-active", value === filterState.tag);
+      });
+    }
+
+    function syncFilterParams() {
+      var params = new URLSearchParams(window.location.search);
+      if (filterState.year) params.set("year", filterState.year);
+      else params.delete("year");
+      if (filterState.tag) params.set("tag", filterState.tag);
+      else params.delete("tag");
+      params.delete("autojump");
+      var next = params.toString();
+      var nextURL = window.location.pathname + (next ? "?" + next : "");
+      window.history.replaceState({}, "", nextURL);
+    }
+
+    function applyFilters() {
+      if (!searchRoot) return;
+      var rows = searchRoot.querySelectorAll(".pagefind-ui__result");
+      var visible = 0;
+      rows.forEach(function (row) {
+        var link = row.querySelector(".pagefind-ui__result-link");
+        var pass = true;
+        if (filterState.year || filterState.tag) {
+          var meta = link ? metaMap[normalizePath(link.getAttribute("href"))] : null;
+          if (!meta) {
+            pass = false;
+          } else {
+            if (filterState.year && meta.year !== filterState.year) pass = false;
+            if (filterState.tag) {
+              var tags = Array.isArray(meta.tags) ? meta.tags : [];
+              if (tags.indexOf(filterState.tag) === -1) pass = false;
+            }
+          }
+        }
+        row.style.display = pass ? "" : "none";
+        if (pass) visible += 1;
+      });
+      updateEmptyState(visible, rows.length);
     }
 
     function bindInputEvents() {
@@ -88,27 +248,32 @@
         event.preventDefault();
         window.setTimeout(function () {
           if (!jumpToFirstResult()) {
-            updateEmptyState();
+            applyFilters();
           }
         }, 130);
       });
       input.addEventListener("input", function () {
-        window.setTimeout(updateEmptyState, 120);
+        window.setTimeout(applyFilters, 120);
       });
       focusInput();
     }
 
     var observer = new MutationObserver(function () {
-      updateEmptyState();
+      applyFilters();
       if (autoJumpRequested) {
         autoJumpRequested = !jumpToFirstResult();
       }
     });
-    observer.observe(document.getElementById("search"), { childList: true, subtree: true });
+    if (searchRoot) {
+      observer.observe(searchRoot, { childList: true, subtree: true });
+    }
 
     var params = new URLSearchParams(window.location.search);
     var initialQuery = params.get("q");
     var autoJumpRequested = params.get("autojump") === "1";
+    filterState.year = params.get("year") || "";
+    filterState.tag = params.get("tag") || "";
+    syncFilterButtons();
 
     if (initialQuery) {
       var applyQuery = function () {
@@ -118,7 +283,7 @@
         }
         focusInput();
         window.setTimeout(function () {
-          updateEmptyState();
+          applyFilters();
           if (autoJumpRequested) {
             autoJumpRequested = !jumpToFirstResult();
           }
@@ -133,11 +298,30 @@
         if (!tag) return;
         if (!setInputQuery(tag)) return;
         focusInput();
-        window.setTimeout(updateEmptyState, 120);
+        window.setTimeout(applyFilters, 120);
+      });
+    });
+
+    document.querySelectorAll("[data-filter-year]").forEach(function (button) {
+      button.addEventListener("click", function () {
+        filterState.year = button.getAttribute("data-filter-year") || "";
+        syncFilterButtons();
+        syncFilterParams();
+        applyFilters();
+      });
+    });
+
+    document.querySelectorAll("[data-filter-tag]").forEach(function (button) {
+      button.addEventListener("click", function () {
+        filterState.tag = button.getAttribute("data-filter-tag") || "";
+        syncFilterButtons();
+        syncFilterParams();
+        applyFilters();
       });
     });
 
     bindInputEvents();
+    window.setTimeout(applyFilters, 120);
   });
 </script>
 {{- end }}

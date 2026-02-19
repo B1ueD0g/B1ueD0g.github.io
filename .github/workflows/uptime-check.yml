@@ -1,0 +1,43 @@
+name: Uptime Check
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+
+jobs:
+  uptime:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check core pages
+        env:
+          BASE_URL: "https://bluedog.website"
+          CORE_PATHS: "/ /posts/ /about/ /search/"
+        run: |
+          set -euo pipefail
+          for path in ${CORE_PATHS}; do
+            url="${BASE_URL%/}${path}"
+            code=$(curl -L -sS -o /tmp/uptime-body -w "%{http_code}" --max-time 25 "${url}")
+            echo "${url} -> ${code}"
+            if [ "${code}" -lt 200 ] || [ "${code}" -ge 400 ]; then
+              echo "Core page check failed: ${url}"
+              exit 1
+            fi
+          done
+
+      - name: Check custom 404 page rendering
+        env:
+          BASE_URL: "https://bluedog.website"
+        run: |
+          set -euo pipefail
+          probe_url="${BASE_URL%/}/__uptime_probe_404__"
+          code=$(curl -L -sS -o /tmp/uptime-404 -w "%{http_code}" --max-time 25 "${probe_url}")
+          echo "${probe_url} -> ${code}"
+          if [ "${code}" -lt 200 ] || [ "${code}" -ge 500 ]; then
+            echo "Unexpected status for 404 probe: ${code}"
+            exit 1
+          fi
+          if ! grep -Eq "Page Not Found|404|这个页面不存在" /tmp/uptime-404; then
+            echo "Custom 404 content not detected."
+            exit 1
+          fi

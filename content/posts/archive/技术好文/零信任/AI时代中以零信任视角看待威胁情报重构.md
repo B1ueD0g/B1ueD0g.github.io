@@ -23,6 +23,14 @@ keywords:
 - 治理实践
 - 技术好文
 - BlueDog
+cover:
+  image: /branding/banner-logo.webp
+  alt: AI时代中以零信任视角看待威胁情报重构 - BlueDog
+  caption: ''
+  relative: false
+  hidden: true
+  hiddenInList: true
+  hiddenInSingle: true
 ---
 随着人工智能（AI）技术的迅猛发展和零信任架构理念的普及，网络安全领域正在经历深刻变革。在**AI 驱动时代**，我们需要重新审视传统的威胁情报体系：如何在“**零信任**”的视角下，重构威胁情报的认知结构、策略逻辑与实战流程。本文将结合笔者最近阅读的《情报分析—结构化分析方法》一书中的方法论，通过**结构化分析**的思维方式来探讨这一重构过程。  
 

@@ -14,6 +14,14 @@ keywords:
 - AI安全
 - 科研总结系列
 - BlueDog
+cover:
+  image: /branding/banner-logo.webp
+  alt: 科研总结系列｜2-GPT学术写作提示词集锦手册 - BlueDog
+  caption: ''
+  relative: false
+  hidden: true
+  hiddenInList: true
+  hiddenInSingle: true
 ---
 ![image-20250113143821830](https://raw.githubusercontent.com/B1ueD0g/Picture/main/202501131438860.png)
 

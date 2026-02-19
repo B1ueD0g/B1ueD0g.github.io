@@ -18,6 +18,14 @@ keywords:
 - 实操指南
 - 技术好文
 - BlueDog
+cover:
+  image: /branding/banner-logo.webp
+  alt: 基于大语言模型（LLM）的系统安全：关键授权实践 - BlueDog
+  caption: ''
+  relative: false
+  hidden: true
+  hiddenInList: true
+  hiddenInSingle: true
 ---
 自2022年ChatGPT发布以来，大语言模型（LLM）作为人工智能领域的关键技术趋势，驱动各行业加速推进系统智能化升级。企业积极尝试将LLM集成至自身系统，以期提升效率并优化用户体验。然而，LLM的引入不仅带来技术革新，也伴随显著的安全风险。由于缺乏系统性的安全指导与最佳实践，其潜在威胁尚未得到充分重视。为帮助各行业安全应用LLM技术，**云安全联盟大中华区发布《基于大语言模型（LLM）的系统安全：关键授权实践》，依照常见的集成LLM的系统设计模式，提出了一系列最佳实践，并针对每种模式提出了相应的建议、注意事项和常见误区。**
 

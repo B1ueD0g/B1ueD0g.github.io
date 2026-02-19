@@ -17,6 +17,14 @@ keywords:
 - 网络工具
 - 技术好文
 - BlueDog
+cover:
+  image: /branding/banner-logo.webp
+  alt: 开源单包授权工具fwknop环境搭建 - BlueDog
+  caption: ''
+  relative: false
+  hidden: true
+  hiddenInList: true
+  hiddenInSingle: true
 ---
 ## 0x01 FWKNOP介绍
 

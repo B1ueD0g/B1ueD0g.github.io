@@ -1,0 +1,47 @@
+{{- define "main" }}
+<section class="not-found-wrap">
+  <article class="not-found-card">
+    <p class="not-found-code">404</p>
+    <h1 class="not-found-title">Page Not Found</h1>
+    <p class="not-found-text">这个页面不存在或地址已变更，你可以返回首页或继续搜索。</p>
+
+    <div class="not-found-actions">
+      <a href="/">Home</a>
+      <a href="/posts/">Article</a>
+      <a href="/search/">Search</a>
+    </div>
+
+    <form id="not-found-search-form" class="not-found-search" action="/search/" method="get">
+      <input id="not-found-keyword" type="search" name="q" placeholder="输入关键词继续搜索" aria-label="Search posts">
+      <button type="submit">Search</button>
+    </form>
+  </article>
+</section>
+
+<script>
+  window.addEventListener("DOMContentLoaded", function () {
+    var form = document.getElementById("not-found-search-form");
+    var input = document.getElementById("not-found-keyword");
+    if (form && input) {
+      form.addEventListener("submit", function (event) {
+        var keyword = input.value.trim();
+        if (!keyword) {
+          event.preventDefault();
+          window.location.href = "/search/";
+        }
+      });
+    }
+
+    try {
+      if (typeof window.plausible === "function") {
+        window.plausible("404", { props: { path: window.location.pathname } });
+      }
+      if (window.umami && typeof window.umami.track === "function") {
+        window.umami.track("404");
+      }
+    } catch (error) {
+      console.warn("analytics track failed on 404 page", error);
+    }
+  });
+</script>
+{{- end }}

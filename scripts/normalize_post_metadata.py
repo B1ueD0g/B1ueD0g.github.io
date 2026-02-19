@@ -12,6 +12,7 @@ import yaml
 
 POSTS_ROOT = Path("content/posts")
 FM_PATTERN = re.compile(r"^---\n(.*?)\n---\n?", re.S)
+DEFAULT_COVER_IMAGE = "/branding/banner-logo.webp"
 
 
 CATEGORY_BASE_TAGS = {
@@ -223,6 +224,26 @@ def build_keywords(tags: List[str], categories: List[str]) -> List[str]:
     return dedup([item for item in raw if item])[:8]
 
 
+def build_cover(front: Dict[str, Any], title: str) -> Dict[str, Any]:
+    incoming = front.get("cover")
+    cover = incoming if isinstance(incoming, dict) else {}
+
+    image = str(cover.get("image", "") or "").strip() or DEFAULT_COVER_IMAGE
+    alt = str(cover.get("alt", "") or "").strip() or f"{title} - BlueDog"
+    caption = str(cover.get("caption", "") or "").strip()
+
+    normalized_cover: Dict[str, Any] = {
+        "image": image,
+        "alt": alt,
+        "caption": caption,
+        "relative": bool(cover.get("relative", False)),
+        "hidden": bool(cover.get("hidden", True)),
+        "hiddenInList": bool(cover.get("hiddenInList", True)),
+        "hiddenInSingle": bool(cover.get("hiddenInSingle", True)),
+    }
+    return normalized_cover
+
+
 def load_front_matter(text: str) -> Tuple[Dict[str, Any], str]:
     match = FM_PATTERN.match(text)
     if not match:
@@ -260,6 +281,7 @@ def normalize_front_matter(path: Path, front: Dict[str, Any], body: str) -> Dict
     if not is_valid_description(summary, min_len=20):
         summary = description
     keywords = build_keywords(tags, categories)
+    cover = build_cover(front, title)
 
     normalized["title"] = title
     normalized["date"] = date_value
@@ -270,6 +292,7 @@ def normalize_front_matter(path: Path, front: Dict[str, Any], body: str) -> Dict
     normalized["categories"] = categories
     normalized["tags"] = tags
     normalized["keywords"] = keywords
+    normalized["cover"] = cover
 
     for key, value in front.items():
         if key not in normalized:

@@ -18,6 +18,14 @@ keywords:
 - 实操指南
 - 技术好文
 - BlueDog
+cover:
+  image: /branding/banner-logo.webp
+  alt: frp内网穿透配置教程 - BlueDog
+  caption: ''
+  relative: false
+  hidden: true
+  hiddenInList: true
+  hiddenInSingle: true
 ---
 **什么是frp**
 

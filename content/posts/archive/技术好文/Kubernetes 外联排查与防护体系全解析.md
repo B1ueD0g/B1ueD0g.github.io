@@ -22,6 +22,14 @@ keywords:
 - 方法解析
 - 技术好文
 - BlueDog
+cover:
+  image: /branding/banner-logo.webp
+  alt: Kubernetes 外联排查与防护体系全解析 - BlueDog
+  caption: ''
+  relative: false
+  hidden: true
+  hiddenInList: true
+  hiddenInSingle: true
 ---
 > 在云原生架构广泛应用的今天，Kubernetes（K8s）集群中容器的非法外联行为成为攻防对抗的重要焦点。本文将从应急排查、强制隔离到策略防护，深入剖析如何**精准定位外联源头、实时告警可视化**，并构建**前置的防控机制**。
 

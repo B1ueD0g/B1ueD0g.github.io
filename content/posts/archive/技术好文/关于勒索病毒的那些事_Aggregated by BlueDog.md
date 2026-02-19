@@ -14,6 +14,14 @@ keywords:
 - 恶意软件
 - 技术好文
 - BlueDog
+cover:
+  image: /branding/banner-logo.webp
+  alt: 关于勒索病毒的那些事 - BlueDog
+  caption: ''
+  relative: false
+  hidden: true
+  hiddenInList: true
+  hiddenInSingle: true
 ---
 [TOC]
 

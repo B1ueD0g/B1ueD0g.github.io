@@ -1,0 +1,22 @@
+<link rel="preload" href="{{ "fonts/RubikBurned-Regular.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{{ "fonts/BreeSerif-Regular.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{{ "fonts/Manrope-Variable.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
+
+{{- with site.Params.analytics -}}
+  {{- if .enabled -}}
+    {{- $provider := lower (default "" .provider) -}}
+    {{- if eq $provider "plausible" -}}
+      {{- $domain := .plausible.domain | default "" -}}
+      {{- $script := .plausible.script | default "https://plausible.io/js/script.js" -}}
+      {{- if $domain -}}
+<script defer data-domain="{{ $domain }}" src="{{ $script }}"></script>
+      {{- end -}}
+    {{- else if eq $provider "umami" -}}
+      {{- $websiteID := .umami.websiteId | default "" -}}
+      {{- $script := .umami.script | default "https://cloud.umami.is/script.js" -}}
+      {{- if and $websiteID $script -}}
+<script defer src="{{ $script }}" data-website-id="{{ $websiteID }}"></script>
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}

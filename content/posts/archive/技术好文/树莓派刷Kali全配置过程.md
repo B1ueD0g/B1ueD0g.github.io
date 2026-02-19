@@ -16,6 +16,14 @@ keywords:
 - 实操指南
 - 技术好文
 - BlueDog
+cover:
+  image: /branding/banner-logo.webp
+  alt: 树莓派刷Kali全配置过程 - BlueDog
+  caption: ''
+  relative: false
+  hidden: true
+  hiddenInList: true
+  hiddenInSingle: true
 ---
 本指南详细介绍如何在**树莓派 5**上以**无显示屏 (headless)** 方式部署 **Kali Linux (XFCE 桌面环境)**，并使用 **FRP (Fast Reverse Proxy)** 实现远程访问。内容涵盖从准备镜像、烧录 TF 卡、系统初始化配置，到安装常用工具、设置图形界面和 VNC 服务，以及通过 FRP 进行内网穿透远程连接的完整步骤。所有操作均针对无屏幕环境设计，并提供清晰的命令行示例（含注释）和配置文件示例。
 

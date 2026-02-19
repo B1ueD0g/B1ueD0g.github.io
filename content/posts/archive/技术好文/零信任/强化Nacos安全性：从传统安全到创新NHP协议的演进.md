@@ -19,6 +19,14 @@ keywords:
 - 实操指南
 - 技术好文
 - BlueDog
+cover:
+  image: /branding/banner-logo.webp
+  alt: 强化Nacos安全性：从传统安全到创新NHP协议的演进 - BlueDog
+  caption: ''
+  relative: false
+  hidden: true
+  hiddenInList: true
+  hiddenInSingle: true
 ---
 ## 0x01 概述
 

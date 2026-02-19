@@ -14,6 +14,14 @@ keywords:
 - 网络工具
 - 技术好文
 - BlueDog
+cover:
+  image: /branding/banner-logo.webp
+  alt: 无需公网-用zerotier异地组网 - BlueDog
+  caption: ''
+  relative: false
+  hidden: true
+  hiddenInList: true
+  hiddenInSingle: true
 ---
 在前面的文章中我们讲到利用frp进行内网穿透，但是他的局限在于你需要一台公网服务器。并且对公网服务器的带宽有一定的要求。因此这里我们推荐一款异地组网工具搭建属于自己的虚拟网络，经过授权连接成功之后彼此都在同一网段，可以像在局域网一样互相访问。
 

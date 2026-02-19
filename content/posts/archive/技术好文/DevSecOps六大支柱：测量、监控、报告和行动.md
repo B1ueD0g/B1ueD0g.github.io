@@ -18,6 +18,14 @@ keywords:
 - 标准解读
 - 技术好文
 - BlueDog
+cover:
+  image: /branding/banner-logo.webp
+  alt: DevSecOps六大支柱：测量、监控、报告和行动 - BlueDog
+  caption: ''
+  relative: false
+  hidden: true
+  hiddenInList: true
+  hiddenInSingle: true
 ---
 当安全从“附属 KPI”跃升为业务韧性的硬指标，度量与可观测性就不再是选做题。**云安全联盟（CSA）大中华区发布的《DevSecOps 六大支柱》终章——“测量、监控、报告和行动”（Pillar 6），**为从事信息安全和信息技术管理和业务职能的人员提供了一套 “可视、可衡、可改” 的闭环方法论。
 

@@ -13,8 +13,11 @@ keywords:
   - "网络安全"
   - "BlueDog"
 cover:
-  image: ""
-  alt: ""
+  image: "/branding/banner-logo.webp"
+  alt: "BlueDog Blog Cover"
   caption: ""
   relative: false
+  hidden: true
+  hiddenInList: true
+  hiddenInSingle: true
 ---

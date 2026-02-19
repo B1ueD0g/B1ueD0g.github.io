@@ -11,9 +11,12 @@
 
 - 站点配置：`hugo.toml`
 - 首页/风格：`assets/css/extended/custom.css`
-- About Me 页面：`content/about/index.md`
+- About Me 结构化资料：`data/about.yaml`
+- About Me 页面配置：`content/about/index.md`
 - 已发布文章：`content/posts/archive/`
 - 待发布草稿：`content/posts/pending/`
+- 元数据脚本：`scripts/normalize_post_metadata.py`
+- 元数据质检脚本：`scripts/check_metadata_quality.py`
 
 ## 2. 本地预览
 
@@ -66,6 +69,14 @@ keywords:
   - "技术实践"
   - "零信任"
   - "BlueDog"
+cover:
+  image: "/branding/banner-logo.webp"
+  alt: "BlueDog Blog Cover"
+  caption: ""
+  relative: false
+  hidden: true
+  hiddenInList: true
+  hiddenInSingle: true
 ---
 
 正文...
@@ -144,16 +155,24 @@ git commit -m "remove: 文章标题"
 git push
 ```
 
-## 8. 如何修改 About Me
+## 8. 如何修改 About Me（结构化）
 
-你只需要改这个文件：
+核心数据改这里：
+
+- `data/about.yaml`
+
+页面级配置改这里：
 
 - `content/about/index.md`
 
-可改内容：
+常见可改字段（`data/about.yaml`）：
 
-- 个人介绍正文
-- 列表、链接、成果物等
+- `profile.roles`
+- `highlights`
+- `certifications`
+- `honors`
+- `works`
+- `roadmap`
 
 社交链接位置：
 
@@ -168,13 +187,15 @@ git push
 
 每次 `git push` 到 `main` 分支后，GitHub Actions 会自动执行：
 
-1. `hugo --gc --minify`
-2. `npx -y pagefind --site public`
-3. 发布到 GitHub Pages
+1. `python3 scripts/check_metadata_quality.py`（元数据质检）
+2. `hugo --gc --minify`
+3. `npx -y pagefind --site public`
+4. 发布到 GitHub Pages
 
 工作流文件：
 
 - `.github/workflows/hugo.yml`
+- `.github/workflows/uptime-check.yml`（每 30 分钟探测可用性）
 
 ## 10. 域名检查（出问题时看这里）
 
@@ -186,3 +207,17 @@ git push
 
 1. 先看 GitHub Actions 是否完成。
 2. 浏览器强刷：`Cmd + Shift + R`。
+
+## 11. 统计脚本配置（Plausible / Umami）
+
+在 `hugo.toml` 修改：
+
+- `params.analytics.enabled = true`
+- `params.analytics.provider = "plausible"` 或 `"umami"`
+- Plausible 填 `params.analytics.plausible.domain`
+- Umami 填 `params.analytics.umami.websiteId` 和 `script`
+
+说明：
+
+- 默认是关闭统计，开启后会自动注入脚本。
+- 404 页面会自动上报一次 `404` 事件（若统计脚本已启用）。

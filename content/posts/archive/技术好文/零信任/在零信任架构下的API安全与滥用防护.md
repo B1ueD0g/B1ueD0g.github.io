@@ -19,6 +19,14 @@ keywords:
 - 实操指南
 - 技术好文
 - BlueDog
+cover:
+  image: /branding/banner-logo.webp
+  alt: 在零信任架构下的API安全与滥用防护 - BlueDog
+  caption: ''
+  relative: false
+  hidden: true
+  hiddenInList: true
+  hiddenInSingle: true
 ---
 ## 引言
 

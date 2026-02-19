@@ -18,6 +18,14 @@ keywords:
 - 网络工具
 - 好文翻译
 - BlueDog
+cover:
+  image: /branding/banner-logo.webp
+  alt: 单包授权 - BlueDog
+  caption: ''
+  relative: false
+  hidden: true
+  hiddenInList: true
+  hiddenInSingle: true
 ---
 作者：**Michael Rash**
 

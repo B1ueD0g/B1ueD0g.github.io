@@ -14,6 +14,14 @@ keywords:
 - 网络安全
 - 技术好文
 - BlueDog
+cover:
+  image: /branding/banner-logo.webp
+  alt: 做一个永不暴露真实IP的网站 - BlueDog
+  caption: ''
+  relative: false
+  hidden: true
+  hiddenInList: true
+  hiddenInSingle: true
 ---
 ## 隐藏真实IP
 
