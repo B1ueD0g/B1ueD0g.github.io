@@ -22,6 +22,22 @@
         search_label: "站内搜索"
       }
     });
+
+    var initialQuery = new URLSearchParams(window.location.search).get("q");
+    if (!initialQuery) return;
+
+    function applyQuery() {
+      var input = document.querySelector("#search input");
+      if (!input) {
+        requestAnimationFrame(applyQuery);
+        return;
+      }
+      input.value = initialQuery;
+      input.dispatchEvent(new Event("input", { bubbles: true }));
+      input.focus();
+    }
+
+    applyQuery();
   });
 </script>
 {{- end }}

@@ -25,7 +25,7 @@ description = "BlueDog 的个人博客，记录技术研究、翻译沉淀与长
 keywords = ["blog", "tech", "hugo", "BlueDog"]
 defaultTheme = "auto"
 ShowReadingTime = true
-ShowShareButtons = true
+ShowShareButtons = false
 ShowCodeCopyButtons = true
 ShowWordCount = true
 ShowPostNavLinks = true
@@ -49,12 +49,24 @@ hideCopyright = true
 text = "Progress, Not Perfection"
 
 [[params.socialIcons]]
-name = "github"
-url = "https://github.com/B1ueD0g"
+name = "x"
+title = "X"
+url = "https://x.com/B1ueD0g_Fun"
 
 [[params.socialIcons]]
-name = "rss"
-url = "index.xml"
+name = "linkedin"
+title = "LinkedIn"
+url = "https://www.linkedin.com/in/b1ued0g/"
+
+[[params.socialIcons]]
+name = "telegram"
+title = "Telegram"
+url = "https://t.me/B1ueD0g"
+
+[[params.socialIcons]]
+name = "email"
+title = "Email"
+url = "mailto:b1ued0g@duck.com"
 
 [[menu.main]]
 identifier = "home"
