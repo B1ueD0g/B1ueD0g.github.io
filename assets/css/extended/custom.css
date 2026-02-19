@@ -283,6 +283,11 @@ body.home-page .custom-min-footer {
   margin: 1.4rem auto 1rem;
 }
 
+.page-footer {
+  margin-top: 1.2rem;
+  padding-top: 0.4rem;
+}
+
 .post-entry {
   margin: 0;
   padding: 1.15rem 0;
@@ -538,6 +543,11 @@ body.home-page .copy-toast {
 
   .post-entry {
     padding: 0.85rem 0;
+  }
+
+  .page-footer {
+    margin-top: 0.9rem;
+    padding-top: 0.2rem;
   }
 
   .post-entry-with-date {
