@@ -7,8 +7,28 @@
 {{- $pages = where $pages "Params.hiddenInHomeList" "!=" "true" }}
 {{- $pages = $pages.ByDate.Reverse }}
 {{- $paginator := .Paginate $pages }}
-
+{{- $years := slice }}
 {{- range $paginator.Pages }}
+  {{- $years = $years | append (.Date.Format "2006") }}
+{{- end }}
+{{- $years = uniq $years }}
+
+{{- if gt (len $years) 0 }}
+<nav class="article-year-nav" aria-label="按年份跳转">
+  <span>Years:</span>
+  {{- range $years }}
+  <a href="#year-{{ . }}">{{ . }}</a>
+  {{- end }}
+</nav>
+{{- end }}
+
+{{- $currentYear := "" }}
+{{- range $paginator.Pages }}
+{{- $year := .Date.Format "2006" }}
+{{- if ne $year $currentYear }}
+<h2 id="year-{{ $year }}" class="article-year-divider">{{ $year }}</h2>
+{{- $currentYear = $year }}
+{{- end }}
 <article class="post-entry post-entry-with-date">
   <div class="post-entry-date">
     <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date | time.Format site.Params.DateFormat }}</time>

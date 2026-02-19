@@ -1,10 +1,19 @@
 ---
-title: "V2rayN 使用教程快速入门"
-date: 2023-11-22T10:00:00+08:00
+title: V2rayN 使用教程快速入门
+date: '2023-11-22T10:00:00+08:00'
 draft: false
-summary: "**v2rayN官网**下载地址：https://github.com/2dust/v2rayN/releases 新手使用建议下载稳定版本，即版本号后标记为 `Latest` 的版本。"
+description: v2rayN官网下载地址： 新手使用建议下载稳定版本，即版本号后标记为 Latest 的版本。
+summary: v2rayN官网下载地址： 新手使用建议下载稳定版本，即版本号后标记为 Latest 的版本。
 categories:
-  - "技术好文"
+- 技术好文
+tags:
+- 技术实践
+- 网络工具
+keywords:
+- 技术实践
+- 网络工具
+- 技术好文
+- BlueDog
 ---
 ## 界面预览
 

@@ -1,12 +1,27 @@
 ---
-title: "增强云安全：Kubernetes 安全的四个关键实践"
-date: 2023-07-19T10:00:00+08:00
+title: 增强云安全：Kubernetes 安全的四个关键实践
+date: '2023-07-19T10:00:00+08:00'
 draft: false
-summary: "原文地址：https://cloudsecurityalliance.org/blog/2023/07/19/enhancing-cloud-security-four-vital-practices-for-kubernetes-..."
+description: 在当今快速发展的云环境中，确保 Kubernetes 环境的强大安全措施对于组织来说已变得至关重要。虽然云原生基础设施的优势是不可否认的，但安全团队常常难以解决 Kubernetes 管理核心的安全难题。他们知道需要一种方法将...
+summary: 在当今快速发展的云环境中，确保 Kubernetes 环境的强大安全措施对于组织来说已变得至关重要。虽然云原生基础设施的优势是不可否认的，但安全团队常常难以解决 Kubernetes 管理核心的安全难题。他们知道需要一种方法将...
 categories:
-  - "好文翻译"
+- 好文翻译
 tags:
-  - "好文翻译"
+- 技术译文
+- 翻译
+- Kubernetes
+- 云原生安全
+- 云安全
+- 标准解读
+keywords:
+- 技术译文
+- 翻译
+- Kubernetes
+- 云原生安全
+- 云安全
+- 标准解读
+- 好文翻译
+- BlueDog
 ---
 原文地址：https://cloudsecurityalliance.org/blog/2023/07/19/enhancing-cloud-security-four-vital-practices-for-kubernetes-security/
 

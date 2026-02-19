@@ -10,6 +10,10 @@ buildFuture = false
 [pagination]
 pagerSize = 10
 
+[taxonomies]
+tag = "tags"
+category = "categories"
+
 [markup]
 [markup.goldmark]
 [markup.goldmark.renderer]
@@ -22,17 +26,19 @@ home = ["HTML", "RSS", "JSON"]
 env = "production"
 author = "BlueDog"
 description = "BlueDog 的个人博客，记录技术研究、翻译沉淀与长期思考。"
-keywords = ["blog", "tech", "hugo", "BlueDog"]
+keywords = ["BlueDog", "网络安全", "零信任", "AI安全", "技术博客"]
+images = ["/branding/banner-logo.webp"]
 defaultTheme = "auto"
 ShowShareButtons = false
 ShowCodeCopyButtons = true
 ShowReadingTime = false
 ShowWordCount = false
 ShowPostNavLinks = true
-ShowBreadCrumbs = true
+ShowBreadCrumbs = false
 ShowRssButtonInSectionTermList = true
 ShowToc = true
 DateFormat = "2006-01-02"
+searchQuickTags = ["零信任", "AI安全", "数据安全", "漏洞研究", "云安全", "实操指南", "标准解读"]
 
 [params.assets]
 favicon = "/branding/favicon.ico"

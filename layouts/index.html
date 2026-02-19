@@ -1,4 +1,5 @@
 {{- define "main" }}
+{{- $quickTags := site.Params.searchQuickTags | default (slice "零信任" "AI安全" "数据安全" "漏洞研究" "标准解读") -}}
 <article class="first-entry home-info">
   <header class="entry-header">
     <h1>{{ site.Params.homeInfoParams.Title | default "He is Exploring Everything." }}</h1>
@@ -9,7 +10,7 @@
       <input
         id="home-search-input"
         type="search"
-        placeholder="输入关键词后回车，例如：零信任、AI、翻译"
+        placeholder="输入关键词后回车，可直接跳转到最佳结果"
         aria-label="Search posts"
       />
       <button id="home-search-btn" type="button">Search</button>
@@ -17,11 +18,9 @@
 
     <div class="home-search-tags">
       <span>Try Tags:</span>
-      <a href="/search/?q=零信任">#零信任</a>
-      <a href="/search/?q=AI">#AI</a>
-      <a href="/search/?q=数据安全">#数据安全</a>
-      <a href="/search/?q=翻译">#翻译</a>
-      <a href="/search/?q=威胁">#威胁</a>
+      {{- range $quickTags }}
+      <a href="/search/?q={{ . | urlquery }}">#{{ . }}</a>
+      {{- end }}
     </div>
   </div>
 </article>
@@ -32,20 +31,25 @@
     var button = document.getElementById("home-search-btn");
     if (!input || !button) return;
 
-    function submitSearch() {
+    function submitSearch(autoJump) {
       var keyword = input.value.trim();
+      var params = new URLSearchParams();
       if (!keyword) {
         window.location.href = "/search/";
         return;
       }
-      window.location.href = "/search/?q=" + encodeURIComponent(keyword);
+      params.set("q", keyword);
+      if (autoJump) params.set("autojump", "1");
+      window.location.href = "/search/?" + params.toString();
     }
 
-    button.addEventListener("click", submitSearch);
+    button.addEventListener("click", function () {
+      submitSearch(false);
+    });
     input.addEventListener("keydown", function (event) {
       if (event.key === "Enter") {
         event.preventDefault();
-        submitSearch();
+        submitSearch(true);
       }
     });
   });

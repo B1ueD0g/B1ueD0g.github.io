@@ -1,10 +1,21 @@
 ---
-title: "树莓派刷Kali全配置过程"
-date: 2025-07-10T10:00:00+08:00
+title: 树莓派刷Kali全配置过程
+date: '2025-07-10T10:00:00+08:00'
 draft: false
-summary: "本指南详细介绍如何在**树莓派 5**上以**无显示屏 (headless)** 方式部署 **Kali Linux (XFCE 桌面环境)**，并使用 **FRP (Fast Reverse Proxy)** 实现远程访问。内容涵..."
+description: 本指南详细介绍如何在树莓派 5上以无显示屏 (headless) 方式部署 Kali Linux (XFCE 桌面环境)，并使用 FRP (Fast Reverse Proxy) 实现远程访问。内容涵...
+summary: 本指南详细介绍如何在树莓派 5上以无显示屏 (headless) 方式部署 Kali Linux (XFCE 桌面环境)，并使用 FRP (Fast Reverse Proxy) 实现远程访问。内容涵...
 categories:
-  - "技术好文"
+- 技术好文
+tags:
+- 技术实践
+- 网络工具
+- 实操指南
+keywords:
+- 技术实践
+- 网络工具
+- 实操指南
+- 技术好文
+- BlueDog
 ---
 本指南详细介绍如何在**树莓派 5**上以**无显示屏 (headless)** 方式部署 **Kali Linux (XFCE 桌面环境)**，并使用 **FRP (Fast Reverse Proxy)** 实现远程访问。内容涵盖从准备镜像、烧录 TF 卡、系统初始化配置，到安装常用工具、设置图形界面和 VNC 服务，以及通过 FRP 进行内网穿透远程连接的完整步骤。所有操作均针对无屏幕环境设计，并提供清晰的命令行示例（含注释）和配置文件示例。
 

@@ -32,8 +32,13 @@ hugo server -D
 
 推荐两种方式：
 
-1. 直接复制一篇已有文章改名改内容。
-2. 手动新建一个 `.md` 文件到指定目录。
+1. 用 Hugo 模板新建（推荐）：
+
+```bash
+hugo new posts/archive/技术好文/你的文章名.md
+```
+
+2. 直接复制一篇已有文章改名改内容。
 
 发布文章放在：
 
@@ -50,10 +55,17 @@ Front Matter 模板（可直接复制）：
 title: "文章标题"
 date: 2026-02-19T12:00:00+08:00
 draft: false
+description: "一句话摘要（用于 SEO）"
+summary: "列表页摘要（可与 description 一致）"
 categories:
   - "技术好文"
 tags:
+  - "技术实践"
   - "零信任"
+keywords:
+  - "技术实践"
+  - "零信任"
+  - "BlueDog"
 ---
 
 正文...
@@ -64,7 +76,40 @@ tags:
 - 如果你还不想发布，把 `draft` 设为 `true`，或先放在 `pending` 目录。
 - 图片继续用 PicGo 外链，不需要本地图片目录。
 
-## 4. 发布新文章
+## 4. Description / Tags 设计规范（重点）
+
+### description 规则
+
+- 长度建议：`50-120` 字。
+- 内容建议：一句话说清“问题 + 方法/结论”。
+- 不建议：只写“原文地址”、纯链接、过短无信息文本。
+
+### tags 规则（重设计，三层）
+
+- 内容层（必选 1 个）：
+  - `技术实践` / `技术译文` / `阅读思考` / `科研方法` / `草稿`
+- 主题层（建议 1-3 个）：
+  - `零信任` / `AI安全` / `数据安全` / `云安全` / `Kubernetes` / `API安全`
+  - `漏洞研究` / `威胁情报` / `网络工具` / `DevSecOps` / `恶意软件`
+- 表达层（可选 1-2 个）：
+  - `实操指南` / `方法解析` / `治理实践` / `标准解读` / `读后总结`
+
+每篇文章建议 `3-6` 个标签，结构建议为：`1 内容 + 1~3 主题 + 0~2 表达`。
+
+### 批量规范化（已内置脚本）
+
+```bash
+cd "/Users/bluedog/Desktop/工作文件/自己的一些事情/Blog"
+python3 scripts/normalize_post_metadata.py --apply
+```
+
+这个脚本会自动：
+
+- 补齐缺失 `description`
+- 按新规则重建 `tags` 与 `keywords`
+- 保留正文不变
+
+## 5. 发布新文章
 
 如果文章在 `pending`：
 
@@ -81,13 +126,13 @@ git push
 
 推送后会自动触发 GitHub Actions 构建和发布。
 
-## 5. 修改已有文章
+## 6. 修改已有文章
 
 1. 打开对应 `.md` 文件直接改内容。
 2. 需要的话更新 `date`（可选）。
 3. `git add . && git commit -m "update: 文章标题" && git push`
 
-## 6. 删除文章
+## 7. 删除文章
 
 1. 删除对应的 `.md` 文件。
 2. 提交推送：
@@ -99,7 +144,7 @@ git commit -m "remove: 文章标题"
 git push
 ```
 
-## 7. 如何修改 About Me
+## 8. 如何修改 About Me
 
 你只需要改这个文件：
 
@@ -119,7 +164,7 @@ git push
 - 点击邮箱图标不会跳转 `mailto`
 - 会自动复制邮箱地址并弹出“已复制”提示
 
-## 8. 发布流程（自动）
+## 9. 发布流程（自动）
 
 每次 `git push` 到 `main` 分支后，GitHub Actions 会自动执行：
 
@@ -131,7 +176,7 @@ git push
 
 - `.github/workflows/hugo.yml`
 
-## 9. 域名检查（出问题时看这里）
+## 10. 域名检查（出问题时看这里）
 
 - `hugo.toml` 的 `baseURL`：`https://bluedog.website/`
 - `CNAME` 文件内容：`bluedog.website`

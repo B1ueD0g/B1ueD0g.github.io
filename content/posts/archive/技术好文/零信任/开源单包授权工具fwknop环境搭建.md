@@ -1,13 +1,22 @@
 ---
-title: "开源单包授权工具fwknop环境搭建"
-date: 2024-01-20T10:00:00+08:00
+title: 开源单包授权工具fwknop环境搭建
+date: '2024-01-20T10:00:00+08:00'
 draft: false
-summary: "SDP架构下保护的业务服务只允许被认为合法的报文进行访问，丢弃“非法”报文，从而实现了业务服务隐身。SDP 架构分为三个部分：SDP Client、Controller、Gateway。所有的Client在访问资源之前，都要通过Co..."
+description: SDP架构下保护的业务服务只允许被认为合法的报文进行访问，丢弃“非法”报文，从而实现了业务服务隐身。SDP 架构分为三个部分：SDP Client、Controller、Gateway。所有的Client在访问资源之前，都要通...
+summary: SDP架构下保护的业务服务只允许被认为合法的报文进行访问，丢弃“非法”报文，从而实现了业务服务隐身。SDP 架构分为三个部分：SDP Client、Controller、Gateway。所有的Client在访问资源之前，都要通...
 categories:
-  - "技术好文"
-  - "零信任"
+- 技术好文
+- 零信任
 tags:
-  - "零信任"
+- 技术实践
+- 零信任
+- 网络工具
+keywords:
+- 技术实践
+- 零信任
+- 网络工具
+- 技术好文
+- BlueDog
 ---
 ## 0x01 FWKNOP介绍
 

@@ -1,4 +1,5 @@
 {{- define "main" }}
+{{- $quickTags := site.Params.searchQuickTags | default (slice "零信任" "AI安全" "数据安全" "漏洞研究" "标准解读") -}}
 <header class="page-header">
   <h1>{{ .Title }}</h1>
 </header>
@@ -6,12 +7,25 @@
 <link rel="stylesheet" href="{{ "pagefind/pagefind-ui.css" | relURL }}">
 <script src="{{ "pagefind/pagefind-ui.js" | relURL }}" defer></script>
 
+<section class="search-guide" aria-label="search-guide">
+  <p class="search-guide-text">输入关键词后按回车，可直接跳转到第一条结果。</p>
+  <div class="search-guide-tags">
+    <span>Suggested Tags:</span>
+    {{- range $quickTags }}
+    <button type="button" data-search-tag="{{ . }}">#{{ . }}</button>
+    {{- end }}
+  </div>
+</section>
+
 <div id="search"></div>
+<div id="search-empty" class="search-empty" hidden>
+  <p>没有找到结果，试试更短的关键词，或点击上方推荐标签。</p>
+</div>
 
 <script>
   window.addEventListener("DOMContentLoaded", function () {
     if (typeof PagefindUI === "undefined") return;
-    new PagefindUI({
+    var searchUI = new PagefindUI({
       element: "#search",
       showSubResults: true,
       showImages: false,
@@ -23,21 +37,107 @@
       }
     });
 
-    var initialQuery = new URLSearchParams(window.location.search).get("q");
-    if (!initialQuery) return;
+    function getSearchInput() {
+      return document.querySelector("#search input");
+    }
 
-    function applyQuery() {
-      var input = document.querySelector("#search input");
+    function getFirstResultLink() {
+      return document.querySelector("#search .pagefind-ui__result-link");
+    }
+
+    function setInputQuery(value) {
+      var input = getSearchInput();
       if (!input) {
-        requestAnimationFrame(applyQuery);
-        return;
+        return false;
       }
-      input.value = initialQuery;
+      input.value = value;
       input.dispatchEvent(new Event("input", { bubbles: true }));
+      return true;
+    }
+
+    function focusInput() {
+      var input = getSearchInput();
+      if (!input) return;
       input.focus();
     }
 
-    applyQuery();
+    function jumpToFirstResult() {
+      var firstLink = getFirstResultLink();
+      if (!firstLink) return false;
+      window.location.href = firstLink.href;
+      return true;
+    }
+
+    function updateEmptyState() {
+      var input = getSearchInput();
+      var empty = document.getElementById("search-empty");
+      if (!input || !empty) return;
+      var keyword = input.value.trim();
+      var hasResult = Boolean(document.querySelector("#search .pagefind-ui__result"));
+      empty.hidden = !(keyword && !hasResult);
+    }
+
+    function bindInputEvents() {
+      var input = getSearchInput();
+      if (!input) {
+        requestAnimationFrame(bindInputEvents);
+        return;
+      }
+      input.addEventListener("keydown", function (event) {
+        if (event.key !== "Enter") return;
+        event.preventDefault();
+        window.setTimeout(function () {
+          if (!jumpToFirstResult()) {
+            updateEmptyState();
+          }
+        }, 130);
+      });
+      input.addEventListener("input", function () {
+        window.setTimeout(updateEmptyState, 120);
+      });
+      focusInput();
+    }
+
+    var observer = new MutationObserver(function () {
+      updateEmptyState();
+      if (autoJumpRequested) {
+        autoJumpRequested = !jumpToFirstResult();
+      }
+    });
+    observer.observe(document.getElementById("search"), { childList: true, subtree: true });
+
+    var params = new URLSearchParams(window.location.search);
+    var initialQuery = params.get("q");
+    var autoJumpRequested = params.get("autojump") === "1";
+
+    if (initialQuery) {
+      var applyQuery = function () {
+        if (!setInputQuery(initialQuery)) {
+          requestAnimationFrame(applyQuery);
+          return;
+        }
+        focusInput();
+        window.setTimeout(function () {
+          updateEmptyState();
+          if (autoJumpRequested) {
+            autoJumpRequested = !jumpToFirstResult();
+          }
+        }, 150);
+      };
+      applyQuery();
+    }
+
+    document.querySelectorAll("[data-search-tag]").forEach(function (button) {
+      button.addEventListener("click", function () {
+        var tag = button.getAttribute("data-search-tag");
+        if (!tag) return;
+        if (!setInputQuery(tag)) return;
+        focusInput();
+        window.setTimeout(updateEmptyState, 120);
+      });
+    });
+
+    bindInputEvents();
   });
 </script>
 {{- end }}

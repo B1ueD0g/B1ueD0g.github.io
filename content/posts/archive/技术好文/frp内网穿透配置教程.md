@@ -1,10 +1,23 @@
 ---
-title: "frp内网穿透配置教程"
-date: 2023-07-19T10:00:00+08:00
+title: frp内网穿透配置教程
+date: '2023-07-19T10:00:00+08:00'
 draft: false
-summary: "**什么是frp**"
+description: frp全名Fast Reverse Proxy，是用于提供内网穿透服务的工具，主要用于解决一些内网服务没有公网ip但是却需要提供外网访问的问题。使用frp你可以将内网中的TCP、UDP、HTTP、HTTPS等协议类型的服务发布...
+summary: frp全名Fast Reverse Proxy，是用于提供内网穿透服务的工具，主要用于解决一些内网服务没有公网ip但是却需要提供外网访问的问题。使用frp你可以将内网中的TCP、UDP、HTTP、HTTPS等协议类型的服务发布...
 categories:
-  - "技术好文"
+- 技术好文
+tags:
+- 技术实践
+- 威胁情报
+- 网络工具
+- 实操指南
+keywords:
+- 技术实践
+- 威胁情报
+- 网络工具
+- 实操指南
+- 技术好文
+- BlueDog
 ---
 **什么是frp**
 

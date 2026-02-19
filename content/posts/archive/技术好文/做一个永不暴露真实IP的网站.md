@@ -1,10 +1,19 @@
 ---
-title: "做一个永不暴露真实IP的网站"
-date: 2024-08-30T15:01:34+08:00
+title: 做一个永不暴露真实IP的网站
+date: '2024-08-30T15:01:34+08:00'
 draft: false
-summary: "防范DDoS攻击最主要的手段是加钱上高防，同时隐藏网站真实IP"
+description: 防范DDoS攻击最主要的手段是加钱上高防，同时隐藏网站真实IP
+summary: 防范DDoS攻击最主要的手段是加钱上高防，同时隐藏网站真实IP
 categories:
-  - "技术好文"
+- 技术好文
+tags:
+- 技术实践
+- 网络安全
+keywords:
+- 技术实践
+- 网络安全
+- 技术好文
+- BlueDog
 ---
 ## 隐藏真实IP
 
