@@ -237,6 +237,36 @@ a:hover {
   color: var(--min-bg);
 }
 
+body.home-page .main {
+  min-height: calc(100vh - 180px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 0;
+  padding-bottom: 88px;
+}
+
+body.home-page .home-stage {
+  width: 100%;
+}
+
+body.home-page .first-entry.home-info {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+body.home-page .custom-min-footer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin-top: 0;
+  padding-top: 0.72rem;
+  padding-bottom: 0.58rem;
+  background: var(--min-bg);
+  z-index: 20;
+}
+
 .page-header {
   margin: 1.4rem auto 1rem;
 }
@@ -458,6 +488,23 @@ a:hover {
 
   .home-search-tags {
     justify-content: flex-start;
+  }
+
+  body.home-page .main {
+    min-height: auto;
+    display: block;
+    padding-bottom: 0.7rem;
+  }
+
+  body.home-page .first-entry.home-info {
+    margin-top: 1.3rem;
+    margin-bottom: 1.5rem;
+  }
+
+  body.home-page .custom-min-footer {
+    position: static;
+    padding-top: 1rem;
+    padding-bottom: 0.8rem;
   }
 
   .post-content {

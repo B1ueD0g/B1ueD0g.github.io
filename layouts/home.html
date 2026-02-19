@@ -1,33 +1,37 @@
 {{- define "main" }}
-<article class="first-entry home-info">
-  <header class="entry-header">
-    <h1>{{ site.Params.homeInfoParams.Title | default "He is Exploring Everything." }}</h1>
-  </header>
+<section class="home-stage">
+  <article class="first-entry home-info">
+    <header class="entry-header">
+      <h1>{{ site.Params.homeInfoParams.Title | default "He is Exploring Everything." }}</h1>
+    </header>
 
-  <div class="home-search-wrap">
-    <div class="home-search-box">
-      <input
-        id="home-search-input"
-        type="search"
-        placeholder="输入关键词后回车，例如：零信任、AI、翻译"
-        aria-label="Search posts"
-      />
-      <button id="home-search-btn" type="button">Search</button>
-    </div>
+    <div class="home-search-wrap">
+      <div class="home-search-box">
+        <input
+          id="home-search-input"
+          type="search"
+          placeholder="输入关键词后回车，例如：零信任、AI、翻译"
+          aria-label="Search posts"
+        />
+        <button id="home-search-btn" type="button">Search</button>
+      </div>
 
-    <div class="home-search-tags">
-      <span>Try Tags:</span>
-      <a href="/search/?q=零信任">#零信任</a>
-      <a href="/search/?q=AI">#AI</a>
-      <a href="/search/?q=数据安全">#数据安全</a>
-      <a href="/search/?q=翻译">#翻译</a>
-      <a href="/search/?q=威胁">#威胁</a>
+      <div class="home-search-tags">
+        <span>Try Tags:</span>
+        <a href="/search/?q=零信任">#零信任</a>
+        <a href="/search/?q=AI">#AI</a>
+        <a href="/search/?q=数据安全">#数据安全</a>
+        <a href="/search/?q=翻译">#翻译</a>
+        <a href="/search/?q=威胁">#威胁</a>
+      </div>
     </div>
-  </div>
-</article>
+  </article>
+</section>
 
 <script>
   window.addEventListener("DOMContentLoaded", function () {
+    document.body.classList.add("home-page");
+
     var input = document.getElementById("home-search-input");
     var button = document.getElementById("home-search-btn");
     if (!input || !button) return;
