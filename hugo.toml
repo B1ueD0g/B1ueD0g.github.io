@@ -1,7 +1,7 @@
 baseURL = "https://bluedog.website/"
 languageCode = "zh-cn"
 defaultContentLanguage = "zh"
-title = "BlueDog Blog"
+title = "BlueDog 's Blog"
 theme = "PaperMod"
 enableRobotsTXT = true
 buildDrafts = false
