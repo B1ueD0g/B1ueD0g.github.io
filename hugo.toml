@@ -35,8 +35,12 @@ ShowToc = true
 DateFormat = "2006-01-02"
 
 [params.homeInfoParams]
-Title = "BlueDog 的知识归档站"
-Content = "已发文章、待发草稿与个人履历统一沉淀在此。"
+Title = "He is Exploring Everything."
+Content = ""
+
+[params.footer]
+hideCopyright = true
+text = "Progress, Not Perfection"
 
 [[params.socialIcons]]
 name = "github"
@@ -47,37 +51,19 @@ name = "rss"
 url = "index.xml"
 
 [[menu.main]]
-identifier = "posts"
-name = "Posts"
-url = "/posts/"
+identifier = "home"
+name = "Home"
+url = "/"
 weight = 10
 
 [[menu.main]]
-identifier = "archives"
-name = "Archives"
-url = "/archives/"
+identifier = "article"
+name = "Article"
+url = "/posts/"
 weight = 20
 
 [[menu.main]]
-identifier = "categories"
-name = "Categories"
-url = "/categories/"
-weight = 30
-
-[[menu.main]]
-identifier = "tags"
-name = "Tags"
-url = "/tags/"
-weight = 40
-
-[[menu.main]]
-identifier = "about"
-name = "About"
+identifier = "me"
+name = "Me"
 url = "/about/"
-weight = 50
-
-[[menu.main]]
-identifier = "search"
-name = "Search"
-url = "/search/"
-weight = 60
+weight = 30

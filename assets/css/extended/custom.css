@@ -1,119 +1,192 @@
-@import url("https://cdnjs.cloudflare.com/ajax/libs/lxgw-wenkai-screen-webfont/1.7.0/lxgwwenkaiscreenr.css");
-
-@font-face {
-  font-family: "Pacifico";
-  src: url("https://gateway.pinata.cloud/ipfs/QmSCkXW4DEFKuPNYzwV88qeYA1DXgkG1e7zpYgdDTVWpRg?_gl=1*1nsnr07*_ga*NzU4ODgwMDgyLjE2ODk0MzcyMTY.*_ga_5RMPXG14TE*MTY4OTQzNzIxNy4xLjEuMTY4OTQzNzUwNS42MC4wLjA.") format("truetype");
-  font-display: swap;
-}
+@import url("https://fonts.googleapis.com/css2?family=Bree+Serif&family=Bungee+Shade&display=swap");
 
 :root {
-  --bd-pink: #f18fa0;
-  --bd-pink-soft: rgba(241, 143, 160, 0.16);
-  --bd-blue-soft: rgba(111, 185, 255, 0.16);
-  --bd-shadow: rgba(15, 23, 42, 0.1);
+  --main-width: 980px;
+  --min-text-color: #0f0f10;
+  --min-line-color: #121212;
+  --min-bg: #f9f9f9;
+  --theme: var(--min-bg);
+  --entry: transparent;
+  --primary: var(--min-text-color);
+  --secondary: #595959;
 }
 
-.dark {
-  --bd-pink-soft: rgba(241, 143, 160, 0.2);
-  --bd-blue-soft: rgba(111, 185, 255, 0.2);
-  --bd-shadow: rgba(0, 0, 0, 0.35);
+html[data-theme="dark"] {
+  --min-text-color: #f4f4f4;
+  --min-line-color: #f1f1f1;
+  --min-bg: #111;
+  --theme: var(--min-bg);
+  --entry: transparent;
+  --primary: var(--min-text-color);
+  --secondary: #b8b8b8;
 }
 
 body {
-  font-family: "LXGW WenKai Screen R", "PingFang SC", "Microsoft YaHei", sans-serif;
-  background:
-    radial-gradient(circle at 10% 5%, var(--bd-pink-soft), transparent 28%),
-    radial-gradient(circle at 90% 8%, var(--bd-blue-soft), transparent 30%),
-    var(--theme);
+  font-family: "Bree Serif", "Noto Serif SC", "PingFang SC", serif;
+  letter-spacing: 0.1px;
+}
+
+.main {
+  padding-top: 2rem;
 }
 
 .header {
-  border-bottom: 1px solid var(--border);
-  backdrop-filter: blur(8px);
+  border-bottom: 3px solid var(--min-line-color);
+}
+
+.nav {
+  min-height: 102px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
 }
 
 .logo a {
-  font-family: "Pacifico", "LXGW WenKai Screen R", sans-serif;
-  color: var(--bd-pink);
-  font-size: 1.6rem;
-  letter-spacing: 0.3px;
+  font-family: "Bungee Shade", "Bree Serif", serif;
+  color: var(--min-text-color);
+  font-size: clamp(2.1rem, 4.8vw, 3.9rem);
+  letter-spacing: 0.8px;
 }
 
-.nav a:hover,
-.nav a.active {
-  color: var(--bd-pink);
+.logo-switches {
+  display: none;
 }
 
-.home-info {
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  padding: 1.4rem;
-  background: linear-gradient(135deg, var(--bd-pink-soft), transparent 65%);
-  box-shadow: 0 12px 30px -24px var(--bd-shadow);
+#menu {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
 }
 
-.home-info .entry-content {
-  font-size: 1.03rem;
+#menu a {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+#menu .active {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+a {
+  text-decoration: none;
+}
+
+a:hover {
+  color: #fff;
+  background: var(--min-text-color);
+}
+
+.first-entry.home-info {
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+  padding: 3.2rem 0;
+  border-top: 3px solid var(--min-line-color);
+  border-bottom: 3px solid var(--min-line-color);
+  border-left: 0;
+  border-right: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+}
+
+.home-info .entry-header h1 {
+  font-size: clamp(2rem, 4.5vw, 3.4rem);
+  margin: 0;
+}
+
+.home-info .entry-content:empty,
+.home-info .entry-footer {
+  display: none;
 }
 
 .post-entry {
-  border-radius: 16px;
-  border: 1px solid var(--border);
-  box-shadow: 0 12px 24px -22px var(--bd-shadow);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  margin: 0;
+  padding: 1.2rem 0;
+  border: 0;
+  border-bottom: 1px solid var(--min-line-color);
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
 }
 
 .post-entry:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 16px 30px -22px var(--bd-shadow);
+  transform: none;
+  box-shadow: none;
 }
 
-.first-entry {
-  border-radius: 18px;
-}
-
+.entry-header h2,
 .post-title,
 .page-header h1 {
-  letter-spacing: 0.3px;
+  font-family: "Bree Serif", "Noto Serif SC", serif;
+  letter-spacing: 0.2px;
 }
 
 .post-content h2,
 .post-content h3 {
-  margin-top: 2rem;
+  margin-top: 2.1rem;
 }
 
 .post-content h2 {
-  border-bottom: 1px solid var(--border);
-  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--min-line-color);
+  padding-bottom: 0.32rem;
 }
 
-.post-content a {
-  color: var(--bd-pink);
-  text-decoration: none;
+.footer {
+  display: none;
 }
 
-.post-content a:hover {
-  text-decoration: underline;
+.custom-min-footer {
+  margin-top: 2.8rem;
+  padding-top: 1.8rem;
+  padding-bottom: 1.2rem;
+  border-top: 3px solid var(--min-line-color);
+  text-align: center;
 }
 
-.toc {
-  border-radius: 14px;
+.custom-min-footer p {
+  margin: 0;
+  font-size: clamp(1.25rem, 2.6vw, 2rem);
+  font-weight: 700;
 }
 
-.about-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1rem;
-  margin-top: 1.1rem;
-}
+@media (max-width: 900px) {
+  .nav {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.7rem;
+    min-height: auto;
+    padding: 0.95rem 0;
+  }
 
-.about-card {
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 0.9rem 1rem;
-  background: var(--code-bg);
-}
+  #menu {
+    width: 100%;
+    gap: 0.85rem;
+    overflow-x: auto;
+    padding-bottom: 0.2rem;
+  }
 
-#search {
-  margin-top: 1.1rem;
+  #menu a {
+    font-size: 1.55rem;
+    white-space: nowrap;
+  }
+
+  .main {
+    padding-top: 1.1rem;
+  }
+
+  .first-entry.home-info {
+    margin-top: 1.8rem;
+    margin-bottom: 2rem;
+    padding: 2.1rem 0;
+  }
+
+  .home-info .entry-header h1 {
+    font-size: clamp(1.55rem, 8.2vw, 2.25rem);
+  }
+
+  .post-entry {
+    padding: 0.95rem 0;
+  }
 }
