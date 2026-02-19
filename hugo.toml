@@ -18,13 +18,10 @@ unsafe = true
 [outputs]
 home = ["HTML", "RSS", "JSON"]
 
-[permalinks]
-posts = "/posts/:slug/"
-
 [params]
 env = "production"
 author = "BlueDog"
-description = "BlueDog 的个人博客，记录技术、项目与思考。"
+description = "BlueDog 的个人博客，记录技术研究、翻译沉淀与长期思考。"
 keywords = ["blog", "tech", "hugo", "BlueDog"]
 defaultTheme = "auto"
 ShowReadingTime = true
@@ -34,11 +31,12 @@ ShowWordCount = true
 ShowPostNavLinks = true
 ShowBreadCrumbs = true
 ShowRssButtonInSectionTermList = true
+ShowToc = true
 DateFormat = "2006-01-02"
 
 [params.homeInfoParams]
-Title = "BlueDog 的数字花园"
-Content = "在这里沉淀技术笔记、项目成果与长期实践。"
+Title = "BlueDog 的知识归档站"
+Content = "已发文章、待发草稿与个人履历统一沉淀在此。"
 
 [[params.socialIcons]]
 name = "github"
@@ -55,19 +53,31 @@ url = "/posts/"
 weight = 10
 
 [[menu.main]]
-identifier = "projects"
-name = "Projects"
-url = "/projects/"
+identifier = "archives"
+name = "Archives"
+url = "/archives/"
 weight = 20
+
+[[menu.main]]
+identifier = "categories"
+name = "Categories"
+url = "/categories/"
+weight = 30
+
+[[menu.main]]
+identifier = "tags"
+name = "Tags"
+url = "/tags/"
+weight = 40
 
 [[menu.main]]
 identifier = "about"
 name = "About"
 url = "/about/"
-weight = 30
+weight = 50
 
 [[menu.main]]
 identifier = "search"
 name = "Search"
 url = "/search/"
-weight = 40
+weight = 60
