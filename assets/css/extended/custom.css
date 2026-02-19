@@ -1,4 +1,10 @@
-@import url("https://fonts.googleapis.com/css2?family=Bree+Serif&family=Rubik+Burned&display=swap");
+@font-face {
+  font-family: "Rubik Burned";
+  src: url("/fonts/RubikBurned-Regular.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
 
 :root {
   --main-width: 820px;
