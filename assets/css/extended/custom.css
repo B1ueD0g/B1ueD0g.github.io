@@ -78,7 +78,13 @@ body {
   color: var(--min-text-color);
   font-size: clamp(2.05rem, 4.7vw, 4.2rem);
   letter-spacing: 0.12px;
-  line-height: 1;
+  line-height: 1.2;
+  display: inline-block;
+  padding-bottom: 0.12em;
+}
+
+.logo {
+  overflow: visible;
 }
 
 .logo-switches {
@@ -134,18 +140,24 @@ a:hover {
 
 .home-info .entry-header {
   width: 100%;
-  display: flex;
-  justify-content: center;
+  display: block;
+  text-align: center;
+  overflow: visible !important;
+  -webkit-line-clamp: unset;
+  -webkit-box-orient: initial;
 }
 
 .home-info .entry-header h1 {
   font-family: "Bree Serif", "Noto Serif SC", "Songti SC", serif;
   font-size: clamp(2.2rem, 5.2vw, 4.25rem);
-  line-height: 1.08;
-  margin: 0 auto;
+  line-height: 1.24;
+  margin: 0;
+  padding: 0.03em 0 0.16em;
   font-weight: 400;
   letter-spacing: 0.012em;
   text-align: center;
+  display: inline-block;
+  overflow: visible;
 }
 
 .home-info .entry-content:empty,
@@ -286,6 +298,35 @@ body.home-page .custom-min-footer {
   box-shadow: none;
 }
 
+.post-entry-with-date {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  column-gap: 1.2rem;
+  align-items: start;
+}
+
+.post-entry-with-date .post-entry-date {
+  font-family: "Manrope", "PingFang SC", "Hiragino Sans GB", sans-serif;
+  font-size: 0.96rem;
+  color: var(--secondary);
+  letter-spacing: 0.015em;
+  line-height: 1.35;
+  padding-top: 0.5rem;
+  white-space: nowrap;
+}
+
+.post-entry-with-date .post-entry-main {
+  min-width: 0;
+}
+
+.post-entry-with-date .entry-header h2 {
+  margin: 0;
+}
+
+.post-entry-with-date .entry-content {
+  margin-top: 0.35rem;
+}
+
 .entry-header h2,
 .post-title,
 .page-header h1 {
@@ -416,6 +457,35 @@ body.home-page .custom-min-footer {
   font-weight: 400;
 }
 
+.copy-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 1.2rem;
+  transform: translate(-50%, 12px);
+  border: 1px solid var(--min-line-color);
+  border-radius: 999px;
+  background: var(--min-text-color);
+  color: var(--min-bg);
+  padding: 0.56rem 0.95rem;
+  font-family: "Manrope", "PingFang SC", "Hiragino Sans GB", sans-serif;
+  font-size: 0.92rem;
+  letter-spacing: 0.01em;
+  box-shadow: 0 10px 24px rgba(12, 13, 18, 0.18);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 120;
+}
+
+.copy-toast.is-visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+body.home-page .copy-toast {
+  bottom: 4.2rem;
+}
+
 @media (max-width: 900px) {
   .nav {
     flex-direction: row;
@@ -470,6 +540,16 @@ body.home-page .custom-min-footer {
     padding: 0.85rem 0;
   }
 
+  .post-entry-with-date {
+    grid-template-columns: 1fr;
+    row-gap: 0.35rem;
+  }
+
+  .post-entry-with-date .post-entry-date {
+    padding-top: 0;
+    font-size: 0.88rem;
+  }
+
   .home-search-wrap {
     margin-top: 1rem;
     align-items: stretch;
@@ -505,6 +585,10 @@ body.home-page .custom-min-footer {
     position: static;
     padding-top: 1rem;
     padding-bottom: 0.8rem;
+  }
+
+  body.home-page .copy-toast {
+    bottom: 1.2rem;
   }
 
   .post-content {

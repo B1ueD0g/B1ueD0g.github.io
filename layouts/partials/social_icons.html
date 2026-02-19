@@ -1,0 +1,25 @@
+<div class="social-icons" {{ with .align }}align="{{ . }}" {{ end }}>
+  {{- range site.Params.socialIcons -}}
+    {{- $rawURL := trim .url " " -}}
+    {{- if hasPrefix $rawURL "mailto:" -}}
+      {{- $email := strings.TrimPrefix "mailto:" $rawURL -}}
+      <a
+        href="#"
+        data-copy-email="{{ $email }}"
+        title="复制邮箱地址"
+        aria-label="Copy email address"
+      >
+        {{ partial "svg.html" . }}
+      </a>
+    {{- else -}}
+      <a
+        href="{{ $rawURL | safeURL }}"
+        target="_blank"
+        rel="noopener noreferrer me"
+        title="{{ (.title | default .name) | title }}"
+      >
+        {{ partial "svg.html" . }}
+      </a>
+    {{- end -}}
+  {{- end -}}
+</div>

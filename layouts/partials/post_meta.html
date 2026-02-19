@@ -1,0 +1,2 @@
+{{- $dateFormat := site.Params.DateFormat | default "2006-01-02" -}}
+<span title='{{ .Date }}'>{{ .Date | time.Format $dateFormat }}</span>

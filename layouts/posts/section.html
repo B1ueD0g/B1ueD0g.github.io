@@ -9,16 +9,18 @@
 {{- $paginator := .Paginate $pages }}
 
 {{- range $paginator.Pages }}
-<article class="post-entry">
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">{{ .Title }}</h2>
-  </header>
-  <div class="entry-content">
-    <p>{{ .Summary | plainify | htmlUnescape }}{{ if .Truncated }}...{{ end }}</p>
+<article class="post-entry post-entry-with-date">
+  <div class="post-entry-date">
+    <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date | time.Format site.Params.DateFormat }}</time>
   </div>
-  <footer class="entry-footer">
-    {{- partial "post_meta.html" . -}}
-  </footer>
+  <div class="post-entry-main">
+    <header class="entry-header">
+      <h2 class="entry-hint-parent">{{ .Title }}</h2>
+    </header>
+    <div class="entry-content">
+      <p>{{ .Summary | plainify | htmlUnescape }}{{ if .Truncated }}...{{ end }}</p>
+    </div>
+  </div>
   <a class="entry-link" aria-label="post link to {{ .Title | plainify }}" href="{{ .Permalink }}"></a>
 </article>
 {{- end }}

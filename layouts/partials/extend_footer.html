@@ -1,3 +1,68 @@
 <footer class="custom-min-footer">
   <p>{{ site.Params.footer.text | default "Progress, Not Perfection" }}</p>
 </footer>
+
+<div id="copy-toast" class="copy-toast" role="status" aria-live="polite" aria-atomic="true"></div>
+
+<script>
+  (function () {
+    var toast = document.getElementById("copy-toast");
+    var timer = null;
+
+    function showToast(message) {
+      if (!toast) return;
+      toast.textContent = message;
+      toast.classList.add("is-visible");
+      if (timer) window.clearTimeout(timer);
+      timer = window.setTimeout(function () {
+        toast.classList.remove("is-visible");
+      }, 1700);
+    }
+
+    function fallbackCopy(text) {
+      var input = document.createElement("textarea");
+      input.value = text;
+      input.setAttribute("readonly", "");
+      input.style.position = "fixed";
+      input.style.opacity = "0";
+      document.body.appendChild(input);
+      input.select();
+      var copied = false;
+      try {
+        copied = document.execCommand("copy");
+      } catch (error) {
+        copied = false;
+      }
+      document.body.removeChild(input);
+      return copied;
+    }
+
+    async function copyEmail(email) {
+      if (!email) return;
+      var copied = false;
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(email);
+          copied = true;
+        } else {
+          copied = fallbackCopy(email);
+        }
+      } catch (error) {
+        copied = fallbackCopy(email);
+      }
+      if (copied) {
+        showToast("邮箱已复制: " + email);
+      } else {
+        showToast("复制失败，请手动复制: " + email);
+      }
+    }
+
+    document.addEventListener("click", function (event) {
+      var link = event.target.closest("[data-copy-email]");
+      if (!link) return;
+      event.preventDefault();
+      var email = link.getAttribute("data-copy-email");
+      copyEmail(email);
+    });
+  })();
+</script>
