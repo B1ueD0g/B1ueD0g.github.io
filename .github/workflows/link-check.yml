@@ -1,9 +1,6 @@
 name: Link Check
 
 on:
-  push:
-    branches: [main]
-  pull_request:
   schedule:
     - cron: "20 2 * * 1"
   workflow_dispatch:
