@@ -133,6 +133,11 @@ name = "email"
 title = "Email"
 url = "mailto:b1ued0g@duck.com"
 
+[[params.socialIcons]]
+name = "rss"
+title = "RSS"
+url = "/index.xml"
+
 [[menu.main]]
 identifier = "home"
 name = "Home"
