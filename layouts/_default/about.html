@@ -15,9 +15,9 @@
   {{- if and $useProfileData $aboutData }}
   <div class="about-profile">
     {{- with $aboutData.profile.roles }}
-    <section class="about-block">
+    <section class="about-block about-block-title">
       <h2>{{ $aboutData.profile.title | default "Title" }}</h2>
-      <ul class="about-list">
+      <ul class="about-title-list">
         {{- range . }}
         <li>{{ . }}</li>
         {{- end }}
@@ -26,9 +26,9 @@
     {{- end }}
 
     {{- with $aboutData.highlights }}
-    <section class="about-block">
+    <section class="about-block about-block-highlights">
       <h2>Highlights</h2>
-      <ul class="about-list">
+      <ul class="about-highlight-list">
         {{- range . }}
         <li>{{ . }}</li>
         {{- end }}
@@ -59,16 +59,17 @@
     {{- end }}
 
     {{- with $aboutData.works }}
-    <section class="about-block">
+    <section class="about-block about-block-works">
       <h2>Works</h2>
       <ul class="about-work-list">
         {{- range . }}
         <li>
           <span class="about-work-type">{{ .type }}</span>
           {{- if .url }}
-          <a href="{{ .url }}" target="_blank" rel="noopener noreferrer">{{ .title }}</a>
+          <a class="about-work-title" href="{{ .url }}" target="_blank" rel="noopener noreferrer">{{ .title }}</a>
+          <span class="about-work-arrow" aria-hidden="true">↗</span>
           {{- else }}
-          <span>{{ .title }}</span>
+          <span class="about-work-title">{{ .title }}</span>
           {{- end }}
         </li>
         {{- end }}

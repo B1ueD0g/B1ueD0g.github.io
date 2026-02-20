@@ -30,6 +30,7 @@ keywords = ["BlueDog", "网络安全", "零信任", "AI安全", "技术博客"]
 images = ["/branding/og-default.png"]
 socialCard = "/branding/og-default.png"
 defaultTheme = "auto"
+disableThemeToggle = false
 ShowShareButtons = false
 ShowCodeCopyButtons = true
 ShowReadingTime = false
