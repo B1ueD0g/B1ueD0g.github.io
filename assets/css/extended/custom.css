@@ -2846,25 +2846,47 @@ html[data-theme="dark"] #menu a.is-current {
   gap: 0;
 }
 
+.about-pro .about-highlight-lead {
+  margin: 0 0 10px;
+  padding: 12px 14px;
+  border: 1px solid var(--about-divider-strong);
+  border-left: 3px solid var(--min-line-color);
+  background: var(--about-surface);
+  color: var(--min-text-color);
+  font-family: var(--font-body);
+  font-size: 1.02rem;
+  line-height: 1.7;
+}
+
 .about-pro .about-work-tabs {
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+  flex-wrap: nowrap;
+  gap: 6px;
   margin-bottom: 12px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-bottom: 2px;
+}
+
+.about-pro .about-work-tabs::-webkit-scrollbar {
+  display: none;
 }
 
 .about-pro .about-work-tab {
   border: 1px solid var(--about-divider-strong);
   border-radius: 999px;
   background: transparent;
-  padding: 5px 12px;
+  padding: 5px 11px;
   font-family: var(--font-ui);
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   font-weight: 650;
   letter-spacing: 0.04em;
   color: var(--secondary);
   cursor: pointer;
   transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+  white-space: nowrap;
+  flex: 0 0 auto;
 }
 
 .about-pro .about-work-tab:hover {
@@ -3034,6 +3056,12 @@ html[data-theme="dark"] .about-pro {
     padding: 9px 0 9px 15px;
   }
 
+  .about-pro .about-highlight-lead {
+    padding: 10px 12px;
+    font-size: 0.95rem;
+    line-height: 1.62;
+  }
+
   .about-pro .about-cert-list {
     grid-template-columns: 1fr;
     gap: 0;
@@ -3045,8 +3073,8 @@ html[data-theme="dark"] .about-pro {
   }
 
   .about-pro .about-work-tab {
-    font-size: 0.74rem;
-    padding: 4px 10px;
+    font-size: 0.72rem;
+    padding: 4px 9px;
   }
 
   .about-pro .about-work-item {

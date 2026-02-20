@@ -28,11 +28,16 @@
     {{- with $aboutData.highlights }}
     <section class="about-block about-block-highlights">
       <h2>Highlights · 亮点</h2>
+      {{- if gt (len .) 0 }}
+      <p class="about-highlight-lead">{{ index . 0 }}</p>
+      {{- end }}
+      {{- if gt (len .) 1 }}
       <ul class="about-highlight-list">
-        {{- range . }}
+        {{- range after 1 . }}
         <li>{{ . }}</li>
         {{- end }}
       </ul>
+      {{- end }}
     </section>
     {{- end }}
 
@@ -72,13 +77,13 @@
       <h2>Works · 成果物</h2>
       <div class="about-work-tabs" role="tablist" aria-label="Works tabs">
         {{- if gt (len $published) 0 }}
-        <button class="about-work-tab{{ if eq $defaultPanel "published" }} is-active{{ end }}" type="button" role="tab" data-target="published" aria-selected="{{ if eq $defaultPanel "published" }}true{{ else }}false{{ end }}" aria-controls="about-work-panel-published">已发布（书籍 / 标准）</button>
+        <button class="about-work-tab{{ if eq $defaultPanel "published" }} is-active{{ end }}" type="button" role="tab" data-target="published" aria-label="已发布（书籍 / 标准）" title="已发布（书籍 / 标准）" aria-selected="{{ if eq $defaultPanel "published" }}true{{ else }}false{{ end }}" aria-controls="about-work-panel-published">已发布</button>
         {{- end }}
         {{- if gt (len $inProgress) 0 }}
-        <button class="about-work-tab{{ if eq $defaultPanel "inprogress" }} is-active{{ end }}" type="button" role="tab" data-target="inprogress" aria-selected="{{ if eq $defaultPanel "inprogress" }}true{{ else }}false{{ end }}" aria-controls="about-work-panel-inprogress">待出版 / 待发布（书籍 / 标准）</button>
+        <button class="about-work-tab{{ if eq $defaultPanel "inprogress" }} is-active{{ end }}" type="button" role="tab" data-target="inprogress" aria-label="待出版 / 待发布（书籍 / 标准）" title="待出版 / 待发布（书籍 / 标准）" aria-selected="{{ if eq $defaultPanel "inprogress" }}true{{ else }}false{{ end }}" aria-controls="about-work-panel-inprogress">待发布</button>
         {{- end }}
         {{- if gt (len $translatedReferences) 0 }}
-        <button class="about-work-tab{{ if eq $defaultPanel "translated" }} is-active{{ end }}" type="button" role="tab" data-target="translated" aria-selected="{{ if eq $defaultPanel "translated" }}true{{ else }}false{{ end }}" aria-controls="about-work-panel-translated">翻译标准/白皮书/报告（节选）</button>
+        <button class="about-work-tab{{ if eq $defaultPanel "translated" }} is-active{{ end }}" type="button" role="tab" data-target="translated" aria-label="翻译标准/白皮书/报告（节选）" title="翻译标准/白皮书/报告（节选）" aria-selected="{{ if eq $defaultPanel "translated" }}true{{ else }}false{{ end }}" aria-controls="about-work-panel-translated">翻译节选</button>
         {{- end }}
       </div>
       <div class="about-work-panels">
