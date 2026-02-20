@@ -3098,6 +3098,30 @@ html[data-theme="dark"] #menu a.is-current {
     padding: 18px 0;
   }
 
+  .post-entry-with-date {
+    grid-template-columns: 1fr;
+    row-gap: 6px;
+    column-gap: 0;
+  }
+
+  .post-entry-with-date::before {
+    display: none;
+  }
+
+  .post-entry-with-date .post-entry-date {
+    padding-top: 0;
+    font-size: 0.84rem;
+    letter-spacing: 0.05em;
+  }
+
+  .post-entry-with-date .post-entry-date time {
+    border: 0;
+    background: transparent;
+    border-radius: 0;
+    min-height: 0;
+    padding: 0;
+  }
+
   .post-entry-with-date .entry-header h2 {
     font-size: 1.24rem;
   }
