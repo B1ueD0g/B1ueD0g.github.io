@@ -60,7 +60,6 @@
   --radius-sm: 10px;
   --radius-md: 14px;
   --radius-pill: 999px;
-  --about-cert-card-height: 152px;
   --surface-soft: rgba(17, 19, 25, 0.03);
   --surface-strong: rgba(17, 19, 25, 0.06);
   --accent-soft: rgba(68, 114, 255, 0.16);
@@ -113,9 +112,15 @@ body {
   border-bottom: 3px solid var(--min-line-color);
 }
 
+html[data-theme="dark"] .header {
+  background: rgba(14, 18, 26, 0.94);
+  border-bottom-color: #2e3543;
+}
+
 .nav {
   min-height: 96px;
   display: flex;
+  flex-wrap: nowrap;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-2);
@@ -186,13 +191,13 @@ body {
 
 html[data-theme="dark"] #theme-toggle {
   border-color: #3b4454;
-  background: linear-gradient(180deg, rgba(241, 244, 255, 0.14) 0%, rgba(241, 244, 255, 0.05) 100%);
-  box-shadow: inset 0 0 0 1px rgba(241, 244, 255, 0.1), 0 10px 22px rgba(0, 0, 0, 0.32);
+  background: transparent;
+  box-shadow: none;
 }
 
 html[data-theme="dark"] #theme-toggle:hover {
-  background: #edf1fa;
-  color: #0f1117;
+  background: rgba(237, 241, 250, 0.12);
+  color: #edf1fa;
 }
 
 #theme-toggle svg {
@@ -374,20 +379,20 @@ a:hover {
 }
 
 html[data-theme="dark"] .first-entry.home-info {
-  background: linear-gradient(180deg, rgba(241, 244, 255, 0.05) 0%, rgba(241, 244, 255, 0.01) 100%);
+  background: transparent;
 }
 
 html[data-theme="dark"] #home-search-input,
 html[data-theme="dark"] #home-search-btn,
 html[data-theme="dark"] .home-search-tags a {
   border-color: #3b4454;
-  background: rgba(241, 244, 255, 0.05);
+  background: transparent;
 }
 
 html[data-theme="dark"] #home-search-btn:hover,
 html[data-theme="dark"] .home-search-tags a:hover {
-  background: #edf1fa;
-  color: #0f1117;
+  background: rgba(237, 241, 250, 0.12);
+  color: #edf1fa;
 }
 
 body.home-page .main {
@@ -1087,20 +1092,20 @@ html[data-theme="dark"] .post-entry:hover {
   margin: 0;
   padding: 0;
   list-style: none;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .about-title-list li {
   border: 1px solid var(--min-line-color);
-  border-radius: 12px;
-  padding: 10px 12px;
-  background: var(--surface-soft);
-  color: var(--min-text-color);
+  border-radius: var(--radius-pill);
+  padding: 5px 12px;
+  background: transparent;
+  color: var(--secondary);
   font-family: var(--font-ui);
-  font-size: 0.94rem;
-  line-height: 1.45;
+  font-size: 0.9rem;
+  line-height: 1.3;
 }
 
 .about-highlight-list {
@@ -1113,30 +1118,30 @@ html[data-theme="dark"] .post-entry:hover {
 
 .about-highlight-list li {
   position: relative;
-  padding: 12px 14px 12px 18px;
-  border-left: 3px solid var(--min-line-color);
-  border-radius: 0 12px 12px 0;
-  background: linear-gradient(90deg, var(--surface-soft) 0%, transparent 94%);
+  padding: 8px 0 8px 18px;
+  border-left: 2px solid var(--min-line-color);
+  border-radius: 0;
+  background: transparent;
   color: var(--secondary);
   font-family: var(--font-body);
   font-size: 1rem;
-  line-height: 1.68;
+  line-height: 1.72;
 }
 
 .about-highlight-list li::before {
   content: "";
   position: absolute;
-  left: -3px;
-  top: 13px;
-  width: 7px;
-  height: 7px;
+  left: -2px;
+  top: 17px;
+  width: 6px;
+  height: 6px;
   border-radius: 999px;
   background: var(--min-line-color);
   transform: translateX(-50%);
 }
 
 html[data-theme="dark"] .about-highlight-list li {
-  background: linear-gradient(90deg, rgba(241, 244, 255, 0.1) 0%, transparent 94%);
+  border-left-color: #3a4250;
 }
 
 .about-list {
@@ -1154,74 +1159,111 @@ html[data-theme="dark"] .about-highlight-list li {
   padding: 0;
   list-style: none;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-  gap: 12px;
-  grid-auto-rows: 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  column-gap: 20px;
+  row-gap: 8px;
 }
 
 .about-cert-list li {
   position: relative;
-  border: 1px solid var(--min-line-color);
-  border-radius: 12px;
-  padding: 12px 13px 12px 32px;
-  background: var(--surface-soft);
+  border: 0;
+  border-bottom: 1px dashed rgba(27, 29, 37, 0.36);
+  border-radius: 0;
+  padding: 2px 0 8px 18px;
+  background: transparent;
   color: var(--min-text-color);
   font-family: var(--font-ui);
-  font-size: 0.9rem;
-  line-height: 1.55;
-  min-height: var(--about-cert-card-height);
-  height: var(--about-cert-card-height);
-  display: flex;
-  align-items: flex-start;
+  font-size: 0.96rem;
+  line-height: 1.52;
 }
 
 .about-cert-list li::before {
-  content: "•";
+  content: "";
   position: absolute;
-  left: 12px;
-  top: 9px;
-  color: var(--secondary);
-  font-size: 1rem;
-  line-height: 1;
+  left: 0;
+  top: 0.92em;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--min-line-color);
+  transform: translateY(-50%);
 }
 
 html[data-theme="dark"] .about-cert-list li {
-  border-color: #3a4250;
-  background: rgba(241, 244, 255, 0.06);
-  box-shadow: inset 0 0 0 1px rgba(241, 244, 255, 0.04);
+  border-bottom-color: #2f3746;
+}
+
+html[data-theme="dark"] .about-cert-list li::before {
+  background: #6e7f9f;
+}
+
+.about-honor-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+.about-honor-list li {
+  position: relative;
+  padding: 8px 0 10px 18px;
+  border-bottom: 1px dashed rgba(27, 29, 37, 0.34);
+  color: var(--secondary);
+  font-family: var(--font-body);
+  line-height: 1.66;
+}
+
+.about-honor-list li::before {
+  content: "✦";
+  position: absolute;
+  left: 0;
+  top: 8px;
+  color: var(--min-text-color);
+  font-size: 0.7rem;
+  line-height: 1;
+  opacity: 0.76;
+}
+
+html[data-theme="dark"] .about-honor-list li {
+  border-bottom-color: #2f3746;
+}
+
+html[data-theme="dark"] .about-honor-list li::before {
+  color: #dbe5f6;
+  opacity: 0.68;
 }
 
 .about-work-list {
   margin: 0;
-  padding-left: 0;
+  padding: 0;
   list-style: none;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
-  gap: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
 }
 
 .about-work-list li {
   position: relative;
-  border: 1px solid var(--min-line-color);
-  border-radius: 14px;
-  padding: 12px 14px 14px;
-  background: linear-gradient(180deg, var(--surface-soft) 0%, transparent 100%);
-  transition: transform 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease;
+  border: 0;
+  border-bottom: 1px solid var(--min-line-color);
+  border-radius: 0;
+  padding: 12px 22px 12px 0;
+  background: transparent;
+  transition: padding-left 0.18s ease, background-color 0.18s ease;
 }
 
 .about-work-list li:hover {
-  transform: translate3d(0, -2px, 0);
-  background: var(--surface-strong);
-  box-shadow: 0 12px 24px rgba(13, 15, 24, 0.08);
+  padding-left: 6px;
+  background: var(--surface-soft);
 }
 
 html[data-theme="dark"] .about-work-list li {
-  border-color: #3a4250;
-  background: linear-gradient(180deg, rgba(241, 244, 255, 0.05) 0%, transparent 100%);
+  border-bottom-color: #2f3746;
 }
 
 html[data-theme="dark"] .about-work-list li:hover {
-  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.26);
+  background: rgba(241, 244, 255, 0.045);
 }
 
 .about-work-type {
@@ -1239,13 +1281,13 @@ html[data-theme="dark"] .about-work-list li:hover {
 }
 
 .about-work-title {
-  display: block;
-  margin-top: 8px;
-  padding-right: 16px;
+  display: inline;
+  margin-top: 0;
+  padding-right: 0;
   color: var(--min-text-color);
-  font-family: var(--font-heading);
-  font-size: 1rem;
-  line-height: 1.58;
+  font-family: var(--font-body);
+  font-size: 1.02rem;
+  line-height: 1.62;
 }
 
 .about-work-list a.about-work-title {
@@ -1258,18 +1300,20 @@ html[data-theme="dark"] .about-work-list li:hover {
 
 .about-work-arrow {
   position: absolute;
-  top: 11px;
-  right: 12px;
+  top: 16px;
+  right: 2px;
   color: var(--secondary);
   font-family: var(--font-ui);
   font-size: 0.92rem;
   line-height: 1;
-  transition: transform 0.16s ease, color 0.16s ease;
+  transition: transform 0.16s ease, color 0.16s ease, opacity 0.16s ease;
+  opacity: 0.72;
 }
 
 .about-work-list li:hover .about-work-arrow {
   color: var(--min-text-color);
-  transform: translate3d(1px, -1px, 0);
+  opacity: 1;
+  transform: translate3d(2px, 0, 0);
 }
 
 .not-found-wrap {
@@ -1530,9 +1574,9 @@ body.home-page .copy-toast {
 
 @media (max-width: 900px) {
   .nav {
-    flex-direction: row;
+    flex-direction: column;
     flex-wrap: wrap;
-    align-items: flex-start;
+    align-items: stretch;
     gap: 8px;
     min-height: auto;
     padding: 8px 0 12px;
@@ -1540,10 +1584,18 @@ body.home-page .copy-toast {
 
   .logo {
     width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap;
   }
 
   .logo a {
-    font-size: clamp(1.7rem, 11vw, 2.75rem);
+    font-size: clamp(1.34rem, 8.7vw, 1.92rem);
+    line-height: 1.16;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: calc(100% - 52px);
   }
 
   .logo-switches {
@@ -1554,8 +1606,10 @@ body.home-page .copy-toast {
 
   #menu {
     width: 100%;
-    gap: 8px;
+    gap: 12px;
+    justify-content: center;
     overflow-x: auto;
+    padding-top: 2px;
     padding-bottom: 4px;
     -ms-overflow-style: none;
     scrollbar-width: none;
@@ -1566,10 +1620,10 @@ body.home-page .copy-toast {
   }
 
   #menu a {
-    font-size: 1.02rem;
+    font-size: 1rem;
     white-space: nowrap;
-    padding: 6px 10px;
-    min-height: 44px;
+    padding: 4px 8px;
+    min-height: 38px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -1577,8 +1631,8 @@ body.home-page .copy-toast {
   }
 
   #theme-toggle {
-    width: 36px;
-    height: 36px;
+    width: 34px;
+    height: 34px;
     box-shadow: none;
   }
 
@@ -1791,27 +1845,25 @@ body.home-page .copy-toast {
   }
 
   .about-title-list {
-    grid-template-columns: 1fr;
     gap: 8px;
   }
 
   .about-title-list li {
     font-size: 0.88rem;
-    padding: 9px 10px;
+    padding: 4px 10px;
   }
 
   .about-highlight-list li {
     font-size: 0.92rem;
-    padding: 10px 12px 10px 16px;
+    padding: 7px 0 7px 14px;
   }
 
   .about-work-list {
-    grid-template-columns: 1fr;
-    gap: 10px;
+    gap: 0;
   }
 
   .about-work-list li {
-    padding: 11px 12px 12px;
+    padding: 10px 18px 10px 0;
   }
 
   .about-work-title {
@@ -1819,20 +1871,23 @@ body.home-page .copy-toast {
   }
 
   .about-work-arrow {
-    top: 10px;
-    right: 10px;
+    top: 14px;
+    right: 1px;
   }
 
   .about-cert-list {
     grid-template-columns: 1fr;
-    gap: 8px;
+    row-gap: 6px;
   }
 
   .about-cert-list li {
     font-size: 0.86rem;
-    padding: 9px 10px 9px 28px;
-    min-height: 0;
-    height: auto;
+    padding: 2px 0 7px 14px;
+  }
+
+  .about-honor-list li {
+    font-size: 0.92rem;
+    padding: 7px 0 8px 14px;
   }
 
   .not-found-wrap {
