@@ -1,7 +1,7 @@
 {{- define "main" }}
 {{- $aboutData := site.Data.about -}}
 {{- $useProfileData := .Param "useProfileData" | default false -}}
-<article class="post-single about-single">
+<article class="post-single about-single about-pro">
   <header class="post-header">
     <h1 class="post-title entry-hint-parent">{{ .Title }}</h1>
     {{- with .Description }}
@@ -27,7 +27,7 @@
 
     {{- with $aboutData.highlights }}
     <section class="about-block about-block-highlights">
-      <h2>Highlights</h2>
+      <h2>Highlights · 亮点</h2>
       <ul class="about-highlight-list">
         {{- range . }}
         <li>{{ . }}</li>
@@ -38,7 +38,7 @@
 
     {{- with $aboutData.certifications }}
     <section class="about-block about-block-certifications">
-      <h2>Certifications</h2>
+      <h2>Certifications · 证书</h2>
       <ul class="about-cert-list">
         {{- range . }}
         <li>{{ . }}</li>
@@ -49,7 +49,7 @@
 
     {{- with $aboutData.honors }}
     <section class="about-block about-block-honors">
-      <h2>Honors</h2>
+      <h2>Honors · 荣誉</h2>
       <ul class="about-honor-list">
         {{- range . }}
         <li>{{ . }}</li>
@@ -59,65 +59,74 @@
     {{- end }}
 
     {{- with $aboutData.works }}
+    {{- $published := where . "type" "in" (slice "编写-书籍" "翻译-书籍" "编制-标准") -}}
+    {{- $inProgress := where . "type" "in" (slice "编写-书籍（待出版）" "翻译-书籍（待出版）" "编制-标准（待发布）") -}}
+    {{- $translatedReferences := where . "type" "in" (slice "翻译-标准" "翻译-白皮书" "翻译-报告") -}}
     <section class="about-block about-block-works">
-      <h2>Works</h2>
+      <h2>Works · 成果物</h2>
       <div class="about-work-groups">
+        {{- if gt (len $published) 0 }}
         <section class="about-work-group">
           <h3>已发布（书籍 / 标准）</h3>
           <ul class="about-work-list">
-            {{- range . }}
-            {{- if or (eq .type "编写-书籍") (eq .type "编制-标准") }}
-            <li>
+            {{- range $published }}
+            <li class="about-work-item">
               <span class="about-work-type">{{ .type }}</span>
-              {{- if .url }}
-              <a class="about-work-title" href="{{ .url }}" target="_blank" rel="noopener noreferrer">{{ .title }}</a>
-              <span class="about-work-arrow" aria-hidden="true">↗</span>
-              {{- else }}
-              <span class="about-work-title">{{ .title }}</span>
-              {{- end }}
+              <div class="about-work-main">
+                {{- if .url }}
+                <a class="about-work-title" href="{{ .url }}" target="_blank" rel="noopener noreferrer">{{ .title }}</a>
+                <span class="about-work-arrow" aria-hidden="true">↗</span>
+                {{- else }}
+                <span class="about-work-title">{{ .title }}</span>
+                {{- end }}
+              </div>
             </li>
-            {{- end }}
             {{- end }}
           </ul>
         </section>
+        {{- end }}
 
+        {{- if gt (len $inProgress) 0 }}
         <section class="about-work-group">
           <h3>待出版 / 待发布（书籍 / 标准）</h3>
           <ul class="about-work-list">
-            {{- range . }}
-            {{- if or (eq .type "编写-书籍（待出版）") (eq .type "编制-标准（待发布）") }}
-            <li>
+            {{- range $inProgress }}
+            <li class="about-work-item">
               <span class="about-work-type">{{ .type }}</span>
-              {{- if .url }}
-              <a class="about-work-title" href="{{ .url }}" target="_blank" rel="noopener noreferrer">{{ .title }}</a>
-              <span class="about-work-arrow" aria-hidden="true">↗</span>
-              {{- else }}
-              <span class="about-work-title">{{ .title }}</span>
-              {{- end }}
+              <div class="about-work-main">
+                {{- if .url }}
+                <a class="about-work-title" href="{{ .url }}" target="_blank" rel="noopener noreferrer">{{ .title }}</a>
+                <span class="about-work-arrow" aria-hidden="true">↗</span>
+                {{- else }}
+                <span class="about-work-title">{{ .title }}</span>
+                {{- end }}
+              </div>
             </li>
-            {{- end }}
             {{- end }}
           </ul>
         </section>
+        {{- end }}
 
-        <section class="about-work-group">
-          <h3>翻译标准（节选）</h3>
+        {{- if gt (len $translatedReferences) 0 }}
+        <details class="about-work-details">
+          <summary>翻译标准/白皮书/报告（节选）</summary>
           <ul class="about-work-list">
-            {{- range . }}
-            {{- if eq .type "翻译-标准" }}
-            <li>
+            {{- range $translatedReferences }}
+            <li class="about-work-item">
               <span class="about-work-type">{{ .type }}</span>
-              {{- if .url }}
-              <a class="about-work-title" href="{{ .url }}" target="_blank" rel="noopener noreferrer">{{ .title }}</a>
-              <span class="about-work-arrow" aria-hidden="true">↗</span>
-              {{- else }}
-              <span class="about-work-title">{{ .title }}</span>
-              {{- end }}
+              <div class="about-work-main">
+                {{- if .url }}
+                <a class="about-work-title" href="{{ .url }}" target="_blank" rel="noopener noreferrer">{{ .title }}</a>
+                <span class="about-work-arrow" aria-hidden="true">↗</span>
+                {{- else }}
+                <span class="about-work-title">{{ .title }}</span>
+                {{- end }}
+              </div>
             </li>
             {{- end }}
-            {{- end }}
           </ul>
-        </section>
+        </details>
+        {{- end }}
       </div>
       {{- with $aboutData.translation_note }}
       <p class="about-translation-note">{{ . }}</p>
@@ -127,7 +136,7 @@
 
     {{- with $aboutData.roadmap }}
     <section class="about-block">
-      <h2>Next</h2>
+      <h2>Next · 进行中</h2>
       <ul class="about-list">
         {{- range . }}
         <li>{{ . }}</li>
