@@ -111,6 +111,24 @@
       });
     }
 
+    function setupThemeToggleA11y() {
+      var toggle = document.getElementById("theme-toggle");
+      if (!toggle) return;
+
+      function syncThemeState() {
+        var currentTheme = document.documentElement.getAttribute("data-theme");
+        var dark = currentTheme === "dark";
+        toggle.setAttribute("aria-pressed", dark ? "true" : "false");
+        toggle.setAttribute("aria-label", dark ? "Switch to light theme" : "Switch to dark theme");
+        toggle.setAttribute("title", dark ? "Switch to light theme (Alt + T)" : "Switch to dark theme (Alt + T)");
+      }
+
+      syncThemeState();
+      toggle.addEventListener("click", function () {
+        window.setTimeout(syncThemeState, 0);
+      });
+    }
+
     function setupReadingProgress() {
       var articleContent = document.querySelector(".post-single .post-content");
       if (!articleContent) return;
@@ -388,6 +406,7 @@
 
     setupNavShrink();
     setupSearchShortcut();
+    setupThemeToggleA11y();
     setupReadingProgress();
     setupHeadingHighlight();
     setupLightbox();

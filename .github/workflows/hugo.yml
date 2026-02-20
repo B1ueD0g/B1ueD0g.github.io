@@ -58,8 +58,26 @@ jobs:
       - name: Build with Hugo
         run: hugo --gc --minify
 
+      - name: Check links in generated site
+        uses: lycheeverse/lychee-action@v2
+        with:
+          fail: true
+          args: >
+            --config .lychee.toml
+            --no-progress
+            "public/**/*.html"
+            "public/**/*.xml"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Build Pagefind index
         run: npx -y pagefind --site public
+
+      - name: Install Lighthouse CI
+        run: npm install -g @lhci/cli@0.14.x
+
+      - name: Run Lighthouse CI quality gate
+        run: lhci autorun --config=.lighthouserc.json
 
       - name: Submit sitemap URLs to IndexNow
         continue-on-error: true

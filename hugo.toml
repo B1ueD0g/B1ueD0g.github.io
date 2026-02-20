@@ -27,7 +27,7 @@ env = "production"
 author = "BlueDog"
 description = "BlueDog 的个人博客，记录技术研究、翻译沉淀与长期思考。"
 keywords = ["BlueDog", "网络安全", "零信任", "AI安全", "技术博客"]
-images = ["/branding/og-default.png"]
+images = ["/branding/og-default.png", "/branding/og-light.svg", "/branding/og-dark.svg"]
 socialCard = "/branding/og-default.png"
 defaultTheme = "auto"
 disableThemeToggle = false
@@ -94,6 +94,16 @@ favicon = "/branding/favicon.ico"
 favicon16x16 = "/branding/favicon-16x16.png"
 favicon32x32 = "/branding/favicon-32x32.png"
 apple_touch_icon = "/branding/apple-touch-icon.png"
+
+[params.label]
+text = "BlueDog 's Blog"
+mobileText = "BlueDog"
+
+[params.branding]
+themeColorLight = "#f4f4f2"
+themeColorDark = "#11151c"
+faviconSvgLight = "/branding/favicon-light.svg"
+faviconSvgDark = "/branding/favicon-dark.svg"
 
 [params.homeInfoParams]
 Title = "He is Exploring Everything."

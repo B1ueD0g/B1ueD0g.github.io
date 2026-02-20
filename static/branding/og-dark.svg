@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="t d">
+  <title id="t">BlueDog's Blog Open Graph Dark</title>
+  <desc id="d">Dark brand card for BlueDog's Blog social sharing.</desc>
+  <rect width="1200" height="630" fill="#11151c"/>
+  <rect x="72" y="70" width="1056" height="490" rx="20" fill="none" stroke="#d8dfef" stroke-width="3"/>
+  <text x="112" y="240" font-family="Rubik Burned, Bree Serif, serif" font-size="88" fill="#edf1fa">BlueDog's Blog</text>
+  <line x1="112" y1="286" x2="1088" y2="286" stroke="#d8dfef" stroke-width="3"/>
+  <text x="112" y="374" font-family="Bree Serif, serif" font-size="60" fill="#edf1fa">He is Exploring Everything.</text>
+  <text x="112" y="460" font-family="Manrope, sans-serif" font-size="34" fill="#aeb8ce">Progress, Not Perfection</text>
+  <text x="112" y="520" font-family="Manrope, sans-serif" font-size="28" fill="#8f9cb6">bluedog.website</text>
+</svg>

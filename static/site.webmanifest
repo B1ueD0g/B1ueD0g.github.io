@@ -1,0 +1,26 @@
+{
+  "name": "BlueDog's Blog",
+  "short_name": "BlueDog",
+  "description": "BlueDog 的个人博客，记录技术研究、翻译沉淀与长期思考。",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f4f4f2",
+  "theme_color": "#11151c",
+  "icons": [
+    {
+      "src": "/branding/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/branding/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/branding/favicon-16x16.png",
+      "sizes": "16x16",
+      "type": "image/png"
+    }
+  ]
+}
