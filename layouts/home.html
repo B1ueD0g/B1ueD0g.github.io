@@ -23,9 +23,11 @@
 
       <div class="home-search-tags">
         <span>Try Tags:</span>
+        <div class="home-search-tag-list">
         {{- range $quickTags }}
         <a href="/search/?q={{ . | urlquery }}" data-home-search-tag="{{ . }}">#{{ . }}</a>
         {{- end }}
+        </div>
       </div>
     </div>
   </article>

@@ -2876,3 +2876,275 @@ html[data-theme="dark"] .about-cert-list li:hover {
     padding: 8px 10px 8px 20px;
   }
 }
+
+/* ===============================
+   2026-02 Holistic Polish Pass
+   items: 1,2,3,5,6,7,8
+================================ */
+
+:root {
+  --bd-stroke: 1.5px;
+  --bd-radius: 12px;
+  --bd-radius-lg: 16px;
+  --bd-shadow-soft: 0 10px 22px rgba(16, 19, 25, 0.08);
+}
+
+/* 1) Unified visual rhythm + logo/header refinement */
+.nav {
+  max-width: min(1220px, calc(100% - 40px));
+}
+
+.logo {
+  gap: 12px;
+}
+
+.logo a {
+  line-height: 1.2;
+  letter-spacing: 0.008em;
+}
+
+.logo-switches {
+  margin-left: 10px;
+  padding-left: 12px;
+}
+
+#theme-toggle {
+  border-radius: var(--bd-radius);
+}
+
+#menu {
+  gap: clamp(8px, 1.35vw, 18px);
+}
+
+#menu a {
+  border: var(--bd-stroke) solid transparent;
+  border-radius: 999px;
+  padding: 6px 12px;
+}
+
+#menu a span {
+  white-space: nowrap;
+}
+
+#menu a.is-current {
+  border-color: color-mix(in srgb, var(--min-line-color) 56%, transparent);
+  background: color-mix(in srgb, var(--surface-quiet) 78%, transparent);
+}
+
+/* 2) Home: stronger cover composition */
+body.home-page .first-entry.home-info {
+  width: min(980px, 100%);
+  padding-top: clamp(42px, 7vh, 70px);
+  padding-bottom: clamp(44px, 7.2vh, 76px);
+}
+
+.home-search-wrap {
+  width: min(980px, 100%);
+}
+
+.home-info .entry-header h1 {
+  max-width: 17ch;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.home-search-tags {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 10px 14px;
+  width: 100%;
+}
+
+.home-search-tags span {
+  margin: 0;
+  white-space: nowrap;
+}
+
+.home-search-tag-list {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 8px;
+  min-width: 0;
+  overflow-x: auto;
+  padding: 2px 0 4px;
+  scrollbar-width: none;
+}
+
+.home-search-tag-list::-webkit-scrollbar {
+  display: none;
+}
+
+.home-search-tag-list a {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+/* 3) Article list: scan-friendly magazine rhythm */
+.post-entry {
+  padding: 30px 0;
+}
+
+.post-entry-with-date {
+  grid-template-columns: 130px minmax(0, 1fr);
+  column-gap: 26px;
+}
+
+.post-entry-with-date::before {
+  left: 116px;
+}
+
+.post-entry-with-date .post-entry-date {
+  padding-top: 7px;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+}
+
+.post-entry-with-date .entry-header h2 {
+  font-size: clamp(1.34rem, 1.26rem + 0.44vw, 1.64rem);
+}
+
+.post-entry-with-date .entry-content p {
+  font-size: 1.02rem;
+  line-height: 1.84;
+}
+
+.article-year-divider {
+  margin-top: 34px;
+}
+
+/* 5) Dark mode: same design language, no glowy mismatch */
+html[data-theme="dark"] {
+  --min-bg: #0d1118;
+  --min-line-color: #2a3446;
+  --min-header-bg: rgba(10, 14, 22, 0.9);
+  --surface-soft: rgba(235, 240, 252, 0.05);
+  --surface-quiet: rgba(235, 240, 252, 0.062);
+  --surface-hover: rgba(235, 240, 252, 0.12);
+  --focus-ring-color: #9ab4ff;
+}
+
+html[data-theme="dark"] .first-entry.home-info {
+  background: rgba(235, 240, 252, 0.014);
+}
+
+html[data-theme="dark"] #menu a.is-current {
+  border-color: rgba(154, 180, 255, 0.36);
+  background: rgba(235, 240, 252, 0.086);
+}
+
+/* 6) Unified interaction feedback */
+:where(a, button, input, .post-entry, .about-cert-list li, .about-honor-list li, .about-work-list li) {
+  transition-duration: 180ms;
+  transition-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+:where(#theme-toggle, #menu a, #home-search-btn, .home-search-tag-list a, .about-social .social-icons a, .pagination a):active {
+  transform: scale(0.985);
+}
+
+/* 7) Mobile-specific polish */
+@media (max-width: 900px) {
+  .nav {
+    max-width: min(100%, calc(100% - 22px));
+  }
+
+  .logo {
+    gap: 8px;
+  }
+
+  .logo a {
+    max-width: calc(100% - 52px);
+    line-height: 1.14;
+  }
+
+  #menu a {
+    min-height: 42px;
+    border-radius: 12px;
+    padding: 5px 8px;
+  }
+
+  body.home-page .first-entry.home-info {
+    width: min(100%, calc(100% - 6px));
+    padding-top: 24px;
+    padding-bottom: 28px;
+  }
+
+  .home-search-wrap {
+    width: 100%;
+  }
+
+  .home-search-tags {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .home-search-tag-list {
+    flex-wrap: wrap;
+    overflow-x: visible;
+    gap: 8px 8px;
+    padding-bottom: 0;
+  }
+
+  .home-search-tag-list a {
+    padding: 6px 13px;
+    font-size: 0.95rem;
+  }
+
+  .post-entry {
+    padding: 18px 0;
+  }
+
+  .post-entry-with-date .entry-header h2 {
+    font-size: 1.24rem;
+  }
+
+  .post-entry-with-date .entry-content p {
+    font-size: 0.95rem;
+    line-height: 1.72;
+  }
+}
+
+/* 8) Brand consistency for metadata/summary blocks */
+.post-description,
+.entry-footer,
+.post-meta {
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+}
+
+.about-single .post-header {
+  padding-bottom: 26px;
+}
+
+.about-cert-list {
+  gap: 14px;
+}
+
+.about-cert-list li {
+  min-height: 86px;
+  border: var(--bd-stroke) solid color-mix(in srgb, var(--min-line-color) 34%, transparent);
+  border-radius: var(--bd-radius-lg);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--surface-soft) 88%, transparent) 0%, transparent 100%);
+  padding: 10px 14px 10px 22px;
+  display: flex;
+  align-items: center;
+}
+
+.about-cert-list li:hover {
+  transform: translate3d(0, -2px, 0);
+  box-shadow: var(--bd-shadow-soft);
+}
+
+.about-honor-list {
+  gap: 12px;
+}
+
+.about-honor-list li {
+  border: var(--bd-stroke) dashed color-mix(in srgb, var(--min-line-color) 32%, transparent);
+  border-radius: var(--bd-radius);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--surface-soft) 76%, transparent) 0%, transparent 88%);
+}
