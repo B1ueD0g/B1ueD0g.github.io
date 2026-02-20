@@ -61,19 +61,67 @@
     {{- with $aboutData.works }}
     <section class="about-block about-block-works">
       <h2>Works</h2>
-      <ul class="about-work-list">
-        {{- range . }}
-        <li>
-          <span class="about-work-type">{{ .type }}</span>
-          {{- if .url }}
-          <a class="about-work-title" href="{{ .url }}" target="_blank" rel="noopener noreferrer">{{ .title }}</a>
-          <span class="about-work-arrow" aria-hidden="true">↗</span>
-          {{- else }}
-          <span class="about-work-title">{{ .title }}</span>
-          {{- end }}
-        </li>
-        {{- end }}
-      </ul>
+      <div class="about-work-groups">
+        <section class="about-work-group">
+          <h3>已发布（书籍 / 标准）</h3>
+          <ul class="about-work-list">
+            {{- range . }}
+            {{- if or (eq .type "编写-书籍") (eq .type "编制-标准") }}
+            <li>
+              <span class="about-work-type">{{ .type }}</span>
+              {{- if .url }}
+              <a class="about-work-title" href="{{ .url }}" target="_blank" rel="noopener noreferrer">{{ .title }}</a>
+              <span class="about-work-arrow" aria-hidden="true">↗</span>
+              {{- else }}
+              <span class="about-work-title">{{ .title }}</span>
+              {{- end }}
+            </li>
+            {{- end }}
+            {{- end }}
+          </ul>
+        </section>
+
+        <section class="about-work-group">
+          <h3>待出版 / 待发布（书籍 / 标准）</h3>
+          <ul class="about-work-list">
+            {{- range . }}
+            {{- if or (eq .type "编写-书籍（待出版）") (eq .type "编制-标准（待发布）") }}
+            <li>
+              <span class="about-work-type">{{ .type }}</span>
+              {{- if .url }}
+              <a class="about-work-title" href="{{ .url }}" target="_blank" rel="noopener noreferrer">{{ .title }}</a>
+              <span class="about-work-arrow" aria-hidden="true">↗</span>
+              {{- else }}
+              <span class="about-work-title">{{ .title }}</span>
+              {{- end }}
+            </li>
+            {{- end }}
+            {{- end }}
+          </ul>
+        </section>
+
+        <section class="about-work-group">
+          <h3>翻译标准（节选）</h3>
+          <ul class="about-work-list">
+            {{- range . }}
+            {{- if eq .type "翻译-标准" }}
+            <li>
+              <span class="about-work-type">{{ .type }}</span>
+              {{- if .url }}
+              <a class="about-work-title" href="{{ .url }}" target="_blank" rel="noopener noreferrer">{{ .title }}</a>
+              <span class="about-work-arrow" aria-hidden="true">↗</span>
+              {{- else }}
+              <span class="about-work-title">{{ .title }}</span>
+              {{- end }}
+            </li>
+            {{- end }}
+            {{- end }}
+          </ul>
+        </section>
+      </div>
+      {{- with $aboutData.translation_note }}
+      <p class="about-translation-note">{{ . }}</p>
+      {{- end }}
     </section>
     {{- end }}
 
