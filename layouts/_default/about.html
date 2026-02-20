@@ -75,9 +75,10 @@
               <div class="about-work-main">
                 {{- if .url }}
                 <a class="about-work-title" href="{{ .url }}" target="_blank" rel="noopener noreferrer">{{ .title }}</a>
-                <span class="about-work-arrow" aria-hidden="true">↗</span>
+                <a class="about-work-open" href="{{ .url }}" target="_blank" rel="noopener noreferrer">查看<span class="about-work-arrow" aria-hidden="true">↗</span></a>
                 {{- else }}
                 <span class="about-work-title">{{ .title }}</span>
+                <span class="about-work-open about-work-open-muted">待发布</span>
                 {{- end }}
               </div>
             </li>
@@ -96,9 +97,10 @@
               <div class="about-work-main">
                 {{- if .url }}
                 <a class="about-work-title" href="{{ .url }}" target="_blank" rel="noopener noreferrer">{{ .title }}</a>
-                <span class="about-work-arrow" aria-hidden="true">↗</span>
+                <a class="about-work-open" href="{{ .url }}" target="_blank" rel="noopener noreferrer">查看<span class="about-work-arrow" aria-hidden="true">↗</span></a>
                 {{- else }}
                 <span class="about-work-title">{{ .title }}</span>
+                <span class="about-work-open about-work-open-muted">待发布</span>
                 {{- end }}
               </div>
             </li>
@@ -117,9 +119,10 @@
               <div class="about-work-main">
                 {{- if .url }}
                 <a class="about-work-title" href="{{ .url }}" target="_blank" rel="noopener noreferrer">{{ .title }}</a>
-                <span class="about-work-arrow" aria-hidden="true">↗</span>
+                <a class="about-work-open" href="{{ .url }}" target="_blank" rel="noopener noreferrer">查看<span class="about-work-arrow" aria-hidden="true">↗</span></a>
                 {{- else }}
                 <span class="about-work-title">{{ .title }}</span>
+                <span class="about-work-open about-work-open-muted">待发布</span>
                 {{- end }}
               </div>
             </li>
