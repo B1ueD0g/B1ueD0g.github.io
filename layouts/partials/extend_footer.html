@@ -341,6 +341,41 @@
       });
     }
 
+    function setupPageTransition() {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      var leaving = false;
+
+      document.addEventListener("click", function (event) {
+        var anchor = event.target.closest("a[href]");
+        if (!anchor || leaving) return;
+        if (anchor.hasAttribute("data-no-transition")) return;
+        if (anchor.target && anchor.target !== "_self") return;
+        if (anchor.hasAttribute("download")) return;
+        if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+
+        var href = anchor.getAttribute("href") || "";
+        if (!href || href.startsWith("#") || href.startsWith("mailto:") || href.startsWith("tel:")) return;
+
+        var nextURL;
+        try {
+          nextURL = new URL(anchor.href, window.location.origin);
+        } catch (error) {
+          return;
+        }
+
+        if (nextURL.origin !== window.location.origin) return;
+        if (nextURL.href === window.location.href) return;
+        if (nextURL.pathname === window.location.pathname && nextURL.search === window.location.search && nextURL.hash) return;
+
+        leaving = true;
+        event.preventDefault();
+        document.body.classList.add("is-page-leaving");
+        window.setTimeout(function () {
+          window.location.href = nextURL.href;
+        }, 140);
+      });
+    }
+
     async function copyEmail(email) {
       if (!email) return;
       var copied = false;
@@ -410,5 +445,6 @@
     setupReadingProgress();
     setupHeadingHighlight();
     setupLightbox();
+    setupPageTransition();
   })();
 </script>

@@ -3,6 +3,9 @@
 {{- $synonyms := site.Params.searchSynonyms | default dict -}}
 <section class="home-stage">
   <article class="first-entry home-info">
+    <div class="home-hero-anchor" aria-hidden="true">
+      <span></span>
+    </div>
     <header class="entry-header">
       <h1>{{ site.Params.homeInfoParams.Title | default "He is Exploring Everything." }}</h1>
     </header>

@@ -2508,3 +2508,371 @@ html[data-theme="dark"] body.home-page .custom-min-footer {
     min-height: 0;
   }
 }
+
+/* ===============================
+   2026-02 Visual Polish Batch B
+   items: 1,2,3,5,6,7,8,9,10
+================================ */
+
+:root {
+  --motion-fast: 160ms;
+  --motion-normal: 220ms;
+  --motion-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* 1) Logo micro polish */
+.logo a {
+  position: relative;
+  line-height: 1.2;
+  padding-bottom: 0.24em;
+  text-rendering: geometricPrecision;
+}
+
+.logo a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0.05em;
+  height: 1px;
+  background: color-mix(in srgb, var(--min-line-color) 72%, transparent);
+  opacity: 0.42;
+  transform: scaleX(0.46);
+  transform-origin: left center;
+  transition: transform var(--motion-normal) var(--motion-ease), opacity var(--motion-fast) ease;
+}
+
+.logo a:hover::after,
+.logo a:focus-visible::after {
+  transform: scaleX(1);
+  opacity: 0.7;
+}
+
+/* 3) Nav active style upgrade */
+#menu a {
+  position: relative;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  transition: background-color var(--motion-fast) var(--motion-ease),
+    border-color var(--motion-fast) var(--motion-ease),
+    color var(--motion-fast) var(--motion-ease),
+    transform var(--motion-fast) var(--motion-ease);
+}
+
+#menu a:hover {
+  background: var(--surface-quiet);
+}
+
+#menu a.is-current {
+  background: color-mix(in srgb, var(--surface-quiet) 72%, transparent);
+  border-color: color-mix(in srgb, var(--min-line-color) 52%, transparent);
+}
+
+#menu a.is-current .active {
+  text-decoration: none;
+  font-weight: 700;
+  position: relative;
+}
+
+#menu a.is-current .active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.28em;
+  height: 2px;
+  border-radius: 999px;
+  background: currentColor;
+  opacity: 0.9;
+}
+
+/* 2) Home hero visual anchor */
+.home-hero-anchor {
+  width: 100%;
+  margin: 0 0 18px;
+  display: flex;
+  justify-content: center;
+}
+
+.home-hero-anchor span {
+  position: relative;
+  display: block;
+  width: min(640px, 82%);
+  height: 2px;
+  background: color-mix(in srgb, var(--min-line-color) 86%, transparent);
+  border-radius: 999px;
+}
+
+.home-hero-anchor span::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  border: 2px solid var(--min-bg);
+  background: var(--min-line-color);
+  transform: translate(-50%, -50%);
+}
+
+body.home-page .first-entry.home-info {
+  position: relative;
+  box-shadow: none;
+}
+
+.home-info .entry-header h1 {
+  letter-spacing: 0.005em;
+  line-height: 1.2;
+  padding-bottom: 0.16em;
+}
+
+/* 5) Section wayfinding feel (without anchor nav) */
+.about-profile {
+  counter-reset: about-block;
+}
+
+.about-block h2 {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.56rem;
+}
+
+.about-block h2::before {
+  counter-increment: about-block;
+  content: counter(about-block, decimal-leading-zero);
+  font-family: var(--font-ui);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  opacity: 0.72;
+}
+
+/* 6) Certification rhythm + hover polish */
+.about-cert-list {
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 12px;
+}
+
+.about-cert-list li {
+  min-height: 84px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  border: 1px solid color-mix(in srgb, var(--min-line-color) 34%, transparent);
+  border-radius: 14px;
+  padding: 10px 14px 10px 22px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--surface-soft) 86%, transparent) 0%, transparent 100%);
+  transition: transform var(--motion-fast) var(--motion-ease),
+    background-color var(--motion-fast) var(--motion-ease),
+    border-color var(--motion-fast) var(--motion-ease),
+    box-shadow var(--motion-fast) var(--motion-ease);
+}
+
+.about-cert-list li::before {
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.about-cert-list li:hover {
+  transform: translate3d(0, -2px, 0);
+  border-color: color-mix(in srgb, var(--min-line-color) 62%, transparent);
+  background: color-mix(in srgb, var(--surface-quiet) 86%, transparent);
+  box-shadow: 0 8px 18px rgba(16, 19, 25, 0.07);
+}
+
+.about-honor-list li {
+  border: 1px dashed color-mix(in srgb, var(--min-line-color) 30%, transparent);
+  border-radius: 12px;
+  padding: 9px 12px 9px 24px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--surface-soft) 76%, transparent) 0%, transparent 85%);
+}
+
+.about-honor-list li::before {
+  left: 10px;
+  top: 12px;
+}
+
+/* 7) Article list date column refinement */
+.post-entry-with-date {
+  grid-template-columns: 132px minmax(0, 1fr);
+  column-gap: 26px;
+}
+
+.post-entry-with-date::before {
+  left: 118px;
+  top: 10px;
+  bottom: 10px;
+  opacity: 0.2;
+}
+
+.post-entry-with-date .post-entry-date {
+  padding-top: 5px;
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.085em;
+  color: color-mix(in srgb, var(--secondary) 86%, var(--min-text-color));
+}
+
+.post-entry-with-date .post-entry-date time {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  border: 1px solid color-mix(in srgb, var(--min-line-color) 34%, transparent);
+  border-radius: 999px;
+  padding: 0 10px;
+  background: color-mix(in srgb, var(--surface-soft) 80%, transparent);
+}
+
+.page-footer {
+  margin-top: 34px;
+  padding-top: 14px;
+  padding-bottom: 16px;
+}
+
+.page-footer .pagination {
+  margin-top: 10px;
+}
+
+/* 8) Dark mode branding polish */
+html[data-theme="dark"] {
+  --min-bg: #0d1118;
+  --min-line-color: #2b3445;
+  --min-header-bg: rgba(10, 14, 22, 0.9);
+  --surface-soft: rgba(235, 240, 252, 0.048);
+  --surface-quiet: rgba(235, 240, 252, 0.06);
+  --surface-hover: rgba(235, 240, 252, 0.12);
+  --focus-ring-color: #9db6ff;
+}
+
+html[data-theme="dark"] body {
+  background: var(--min-bg);
+}
+
+html[data-theme="dark"] .header {
+  border-bottom-color: color-mix(in srgb, var(--min-line-color) 86%, #0d1118);
+  box-shadow: 0 1px 0 rgba(235, 240, 252, 0.04);
+}
+
+html[data-theme="dark"] .first-entry.home-info {
+  background: rgba(235, 240, 252, 0.015);
+  box-shadow: none;
+}
+
+html[data-theme="dark"] #menu a.is-current {
+  background: rgba(235, 240, 252, 0.08);
+  border-color: rgba(157, 182, 255, 0.32);
+}
+
+html[data-theme="dark"] .about-cert-list li:hover {
+  box-shadow: 0 10px 24px rgba(3, 6, 10, 0.36);
+}
+
+/* 9) Unified interaction feedback */
+:where(#theme-toggle, #menu a, #home-search-btn, #home-search-input, .home-search-tags a, .about-social .social-icons a, .pagination a, .about-work-list li, .about-cert-list li, .about-honor-list li) {
+  transition-timing-function: var(--motion-ease);
+}
+
+:where(#theme-toggle, #menu a, #home-search-btn, .home-search-tags a, .about-social .social-icons a, .pagination a):focus-visible {
+  outline: 2px solid var(--focus-ring-color);
+  outline-offset: 2px;
+}
+
+:where(#theme-toggle, #menu a, #home-search-btn, .home-search-tags a, .about-social .social-icons a, .pagination a):active {
+  transform: scale(0.985);
+}
+
+.copy-toast {
+  border-radius: 999px;
+  border-width: 1px;
+  padding: 10px 16px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+/* 10) Lightweight page transitions */
+@media (prefers-reduced-motion: no-preference) {
+  body {
+    animation: pageEnter 220ms ease both;
+  }
+
+  body.is-page-leaving {
+    opacity: 0;
+    transform: translate3d(0, 6px, 0);
+    transition: opacity 140ms ease, transform 140ms ease;
+  }
+}
+
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 4px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@media (max-width: 900px) {
+  .logo a {
+    line-height: 1.15;
+    padding-bottom: 0.2em;
+  }
+
+  .logo a::after {
+    bottom: 0.03em;
+    transform: scaleX(0.36);
+  }
+
+  #menu a {
+    border-radius: 12px;
+    min-height: 42px;
+    padding: 5px 9px;
+  }
+
+  .home-hero-anchor {
+    margin-bottom: 14px;
+  }
+
+  .home-hero-anchor span {
+    width: min(540px, 88%);
+  }
+
+  .home-hero-anchor span::after {
+    width: 8px;
+    height: 8px;
+  }
+
+  .post-entry-with-date {
+    grid-template-columns: 1fr;
+    row-gap: 7px;
+  }
+
+  .post-entry-with-date::before {
+    display: none;
+  }
+
+  .post-entry-with-date .post-entry-date {
+    padding-top: 0;
+  }
+
+  .post-entry-with-date .post-entry-date time {
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+  }
+
+  .about-cert-list {
+    grid-template-columns: 1fr;
+  }
+
+  .about-cert-list li {
+    min-height: 0;
+  }
+
+  .about-honor-list li {
+    padding: 8px 10px 8px 20px;
+  }
+}
