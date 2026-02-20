@@ -1,5 +1,6 @@
 {{- define "main" }}
 {{- $quickTags := site.Params.searchQuickTags | default (slice "零信任" "AI安全" "数据安全" "漏洞研究" "标准解读") -}}
+{{- $synonyms := site.Params.searchSynonyms | default dict -}}
 <article class="first-entry home-info">
   <header class="entry-header">
     <h1>{{ site.Params.homeInfoParams.Title | default "He is Exploring Everything." }}</h1>
@@ -19,7 +20,7 @@
     <div class="home-search-tags">
       <span>Try Tags:</span>
       {{- range $quickTags }}
-      <a href="/search/?q={{ . | urlquery }}">#{{ . }}</a>
+      <a href="/search/?q={{ . | urlquery }}" data-home-search-tag="{{ . }}">#{{ . }}</a>
       {{- end }}
     </div>
   </div>
@@ -27,9 +28,75 @@
 
 <script>
   window.addEventListener("DOMContentLoaded", function () {
+    document.body.classList.add("home-page");
+
     var input = document.getElementById("home-search-input");
     var button = document.getElementById("home-search-btn");
+    var synonymMap = {{ $synonyms | jsonify | safeJS }};
+    var synonymLookup = {};
     if (!input || !button) return;
+
+    function track(name, props) {
+      if (typeof window.BlueDogTrack === "function") {
+        window.BlueDogTrack(name, props || {});
+      }
+    }
+
+    Object.keys(synonymMap || {}).forEach(function (rawKey) {
+      var key = String(rawKey || "").trim().toLowerCase();
+      if (!key) return;
+      var values = Array.isArray(synonymMap[rawKey]) ? synonymMap[rawKey] : [];
+      synonymLookup[key] = values
+        .map(function (item) {
+          return String(item || "").trim();
+        })
+        .filter(function (item) {
+          return item.length > 0;
+        });
+    });
+
+    function normalizeTerm(value) {
+      return String(value || "")
+        .trim()
+        .replace(/^#/, "")
+        .toLowerCase();
+    }
+
+    function splitTerms(query) {
+      return String(query || "")
+        .split(/[\s,，、]+/)
+        .map(function (item) {
+          return item.trim();
+        })
+        .filter(function (item) {
+          return item.length > 0;
+        });
+    }
+
+    function expandQuery(query) {
+      var raw = String(query || "").trim();
+      if (!raw) return raw;
+      var expanded = [];
+      var seen = {};
+
+      function pushTerm(term) {
+        var clean = String(term || "").trim();
+        if (!clean) return;
+        var normalized = normalizeTerm(clean);
+        if (seen[normalized]) return;
+        seen[normalized] = true;
+        expanded.push(clean);
+      }
+
+      pushTerm(raw);
+      splitTerms(raw).forEach(function (term) {
+        pushTerm(term);
+        var normalized = normalizeTerm(term);
+        (synonymLookup[normalized] || []).forEach(pushTerm);
+      });
+      (synonymLookup[normalizeTerm(raw)] || []).forEach(pushTerm);
+      return expanded.join(" ");
+    }
 
     function submitSearch(autoJump) {
       var keyword = input.value.trim();
@@ -38,8 +105,9 @@
         window.location.href = "/search/";
         return;
       }
-      params.set("q", keyword);
+      params.set("q", expandQuery(keyword) || keyword);
       if (autoJump) params.set("autojump", "1");
+      track("search_submit_home", { query: keyword, autoJump: autoJump ? "1" : "0" });
       window.location.href = "/search/?" + params.toString();
     }
 
@@ -51,6 +119,12 @@
         event.preventDefault();
         submitSearch(true);
       }
+    });
+
+    document.querySelectorAll("[data-home-search-tag]").forEach(function (anchor) {
+      anchor.addEventListener("click", function () {
+        track("search_home_tag_click", { tag: anchor.getAttribute("data-home-search-tag") || "" });
+      });
     });
   });
 </script>

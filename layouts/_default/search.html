@@ -1,5 +1,7 @@
 {{- define "main" }}
 {{- $quickTags := site.Params.searchQuickTags | default (slice "零信任" "AI安全" "数据安全" "漏洞研究" "标准解读") -}}
+{{- $synonyms := site.Params.searchSynonyms | default dict -}}
+{{- $synonymHints := site.Params.searchSynonymHints | default (slice "零信任 ↔ zero trust" "AI安全 ↔ ai security" "威胁情报 ↔ threat intelligence") -}}
 {{- $posts := where site.RegularPages "Section" "posts" -}}
 {{- $posts = where $posts "Params.hiddenInHomeList" "!=" "true" -}}
 {{- $posts = $posts.ByDate.Reverse -}}
@@ -43,6 +45,12 @@
     <button type="button" data-search-tag="{{ . }}">#{{ . }}</button>
     {{- end }}
   </div>
+  <div class="search-guide-synonyms">
+    <span>Synonyms:</span>
+    {{- range $synonymHints }}
+    <button type="button" data-search-hint="{{ . }}">{{ . }}</button>
+    {{- end }}
+  </div>
 </section>
 
 <section class="search-filters" aria-label="search-filters">
@@ -66,6 +74,7 @@
 <div id="search-empty" class="search-empty" hidden>
   <p>没有找到结果，试试更短的关键词，或点击上方推荐标签。</p>
 </div>
+<div id="search-synonym-tip" class="search-synonym-tip" hidden></div>
 <textarea id="search-meta-json" hidden>{{ $searchMeta | jsonify }}</textarea>
 
 <script>
@@ -85,6 +94,27 @@
     void searchUI;
     var searchRoot = document.getElementById("search");
     var filterState = { year: "", tag: "" };
+    var synonymMap = {{ $synonyms | jsonify | safeJS }};
+    var synonymLookup = {};
+
+    function track(name, props) {
+      if (typeof window.BlueDogTrack === "function") {
+        window.BlueDogTrack(name, props || {});
+      }
+    }
+
+    Object.keys(synonymMap || {}).forEach(function (rawKey) {
+      var key = String(rawKey || "").trim().toLowerCase();
+      if (!key) return;
+      var values = Array.isArray(synonymMap[rawKey]) ? synonymMap[rawKey] : [];
+      synonymLookup[key] = values
+        .map(function (item) {
+          return String(item || "").trim();
+        })
+        .filter(function (item) {
+          return item.length > 0;
+        });
+    });
 
     function normalizePath(raw) {
       if (!raw) return "";
@@ -94,6 +124,49 @@
       } catch (error) {
         return "";
       }
+    }
+
+    function normalizeTerm(value) {
+      return String(value || "")
+        .trim()
+        .replace(/^#/, "")
+        .toLowerCase();
+    }
+
+    function splitTerms(query) {
+      return String(query || "")
+        .split(/[\s,，、]+/)
+        .map(function (item) {
+          return item.trim();
+        })
+        .filter(function (item) {
+          return item.length > 0;
+        });
+    }
+
+    function expandQuery(query) {
+      var raw = String(query || "").trim();
+      if (!raw) return raw;
+      var expanded = [];
+      var seen = {};
+
+      function pushTerm(term) {
+        var clean = String(term || "").trim();
+        if (!clean) return;
+        var normalized = normalizeTerm(clean);
+        if (seen[normalized]) return;
+        seen[normalized] = true;
+        expanded.push(clean);
+      }
+
+      pushTerm(raw);
+      splitTerms(raw).forEach(function (term) {
+        pushTerm(term);
+        var normalized = normalizeTerm(term);
+        (synonymLookup[normalized] || []).forEach(pushTerm);
+      });
+      (synonymLookup[normalizeTerm(raw)] || []).forEach(pushTerm);
+      return expanded.join(" ");
     }
 
     var metaMap = {};
@@ -114,6 +187,18 @@
       } catch (error) {
         metaMap = {};
       }
+    }
+
+    function showSynonymTip(rawQuery, expandedQuery) {
+      var tip = document.getElementById("search-synonym-tip");
+      if (!tip) return;
+      if (!rawQuery || !expandedQuery || rawQuery === expandedQuery) {
+        tip.hidden = true;
+        tip.textContent = "";
+        return;
+      }
+      tip.textContent = "已启用同义词扩展: " + rawQuery + " → " + expandedQuery;
+      tip.hidden = false;
     }
 
     function getSearchInput() {
@@ -246,6 +331,18 @@
       input.addEventListener("keydown", function (event) {
         if (event.key !== "Enter") return;
         event.preventDefault();
+        var rawKeyword = input.value.trim();
+        var expandedKeyword = expandQuery(rawKeyword);
+        if (expandedKeyword && expandedKeyword !== rawKeyword) {
+          setInputQuery(expandedKeyword);
+          showSynonymTip(rawKeyword, expandedKeyword);
+          rawKeyword = expandedKeyword;
+        }
+        track("search_enter", {
+          query: rawKeyword,
+          year: filterState.year || "all",
+          tag: filterState.tag || "all",
+        });
         window.setTimeout(function () {
           if (!jumpToFirstResult()) {
             applyFilters();
@@ -277,11 +374,18 @@
 
     if (initialQuery) {
       var applyQuery = function () {
-        if (!setInputQuery(initialQuery)) {
+        var expandedInitial = expandQuery(initialQuery);
+        var queryToApply = expandedInitial || initialQuery;
+        if (!setInputQuery(queryToApply)) {
           requestAnimationFrame(applyQuery);
           return;
         }
+        showSynonymTip(initialQuery, queryToApply);
         focusInput();
+        track("search_prefill", {
+          query: initialQuery,
+          expanded: queryToApply !== initialQuery ? "1" : "0",
+        });
         window.setTimeout(function () {
           applyFilters();
           if (autoJumpRequested) {
@@ -296,7 +400,24 @@
       button.addEventListener("click", function () {
         var tag = button.getAttribute("data-search-tag");
         if (!tag) return;
-        if (!setInputQuery(tag)) return;
+        var expandedTag = expandQuery(tag);
+        if (!setInputQuery(expandedTag || tag)) return;
+        showSynonymTip(tag, expandedTag);
+        track("search_quick_tag_click", { tag: tag });
+        focusInput();
+        window.setTimeout(applyFilters, 120);
+      });
+    });
+
+    document.querySelectorAll("[data-search-hint]").forEach(function (button) {
+      button.addEventListener("click", function () {
+        var hint = String(button.getAttribute("data-search-hint") || "");
+        var query = hint.split("↔")[0].trim();
+        if (!query) return;
+        var expanded = expandQuery(query);
+        if (!setInputQuery(expanded || query)) return;
+        showSynonymTip(query, expanded);
+        track("search_synonym_hint_click", { hint: hint, query: query });
         focusInput();
         window.setTimeout(applyFilters, 120);
       });
@@ -307,6 +428,7 @@
         filterState.year = button.getAttribute("data-filter-year") || "";
         syncFilterButtons();
         syncFilterParams();
+        track("search_filter_year", { year: filterState.year || "all" });
         applyFilters();
       });
     });
@@ -316,6 +438,7 @@
         filterState.tag = button.getAttribute("data-filter-tag") || "";
         syncFilterButtons();
         syncFilterParams();
+        track("search_filter_tag", { tag: filterState.tag || "all" });
         applyFilters();
       });
     });

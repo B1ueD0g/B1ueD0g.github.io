@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+
+Sitemap: {{ "sitemap.xml" | absURL }}
+{{ $parsed := urls.Parse site.BaseURL }}
+Host: {{ $parsed.Host | default "bluedog.website" }}

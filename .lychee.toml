@@ -1,0 +1,16 @@
+verbose = true
+max_retries = 2
+retry_wait_time = 2
+timeout = 20
+insecure = false
+exclude_all_private = true
+
+# Some sites may block CI user agents or return rate-limited status.
+accept = [200, 206, 301, 302, 307, 308, 403, 429]
+
+exclude = [
+  "^mailto:",
+  "^tel:",
+  "^javascript:",
+  "^#",
+]

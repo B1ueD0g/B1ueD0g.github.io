@@ -28,16 +28,24 @@
         if (!keyword) {
           event.preventDefault();
           window.location.href = "/search/";
+          return;
+        }
+        if (typeof window.BlueDogTrack === "function") {
+          window.BlueDogTrack("search_submit_404", { query: keyword });
         }
       });
     }
 
     try {
-      if (typeof window.plausible === "function") {
-        window.plausible("404", { props: { path: window.location.pathname } });
-      }
-      if (window.umami && typeof window.umami.track === "function") {
-        window.umami.track("404");
+      if (typeof window.BlueDogTrack === "function") {
+        window.BlueDogTrack("404", { path: window.location.pathname });
+      } else {
+        if (typeof window.plausible === "function") {
+          window.plausible("404", { props: { path: window.location.pathname } });
+        }
+        if (window.umami && typeof window.umami.track === "function") {
+          window.umami.track("404");
+        }
       }
     } catch (error) {
       console.warn("analytics track failed on 404 page", error);

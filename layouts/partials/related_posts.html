@@ -1,0 +1,32 @@
+{{- $current := . -}}
+{{- if eq $current.Section "posts" -}}
+  {{- $currentTags := $current.Params.tags | default (slice) -}}
+  {{- if gt (len $currentTags) 0 -}}
+    {{- $candidates := where site.RegularPages "Section" "posts" -}}
+    {{- $candidates = where $candidates "Permalink" "!=" $current.Permalink -}}
+    {{- $candidates = $candidates.ByDate.Reverse -}}
+    {{- $scored := slice -}}
+    {{- range $candidates -}}
+      {{- $tags := .Params.tags | default (slice) -}}
+      {{- $intersects := intersect $currentTags $tags -}}
+      {{- if gt (len $intersects) 0 -}}
+        {{- $scored = $scored | append (dict "page" . "score" (len $intersects)) -}}
+      {{- end -}}
+    {{- end -}}
+    {{- if gt (len $scored) 0 -}}
+      {{- $related := first 4 (sort $scored "score" "desc") -}}
+      <section class="post-related" aria-label="related-posts">
+        <h2>Related</h2>
+        <ul class="post-related-list">
+          {{- range $related -}}
+            {{- $item := .page -}}
+            <li>
+              <time datetime="{{ $item.Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ $item.Date | time.Format site.Params.DateFormat }}</time>
+              <a href="{{ $item.RelPermalink }}">{{ $item.Title }}</a>
+            </li>
+          {{- end -}}
+        </ul>
+      </section>
+    {{- end -}}
+  {{- end -}}
+{{- end -}}

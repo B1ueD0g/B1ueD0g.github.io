@@ -8,6 +8,7 @@
   (function () {
     var toast = document.getElementById("copy-toast");
     var timer = null;
+    var externalTrackCache = {};
 
     function showToast(message) {
       if (!toast) return;
@@ -37,6 +38,27 @@
       return copied;
     }
 
+    function trackEvent(name, props) {
+      if (!name) return;
+      var payload = props || {};
+      try {
+        if (typeof window.plausible === "function") {
+          window.plausible(name, { props: payload });
+        }
+      } catch (error) {
+        console.warn("plausible track failed", error);
+      }
+      try {
+        if (window.umami && typeof window.umami.track === "function") {
+          window.umami.track(name, payload);
+        }
+      } catch (error) {
+        console.warn("umami track failed", error);
+      }
+    }
+
+    window.BlueDogTrack = trackEvent;
+
     async function copyEmail(email) {
       if (!email) return;
       var copied = false;
@@ -52,8 +74,10 @@
       }
       if (copied) {
         showToast("邮箱已复制: " + email);
+        trackEvent("email_copy", { email: email, page: window.location.pathname });
       } else {
         showToast("复制失败，请手动复制: " + email);
+        trackEvent("email_copy_failed", { page: window.location.pathname });
       }
     }
 
@@ -63,6 +87,39 @@
       event.preventDefault();
       var email = link.getAttribute("data-copy-email");
       copyEmail(email);
+    });
+
+    document.addEventListener("click", function (event) {
+      var tagAnchor = event.target.closest(".post-tags a");
+      if (tagAnchor) {
+        var tagName = (tagAnchor.getAttribute("data-tag-click") || tagAnchor.textContent || "").trim();
+        if (tagName) {
+          trackEvent("tag_click", { tag: tagName, page: window.location.pathname });
+        }
+      }
+
+      var anchor = event.target.closest("a[href]");
+      if (!anchor) return;
+      var href = anchor.getAttribute("href") || "";
+      if (!href || href.startsWith("#") || href.startsWith("mailto:") || href.startsWith("tel:")) return;
+
+      var targetURL;
+      try {
+        targetURL = new URL(anchor.href, window.location.origin);
+      } catch (error) {
+        return;
+      }
+      if (targetURL.origin === window.location.origin) return;
+
+      var key = targetURL.href + "::" + window.location.pathname;
+      if (externalTrackCache[key]) return;
+      externalTrackCache[key] = true;
+
+      trackEvent("outbound_click", {
+        host: targetURL.host,
+        href: targetURL.href,
+        page: window.location.pathname,
+      });
     });
   })();
 </script>

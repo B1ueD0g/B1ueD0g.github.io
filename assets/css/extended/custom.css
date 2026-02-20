@@ -385,6 +385,35 @@ body.home-page .custom-min-footer {
   color: var(--min-bg);
 }
 
+.search-guide-synonyms {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.46rem;
+  font-family: var(--font-ui);
+}
+
+.search-guide-synonyms span {
+  color: var(--secondary);
+  font-size: 0.9rem;
+}
+
+.search-guide-synonyms button {
+  border: 1px dashed var(--min-line-color);
+  border-radius: 999px;
+  padding: 0.18rem 0.62rem;
+  color: var(--secondary);
+  background: transparent;
+  font-size: 0.84rem;
+  font-family: var(--font-ui);
+  line-height: 1.22;
+}
+
+.search-guide-synonyms button:hover {
+  color: var(--min-text-color);
+  border-style: solid;
+}
+
 .search-filters {
   margin-bottom: 0.95rem;
   display: flex;
@@ -439,6 +468,16 @@ body.home-page .custom-min-footer {
 
 .search-empty p {
   margin: 0;
+}
+
+.search-synonym-tip {
+  margin-top: 0.62rem;
+  border-left: 2px solid var(--min-line-color);
+  padding-left: 0.56rem;
+  color: var(--secondary);
+  font-family: var(--font-ui);
+  font-size: 0.86rem;
+  line-height: 1.5;
 }
 
 .pagefind-ui {
@@ -554,6 +593,71 @@ body.home-page .custom-min-footer {
 
 .post-content a:hover {
   color: var(--min-hover);
+}
+
+.post-related {
+  margin-top: 1.9rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--min-line-color);
+}
+
+.post-related h2 {
+  margin: 0 0 0.55rem;
+  font-family: var(--font-heading);
+  font-size: 1.28rem;
+  font-weight: 400;
+}
+
+.post-related-list {
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.42rem;
+}
+
+.post-related-list li {
+  display: flex;
+  align-items: baseline;
+  gap: 0.65rem;
+}
+
+.post-related-list time {
+  min-width: 90px;
+  font-family: var(--font-ui);
+  font-size: 0.83rem;
+  color: var(--secondary);
+}
+
+.post-related-list a {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.45;
+}
+
+.post-backtop-wrap {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.post-backtop {
+  border: 1px solid var(--min-line-color);
+  border-radius: 999px;
+  min-height: 38px;
+  padding: 0 0.82rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-ui);
+  font-size: 0.88rem;
+  color: var(--min-text-color);
+}
+
+.post-backtop:hover {
+  background: var(--min-text-color);
+  color: var(--min-bg);
 }
 
 .post-meta,
@@ -944,6 +1048,10 @@ body.home-page .copy-toast {
     font-size: 0.84rem;
   }
 
+  .search-guide-synonyms button {
+    font-size: 0.78rem;
+  }
+
   .search-filters {
     margin-bottom: 0.7rem;
     gap: 0.4rem;
@@ -1003,6 +1111,29 @@ body.home-page .copy-toast {
   .post-content {
     font-size: 1rem;
     line-height: 1.82;
+  }
+
+  .post-related {
+    margin-top: 1.4rem;
+    padding-top: 0.8rem;
+  }
+
+  .post-related h2 {
+    font-size: 1.1rem;
+  }
+
+  .post-related-list li {
+    flex-direction: column;
+    gap: 0.12rem;
+  }
+
+  .post-related-list time {
+    min-width: 0;
+    font-size: 0.8rem;
+  }
+
+  .post-backtop-wrap {
+    justify-content: center;
   }
 
   .about-social .social-icons a {

@@ -61,6 +61,26 @@ jobs:
       - name: Build Pagefind index
         run: npx -y pagefind --site public
 
+      - name: Submit sitemap URLs to IndexNow
+        continue-on-error: true
+        env:
+          INDEXNOW_ENABLED: "true"
+          INDEXNOW_HOST: "bluedog.website"
+          INDEXNOW_KEY: "4bae4031fdb246e2a0ca3d0ad07fdace"
+          INDEXNOW_KEY_LOCATION: "https://bluedog.website/4bae4031fdb246e2a0ca3d0ad07fdace.txt"
+          INDEXNOW_ENDPOINT: "https://api.indexnow.org/indexnow"
+        run: |
+          if [ "${INDEXNOW_ENABLED}" != "true" ]; then
+            echo "IndexNow is disabled."
+            exit 0
+          fi
+          python3 scripts/submit_indexnow.py \
+            --sitemap public/sitemap.xml \
+            --host "${INDEXNOW_HOST}" \
+            --key "${INDEXNOW_KEY}" \
+            --key-location "${INDEXNOW_KEY_LOCATION}" \
+            --endpoint "${INDEXNOW_ENDPOINT}"
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:

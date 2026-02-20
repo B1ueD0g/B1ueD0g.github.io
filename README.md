@@ -17,6 +17,7 @@
 - 待发布草稿：`content/posts/pending/`
 - 元数据脚本：`scripts/normalize_post_metadata.py`
 - 元数据质检脚本：`scripts/check_metadata_quality.py`
+- IndexNow 提交脚本：`scripts/submit_indexnow.py`
 
 ## 2. 本地预览
 
@@ -195,12 +196,14 @@ git push
 工作流文件：
 
 - `.github/workflows/hugo.yml`
+- `.github/workflows/link-check.yml`（推送、PR、每周死链检查）
 - `.github/workflows/uptime-check.yml`（每 30 分钟探测可用性）
 
 ## 10. 域名检查（出问题时看这里）
 
 - `hugo.toml` 的 `baseURL`：`https://bluedog.website/`
 - `CNAME` 文件内容：`bluedog.website`
+- `static/4bae4031fdb246e2a0ca3d0ad07fdace.txt` 可访问
 - GitHub Pages 设置里的 `Custom domain`：`bluedog.website`
 
 如果网页没立刻更新：
@@ -221,3 +224,31 @@ git push
 
 - 默认是关闭统计，开启后会自动注入脚本。
 - 404 页面会自动上报一次 `404` 事件（若统计脚本已启用）。
+- 其余事件已内置：`search_submit_home`、`search_enter`、`search_quick_tag_click`、`search_filter_year`、`search_filter_tag`、`outbound_click`、`tag_click`、`email_copy`
+
+## 12. 收录与死链检查
+
+在 `hugo.toml` 可选填写：
+
+- `params.analytics.google.SiteVerificationTag`
+- `params.analytics.bing.SiteVerificationTag`
+
+向搜索引擎提交：
+
+- `https://bluedog.website/sitemap.xml`
+
+IndexNow 已在部署流程自动执行（失败不阻断发布）：
+
+- `scripts/submit_indexnow.py`
+- `static/4bae4031fdb246e2a0ca3d0ad07fdace.txt`
+
+本地 dry-run 验证：
+
+```bash
+python3 scripts/submit_indexnow.py \
+  --sitemap public/sitemap.xml \
+  --host bluedog.website \
+  --key 4bae4031fdb246e2a0ca3d0ad07fdace \
+  --key-location https://bluedog.website/4bae4031fdb246e2a0ca3d0ad07fdace.txt \
+  --dry-run
+```

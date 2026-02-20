@@ -39,10 +39,34 @@ ShowRssButtonInSectionTermList = true
 ShowToc = true
 DateFormat = "2006-01-02"
 searchQuickTags = ["零信任", "AI安全", "数据安全", "漏洞研究", "云安全", "实操指南", "标准解读"]
+searchSynonymHints = [
+  "零信任 ↔ zero trust / zta",
+  "AI安全 ↔ ai security / llm security",
+  "威胁情报 ↔ threat intelligence / ioc / ttp",
+  "数据安全 ↔ data security / 数据治理",
+  "漏洞研究 ↔ vulnerability research / cve",
+]
+
+[params.searchSynonyms]
+"零信任" = ["zero trust", "zta", "zero-trust", "零信任架构"]
+"zero trust" = ["零信任", "zta", "零信任架构"]
+"AI安全" = ["ai security", "llm security", "模型安全", "人工智能安全"]
+"人工智能安全" = ["AI安全", "ai security", "模型安全"]
+"威胁情报" = ["threat intelligence", "ioc", "ttp"]
+"数据安全" = ["data security", "数据治理", "隐私保护"]
+"漏洞研究" = ["vulnerability research", "cve", "漏洞分析"]
+"云安全" = ["cloud security", "cnapp", "kubernetes security"]
+"DevSecOps" = ["devsecops", "安全左移", "shift left security"]
 
 [params.analytics]
 enabled = false
 provider = "plausible"
+
+[params.analytics.google]
+SiteVerificationTag = ""
+
+[params.analytics.bing]
+SiteVerificationTag = ""
 
 [params.analytics.plausible]
 domain = "bluedog.website"
@@ -55,6 +79,13 @@ script = "https://cloud.umami.is/script.js"
 [params.monitoring]
 uptimeBaseURL = "https://bluedog.website"
 uptimePaths = ["/", "/posts/", "/about/", "/search/", "/404.html"]
+
+[params.indexNow]
+enabled = true
+host = "bluedog.website"
+key = "4bae4031fdb246e2a0ca3d0ad07fdace"
+keyLocation = "https://bluedog.website/4bae4031fdb246e2a0ca3d0ad07fdace.txt"
+endpoint = "https://api.indexnow.org/indexnow"
 
 [params.assets]
 favicon = "/branding/favicon.ico"
