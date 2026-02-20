@@ -14,16 +14,15 @@
 
   {{- if and $useProfileData $aboutData }}
   <div class="about-profile">
-    {{- with $aboutData.profile.tagline }}
-    <p class="about-tagline">{{ . }}</p>
-    {{- end }}
-
     {{- with $aboutData.profile.roles }}
-    <ul class="about-role-list">
-      {{- range . }}
-      <li>{{ . }}</li>
-      {{- end }}
-    </ul>
+    <section class="about-block">
+      <h2>{{ $aboutData.profile.title | default "Title" }}</h2>
+      <ul class="about-list">
+        {{- range . }}
+        <li>{{ . }}</li>
+        {{- end }}
+      </ul>
+    </section>
     {{- end }}
 
     {{- with $aboutData.highlights }}
@@ -38,9 +37,9 @@
     {{- end }}
 
     {{- with $aboutData.certifications }}
-    <section class="about-block">
+    <section class="about-block about-block-certifications">
       <h2>Certifications</h2>
-      <ul class="about-list">
+      <ul class="about-cert-list">
         {{- range . }}
         <li>{{ . }}</li>
         {{- end }}

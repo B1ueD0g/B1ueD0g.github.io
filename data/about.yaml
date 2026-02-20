@@ -1,5 +1,5 @@
 profile:
-  tagline: "BlueDog 就是蓝狗。Researcher, Author, Explorer & Communist."
+  title: "Title"
   roles:
     - "CSA研究分析师"
     - "CCF专业会员"
@@ -10,9 +10,10 @@ profile:
 highlights:
   - "热衷睡觉。"
   - "少年驰骋的风比黄金还要珍贵。"
-  - "家有两只猫：Lemon（2023-09-07）与凉茶（2024-08-27）。"
+  - "家有两只咪。"
 
 certifications:
+  - "CSPM-3"
   - "NISP 二级"
   - "CBP 区块链专业人员认证"
   - "CDSP 数据安全认证专家"

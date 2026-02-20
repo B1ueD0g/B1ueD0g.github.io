@@ -1021,6 +1021,37 @@ html[data-theme="dark"] .post-entry:hover {
   margin-top: 0.4rem;
 }
 
+.about-cert-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 10px;
+}
+
+.about-cert-list li {
+  position: relative;
+  border: 1px solid var(--min-line-color);
+  border-radius: 12px;
+  padding: 10px 12px 10px 30px;
+  background: var(--surface-soft);
+  color: var(--min-text-color);
+  font-family: var(--font-ui);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.about-cert-list li::before {
+  content: "•";
+  position: absolute;
+  left: 12px;
+  top: 9px;
+  color: var(--secondary);
+  font-size: 1rem;
+  line-height: 1;
+}
+
 .about-work-list {
   margin: 0;
   padding-left: 0;
@@ -1554,6 +1585,16 @@ body.home-page .copy-toast {
 
   .about-block h2 {
     font-size: 1.15rem;
+  }
+
+  .about-cert-list {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .about-cert-list li {
+    font-size: 0.86rem;
+    padding: 9px 10px 9px 28px;
   }
 
   .not-found-wrap {
