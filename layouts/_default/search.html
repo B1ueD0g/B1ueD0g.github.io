@@ -71,6 +71,7 @@
 </section>
 
 <div id="search"></div>
+<div id="search-loading" class="search-loading">搜索索引加载中…</div>
 <div id="search-recent" class="search-recent" hidden>
   <span>Recent:</span>
   <div id="search-recent-list" class="search-recent-list" role="list"></div>
@@ -84,7 +85,13 @@
 
 <script>
   window.addEventListener("DOMContentLoaded", function () {
-    if (typeof PagefindUI === "undefined") return;
+    if (typeof PagefindUI === "undefined") {
+      var loading = document.getElementById("search-loading");
+      if (loading) {
+        loading.textContent = "搜索组件加载失败，请刷新页面重试。";
+      }
+      return;
+    }
     var searchUI = new PagefindUI({
       element: "#search",
       showSubResults: true,
@@ -106,6 +113,7 @@
     var recentWrap = document.getElementById("search-recent");
     var recentList = document.getElementById("search-recent-list");
     var recentClear = document.getElementById("search-recent-clear");
+    var searchLoading = document.getElementById("search-loading");
 
     function track(name, props) {
       if (typeof window.BlueDogTrack === "function") {
@@ -400,6 +408,9 @@
       if (!input) {
         requestAnimationFrame(bindInputEvents);
         return;
+      }
+      if (searchLoading) {
+        searchLoading.classList.add("is-hidden");
       }
       input.addEventListener("keydown", function (event) {
         if (event.key !== "Enter") return;

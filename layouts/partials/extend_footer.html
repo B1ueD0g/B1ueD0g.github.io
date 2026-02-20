@@ -10,9 +10,11 @@
     var timer = null;
     var externalTrackCache = {};
 
-    function showToast(message) {
+    function showToast(message, tone) {
       if (!toast) return;
       toast.textContent = message;
+      toast.classList.remove("is-error", "is-success");
+      toast.classList.add(tone === "error" ? "is-error" : "is-success");
       toast.classList.add("is-visible");
       if (timer) window.clearTimeout(timer);
       timer = window.setTimeout(function () {
@@ -335,10 +337,10 @@
         copied = fallbackCopy(email);
       }
       if (copied) {
-        showToast("邮箱已复制: " + email);
+        showToast("邮箱已复制: " + email, "success");
         trackEvent("email_copy", { email: email, page: window.location.pathname });
       } else {
-        showToast("复制失败，请手动复制: " + email);
+        showToast("复制失败，请手动复制: " + email, "error");
         trackEvent("email_copy_failed", { page: window.location.pathname });
       }
     }

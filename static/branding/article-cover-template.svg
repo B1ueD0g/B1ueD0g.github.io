@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" fill="none">
+  <rect width="1200" height="630" fill="#F4F4F2"/>
+  <line x1="64" y1="88" x2="1136" y2="88" stroke="#1B1D25" stroke-width="3"/>
+  <line x1="64" y1="540" x2="1136" y2="540" stroke="#1B1D25" stroke-width="3"/>
+  <rect x="120" y="166" width="300" height="300" rx="20" fill="#D3E4F7"/>
+  <text x="460" y="226" fill="#111319" font-size="84" font-family="Bree Serif, Georgia, serif">BlueDog's Blog</text>
+  <text x="460" y="318" fill="#585D69" font-size="40" font-family="Manrope, Arial, sans-serif">Progress, Not Perfection</text>
+  <text x="460" y="404" fill="#111319" font-size="56" font-family="Bree Serif, Georgia, serif">[Article Title]</text>
+  <text x="460" y="454" fill="#585D69" font-size="28" font-family="Manrope, Arial, sans-serif">[YYYY-MM-DD] · [Tag1] [Tag2]</text>
+</svg>
