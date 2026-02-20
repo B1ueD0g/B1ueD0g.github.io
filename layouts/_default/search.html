@@ -71,6 +71,11 @@
 </section>
 
 <div id="search"></div>
+<div id="search-recent" class="search-recent" hidden>
+  <span>Recent:</span>
+  <div id="search-recent-list" class="search-recent-list" role="list"></div>
+  <button type="button" id="search-recent-clear">Clear</button>
+</div>
 <div id="search-empty" class="search-empty" hidden>
   <p>没有找到结果，试试更短的关键词，或点击上方推荐标签。</p>
 </div>
@@ -96,6 +101,11 @@
     var filterState = { year: "", tag: "" };
     var synonymMap = {{ $synonyms | jsonify | safeJS }};
     var synonymLookup = {};
+    var recentStorageKey = "bluedog_recent_searches_v1";
+    var recentMax = 8;
+    var recentWrap = document.getElementById("search-recent");
+    var recentList = document.getElementById("search-recent-list");
+    var recentClear = document.getElementById("search-recent-clear");
 
     function track(name, props) {
       if (typeof window.BlueDogTrack === "function") {
@@ -201,6 +211,13 @@
       tip.hidden = false;
     }
 
+    function decorateResultHighlights() {
+      if (!searchRoot) return;
+      searchRoot.querySelectorAll("mark").forEach(function (node) {
+        node.classList.add("search-hit");
+      });
+    }
+
     function getSearchInput() {
       return document.querySelector("#search input");
     }
@@ -229,6 +246,61 @@
       var input = getSearchInput();
       if (!input) return;
       input.focus();
+    }
+
+    function getRecentSearches() {
+      try {
+        var raw = localStorage.getItem(recentStorageKey) || "[]";
+        var parsed = JSON.parse(raw);
+        if (!Array.isArray(parsed)) return [];
+        return parsed
+          .map(function (item) {
+            return String(item || "").trim();
+          })
+          .filter(function (item) {
+            return item.length > 0;
+          })
+          .slice(0, recentMax);
+      } catch (error) {
+        return [];
+      }
+    }
+
+    function renderRecentSearches(inputList) {
+      if (!recentWrap || !recentList) return;
+      var list = Array.isArray(inputList) ? inputList : getRecentSearches();
+      recentList.innerHTML = "";
+      if (list.length === 0) {
+        recentWrap.hidden = true;
+        return;
+      }
+      list.forEach(function (term) {
+        var button = document.createElement("button");
+        button.type = "button";
+        button.setAttribute("data-recent-query", term);
+        button.textContent = term;
+        recentList.appendChild(button);
+      });
+      recentWrap.hidden = false;
+    }
+
+    function saveRecentSearch(term) {
+      var value = String(term || "").trim();
+      if (!value) return;
+      var seen = {};
+      var next = [value].concat(getRecentSearches()).filter(function (item) {
+        var normalized = normalizeTerm(item);
+        if (!normalized || seen[normalized]) return false;
+        seen[normalized] = true;
+        return true;
+      });
+      next = next.slice(0, recentMax);
+      try {
+        localStorage.setItem(recentStorageKey, JSON.stringify(next));
+      } catch (error) {
+        return;
+      }
+      renderRecentSearches(next);
     }
 
     function jumpToFirstResult() {
@@ -320,6 +392,7 @@
         if (pass) visible += 1;
       });
       updateEmptyState(visible, rows.length);
+      decorateResultHighlights();
     }
 
     function bindInputEvents() {
@@ -331,13 +404,15 @@
       input.addEventListener("keydown", function (event) {
         if (event.key !== "Enter") return;
         event.preventDefault();
-        var rawKeyword = input.value.trim();
-        var expandedKeyword = expandQuery(rawKeyword);
+        var userKeyword = input.value.trim();
+        var rawKeyword = userKeyword;
+        var expandedKeyword = expandQuery(userKeyword);
         if (expandedKeyword && expandedKeyword !== rawKeyword) {
           setInputQuery(expandedKeyword);
           showSynonymTip(rawKeyword, expandedKeyword);
           rawKeyword = expandedKeyword;
         }
+        saveRecentSearch(userKeyword || rawKeyword);
         track("search_enter", {
           query: rawKeyword,
           year: filterState.year || "all",
@@ -357,6 +432,7 @@
 
     var observer = new MutationObserver(function () {
       applyFilters();
+      decorateResultHighlights();
       if (autoJumpRequested) {
         autoJumpRequested = !jumpToFirstResult();
       }
@@ -403,6 +479,7 @@
         var expandedTag = expandQuery(tag);
         if (!setInputQuery(expandedTag || tag)) return;
         showSynonymTip(tag, expandedTag);
+        saveRecentSearch(tag);
         track("search_quick_tag_click", { tag: tag });
         focusInput();
         window.setTimeout(applyFilters, 120);
@@ -417,6 +494,7 @@
         var expanded = expandQuery(query);
         if (!setInputQuery(expanded || query)) return;
         showSynonymTip(query, expanded);
+        saveRecentSearch(query);
         track("search_synonym_hint_click", { hint: hint, query: query });
         focusInput();
         window.setTimeout(applyFilters, 120);
@@ -443,6 +521,32 @@
       });
     });
 
+    if (recentList) {
+      recentList.addEventListener("click", function (event) {
+        var button = event.target.closest("[data-recent-query]");
+        if (!button) return;
+        var term = button.getAttribute("data-recent-query") || "";
+        if (!term) return;
+        if (!setInputQuery(term)) return;
+        focusInput();
+        track("search_recent_click", { query: term });
+        window.setTimeout(applyFilters, 120);
+      });
+    }
+
+    if (recentClear) {
+      recentClear.addEventListener("click", function () {
+        try {
+          localStorage.removeItem(recentStorageKey);
+        } catch (error) {
+          return;
+        }
+        renderRecentSearches([]);
+        track("search_recent_clear", {});
+      });
+    }
+
+    renderRecentSearches();
     bindInputEvents();
     window.setTimeout(applyFilters, 120);
   });
