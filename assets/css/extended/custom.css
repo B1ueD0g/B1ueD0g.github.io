@@ -2877,28 +2877,47 @@ body.wechat-safe .logo a {
 }
 
 /* WeChat + mobile overflow guard */
-html,
-body {
+html.wechat-safe,
+body.wechat-safe {
   max-width: 100%;
   overflow-x: clip;
 }
 
-.main,
-.post-single,
-.post-content,
-.post-header,
-.post-footer {
+html.wechat-safe .main,
+body.wechat-safe .main,
+html.wechat-safe .post-single,
+body.wechat-safe .post-single,
+html.wechat-safe .post-content,
+body.wechat-safe .post-content,
+html.wechat-safe .post-header,
+body.wechat-safe .post-header,
+html.wechat-safe .post-footer,
+body.wechat-safe .post-footer {
   max-width: 100%;
 }
 
-.post-title,
-.entry-header h2,
-.post-content {
-  overflow-wrap: anywhere;
-  word-break: break-word;
-}
-
 @media (max-width: 900px) {
+  html,
+  body {
+    max-width: 100%;
+    overflow-x: clip;
+  }
+
+  .main,
+  .post-single,
+  .post-content,
+  .post-header,
+  .post-footer {
+    max-width: 100%;
+  }
+
+  .post-title,
+  .entry-header h2,
+  .post-content {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
   .nav {
     overflow-x: clip;
   }
