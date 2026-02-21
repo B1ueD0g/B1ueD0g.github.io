@@ -3305,6 +3305,35 @@ html[data-theme="dark"] .bd-share-close:hover {
   background: rgba(237, 241, 250, 0.09);
 }
 
+html.wechat-safe .header,
+body.wechat-safe .header {
+  position: relative;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background: var(--min-bg);
+  border-bottom-width: 2px;
+}
+
+html.wechat-safe .main,
+body.wechat-safe .main {
+  animation: none !important;
+  transition: none !important;
+}
+
+html.wechat-safe,
+body.wechat-safe {
+  --font-display: "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
+  --font-heading: "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
+  --font-body: "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
+  --font-ui: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+}
+
+html.wechat-safe .logo a,
+body.wechat-safe .logo a {
+  font-family: var(--font-heading);
+  letter-spacing: 0.01em;
+}
+
 @media (max-width: 680px) {
   .bd-share-panel {
     width: 100%;

@@ -22,6 +22,9 @@ unsafe = true
 [outputs]
 home = ["HTML", "RSS", "JSON"]
 
+[minify]
+disableJS = true
+
 [params]
 env = "production"
 author = "BlueDog"

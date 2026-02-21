@@ -9,6 +9,15 @@
     var toast = document.getElementById("copy-toast");
     var timer = null;
     var externalTrackCache = {};
+    var isWeChatWebView = /MicroMessenger/i.test(navigator.userAgent || "");
+
+    if (isWeChatWebView) {
+      document.documentElement.classList.add("wechat-safe");
+      if (document.body) document.body.classList.add("wechat-safe");
+    }
+
+    window.BlueDogEnv = window.BlueDogEnv || {};
+    window.BlueDogEnv.isWeChatWebView = isWeChatWebView;
 
     function showToast(message, tone) {
       if (!toast) return;
@@ -441,9 +450,13 @@
       });
     });
 
+    setupThemeToggleA11y();
+    if (isWeChatWebView) {
+      return;
+    }
+
     setupNavShrink();
     setupSearchShortcut();
-    setupThemeToggleA11y();
     setupReadingProgress();
     setupHeadingHighlight();
     setupLightbox();
