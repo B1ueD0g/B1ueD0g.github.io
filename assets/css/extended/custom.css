@@ -3128,19 +3128,6 @@ html[data-theme="dark"] .about-pro {
   flex-shrink: 0;
 }
 
-.bd-share-wechat-tip {
-  display: none;
-  margin: 0;
-  border: 1px solid var(--min-line-color);
-  border-radius: 999px;
-  min-height: 38px;
-  padding: 0 0.82rem;
-  align-items: center;
-  font-family: var(--font-ui);
-  font-size: 0.78rem;
-  color: var(--secondary);
-}
-
 .bd-share-trigger {
   border: 1px solid var(--min-line-color);
   border-radius: 999px;
@@ -3252,7 +3239,7 @@ body.bd-share-opened {
 
 .bd-share-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 7px;
 }
 
@@ -3281,33 +3268,6 @@ body.bd-share-opened {
   outline-offset: 1px;
 }
 
-.bd-share-qr {
-  margin-top: 10px;
-  border-top: 1px dashed color-mix(in srgb, var(--min-line-color) 48%, transparent);
-  padding-top: 10px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.bd-share-qr img {
-  width: 88px;
-  height: 88px;
-  border-radius: 11px;
-  border: 1px solid var(--min-line-color);
-  background: #fff;
-  object-fit: cover;
-  flex-shrink: 0;
-}
-
-.bd-share-qr p {
-  margin: 0;
-  color: var(--secondary);
-  font-family: var(--font-ui);
-  font-size: 0.86rem;
-  line-height: 1.55;
-}
-
 html[data-theme="dark"] .bd-share-panel {
   box-shadow: 0 22px 54px rgba(0, 0, 0, 0.5);
 }
@@ -3333,11 +3293,20 @@ body.wechat-safe .main {
   transition: none !important;
 }
 
-html.wechat-safe *,
-html.wechat-safe *::before,
-html.wechat-safe *::after {
+html.wechat-safe body,
+body.wechat-safe {
   animation: none !important;
-  transition: none !important;
+}
+
+html.wechat-safe .home-search-tags a,
+body.wechat-safe .home-search-tags a,
+html.wechat-safe .about-profile .about-block,
+body.wechat-safe .about-profile .about-block,
+html.wechat-safe body.home-page .first-entry.home-info,
+body.wechat-safe.home-page .first-entry.home-info {
+  animation: none !important;
+  opacity: 1 !important;
+  transform: none !important;
 }
 
 html.wechat-safe,
@@ -3354,16 +3323,6 @@ body.wechat-safe .logo a {
   letter-spacing: 0.01em;
 }
 
-html.wechat-safe .bd-share-trigger,
-body.wechat-safe .bd-share-trigger {
-  display: none;
-}
-
-html.wechat-safe .bd-share-wechat-tip,
-body.wechat-safe .bd-share-wechat-tip {
-  display: inline-flex;
-}
-
 @media (max-width: 680px) {
   .bd-share-panel {
     width: 100%;
@@ -3376,20 +3335,6 @@ body.wechat-safe .bd-share-wechat-tip {
     border-left: none;
     border-right: none;
     padding: 12px 12px calc(12px + env(safe-area-inset-bottom));
-  }
-
-  .bd-share-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 7px;
-  }
-
-  .bd-share-qr {
-    align-items: flex-start;
-  }
-
-  .bd-share-qr img {
-    width: 80px;
-    height: 80px;
   }
 
   .post-actions {

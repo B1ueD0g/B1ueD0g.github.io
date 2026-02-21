@@ -102,19 +102,6 @@
     });
   }
 
-  function setQr(root, message) {
-    var qrWrap = root.querySelector("[data-share-qr]");
-    var qrImg = root.querySelector("[data-share-qr-image]");
-    var qrTip = root.querySelector("[data-share-qr-tip]");
-    if (!qrWrap || !qrImg) return;
-    var payload = getSharePayload(root);
-    var qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=280x280&margin=8&data=" + encodeURIComponent(payload.url);
-    qrImg.src = qrUrl;
-    qrImg.alt = "二维码：" + payload.title;
-    if (qrTip) qrTip.textContent = message;
-    qrWrap.hidden = false;
-  }
-
   function handleShareAction(root, action) {
     var payload = getSharePayload(root);
     var encodedUrl = encodeURIComponent(payload.url);
@@ -145,19 +132,6 @@
       });
       closeSheet(root);
       return;
-    }
-    if (action === "wechat") {
-      setQr(root, "微信扫码后可转发给好友");
-      copyText(payload.url).then(function (ok) {
-        if (ok) showToast("链接已复制，可在微信中直接粘贴", "success");
-      });
-      return;
-    }
-    if (action === "moments") {
-      setQr(root, "微信扫码后可分享到朋友圈");
-      copyText(payload.url).then(function (ok) {
-        if (ok) showToast("链接已复制，可在朋友圈发布时粘贴", "success");
-      });
     }
   }
 
