@@ -160,12 +160,12 @@
             </li>
             {{- end }}
           </ul>
+          {{- with $aboutData.translation_note }}
+          <p class="about-translation-note">{{ . }}</p>
+          {{- end }}
         </section>
         {{- end }}
       </div>
-      {{- with $aboutData.translation_note }}
-      <p class="about-translation-note">{{ . }}</p>
-      {{- end }}
     </section>
     <script>
       (function () {

@@ -2113,13 +2113,28 @@ html[data-theme="dark"] #menu a.is-current {
 
 .about-pro .about-profile {
   display: grid;
-  gap: 30px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px 28px;
   counter-reset: none;
 }
 
 .about-pro .about-block {
   border-top: 1.5px solid var(--about-divider-strong);
   padding-top: 18px;
+}
+
+.about-pro .about-block-title,
+.about-pro .about-block-highlights,
+.about-pro .about-block-works {
+  grid-column: 1 / -1;
+}
+
+.about-pro .about-block-certifications {
+  grid-column: 1;
+}
+
+.about-pro .about-block-honors {
+  grid-column: 2;
 }
 
 .about-pro .about-block h2 {
@@ -2202,6 +2217,11 @@ html[data-theme="dark"] #menu a.is-current {
   gap: 0;
 }
 
+.about-pro .about-honor-list {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 18px;
+}
+
 .about-pro .about-highlight-lead {
   margin: 0 0 10px;
   padding: 12px 14px;
@@ -2270,31 +2290,33 @@ html[data-theme="dark"] #menu a.is-current {
 
 .about-pro .about-work-list {
   display: grid;
-  gap: 0;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 14px;
 }
 
 .about-pro .about-work-item {
   display: grid;
-  grid-template-columns: 184px minmax(0, 1fr);
+  grid-template-columns: 1fr;
   align-items: start;
-  gap: 12px;
-  border-bottom: 1px solid var(--about-divider);
-  padding: 12px 0;
-  border-radius: 0;
-  background: transparent;
+  gap: 7px;
+  border: 1px solid var(--about-divider);
+  padding: 11px 12px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--surface-soft) 62%, transparent);
 }
 
 .about-pro .about-work-item:hover {
-  background: color-mix(in srgb, var(--surface-soft) 74%, transparent);
+  background: color-mix(in srgb, var(--surface-soft) 86%, transparent);
+  border-color: var(--about-divider-strong);
 }
 
 .about-pro .about-work-type {
   margin: 0;
   border: 1px solid var(--about-divider-strong);
   border-radius: 999px;
-  padding: 2px 10px;
+  padding: 2px 9px;
   font-family: var(--font-ui);
-  font-size: 0.72rem;
+  font-size: 0.69rem;
   font-weight: 700;
   letter-spacing: 0.03em;
   color: var(--secondary);
@@ -2327,13 +2349,13 @@ html[data-theme="dark"] #menu a.is-current {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .about-pro .about-work-title {
   font-family: var(--font-body);
-  font-size: 1.04rem;
-  line-height: 1.62;
+  font-size: 0.99rem;
+  line-height: 1.52;
   font-weight: 650;
   color: var(--min-text-color);
   word-break: break-word;
@@ -2394,6 +2416,7 @@ html[data-theme="dark"] .about-pro {
 
 @media (max-width: 900px) {
   .about-pro .about-profile {
+    grid-template-columns: 1fr;
     gap: 24px;
   }
 
@@ -2423,6 +2446,11 @@ html[data-theme="dark"] .about-pro {
     gap: 0;
   }
 
+  .about-pro .about-honor-list {
+    grid-template-columns: 1fr;
+    column-gap: 0;
+  }
+
   .about-pro .about-work-tabs {
     gap: 6px;
     margin-bottom: 10px;
@@ -2433,10 +2461,19 @@ html[data-theme="dark"] .about-pro {
     padding: 4px 9px;
   }
 
+  .about-pro .about-work-list {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
   .about-pro .about-work-item {
     grid-template-columns: 1fr;
     gap: 8px;
     padding: 10px 0;
+    border: 0;
+    border-bottom: 1px solid var(--about-divider);
+    border-radius: 0;
+    background: transparent;
   }
 
   .about-pro .about-work-type {
@@ -2653,15 +2690,15 @@ body.wechat-safe.home-page .first-entry.home-info {
 
 html.wechat-safe,
 body.wechat-safe {
-  --font-display: "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
-  --font-heading: "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
-  --font-body: "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
-  --font-ui: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --font-display: "Bree Serif", "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
+  --font-heading: "Bree Serif", "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
+  --font-body: "Bree Serif", "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
+  --font-ui: "Manrope", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
 }
 
 html.wechat-safe .logo a,
 body.wechat-safe .logo a {
-  font-family: var(--font-heading);
+  font-family: "Rubik Burned", "Bree Serif", "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
   letter-spacing: 0.01em;
 }
 
@@ -2836,5 +2873,49 @@ body.wechat-safe .logo a {
   .bd-share-trigger:hover,
   .post-backtop:hover {
     transform: none;
+  }
+}
+
+/* WeChat + mobile overflow guard */
+html,
+body {
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+.main,
+.post-single,
+.post-content,
+.post-header,
+.post-footer {
+  max-width: 100%;
+}
+
+.post-title,
+.entry-header h2,
+.post-content {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+@media (max-width: 900px) {
+  .nav {
+    overflow-x: clip;
+  }
+
+  #menu {
+    max-width: 100%;
+  }
+
+  .post-single .post-header,
+  .post-single .post-content,
+  .post-single .post-footer,
+  .post-single .post-related {
+    max-width: 100%;
+  }
+
+  .post-title {
+    font-size: clamp(1.95rem, 8.2vw, 2.65rem);
+    line-height: 1.28;
   }
 }
