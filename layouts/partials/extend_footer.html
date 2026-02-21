@@ -3,6 +3,7 @@
 </footer>
 
 <div id="copy-toast" class="copy-toast" role="status" aria-live="polite" aria-atomic="true"></div>
+{{- $siteEnhance := resources.Get "js/site-enhance.js" | minify | fingerprint -}}
 
 <script>
   (function () {
@@ -19,7 +20,7 @@
     }
 
     var script = document.createElement("script");
-    script.src = "{{ "js/site-enhance.js" | relURL }}";
+    script.src = "{{ $siteEnhance.RelPermalink }}";
     script.defer = true;
     document.body.appendChild(script);
   })();

@@ -21,6 +21,7 @@
     </section>
   </div>
 </div>
+{{- $shareSheet := resources.Get "js/share-sheet.js" | minify | fingerprint -}}
 
 <script>
   (function () {
@@ -29,7 +30,7 @@
     if (window.BlueDogShareSheetLoaderReady) return;
     window.BlueDogShareSheetLoaderReady = true;
     var script = document.createElement("script");
-    script.src = "{{ "js/share-sheet.js" | relURL }}";
+    script.src = "{{ $shareSheet.RelPermalink }}";
     script.defer = true;
     document.body.appendChild(script);
   })();

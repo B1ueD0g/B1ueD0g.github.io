@@ -1,7 +1,6 @@
 @font-face {
   font-family: "Rubik Burned";
-  src: url("/fonts/RubikBurned-Regular.woff2") format("woff2"),
-    url("/fonts/RubikBurned-Regular.ttf") format("truetype");
+  src: url("/fonts/RubikBurned-Regular.woff2") format("woff2");
   font-style: normal;
   font-weight: 400;
   font-display: swap;
@@ -10,8 +9,7 @@
 
 @font-face {
   font-family: "Bree Serif";
-  src: url("/fonts/BreeSerif-Regular.woff2") format("woff2"),
-    url("/fonts/BreeSerif-Regular.ttf") format("truetype");
+  src: url("/fonts/BreeSerif-Regular.woff2") format("woff2");
   font-style: normal;
   font-weight: 400;
   font-display: swap;
@@ -20,8 +18,7 @@
 
 @font-face {
   font-family: "Manrope";
-  src: url("/fonts/Manrope-Variable.woff2") format("woff2"),
-    url("/fonts/Manrope-Variable.ttf") format("truetype");
+  src: url("/fonts/Manrope-Variable.woff2") format("woff2");
   font-style: normal;
   font-weight: 200 800;
   font-display: swap;
@@ -98,6 +95,34 @@ body {
   letter-spacing: 0.006em;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--min-line-color) 20%, transparent);
+  color: var(--min-text-color);
+}
+
+html[data-theme="dark"] ::selection {
+  background: color-mix(in srgb, #9ab4ff 26%, transparent);
+}
+
+.entry-header h2,
+.post-title,
+.about-pro .about-work-title {
+  text-wrap: balance;
+}
+
+.entry-content p,
+.post-content p {
+  text-wrap: pretty;
+}
+
+@supports (content-visibility: auto) {
+  .list .post-entry,
+  .about-pro .about-work-item {
+    content-visibility: auto;
+    contain-intrinsic-size: 1px 240px;
+  }
 }
 
 .skip-link {

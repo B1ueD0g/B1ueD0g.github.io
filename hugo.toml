@@ -23,7 +23,7 @@ unsafe = true
 home = ["HTML", "RSS", "JSON"]
 
 [minify]
-disableJS = true
+disableJS = false
 
 [params]
 env = "production"
