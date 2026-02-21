@@ -1065,8 +1065,17 @@ html[data-theme="dark"] .post-entry:hover {
   line-height: 1.45;
 }
 
-.post-backtop-wrap {
+.post-actions {
   margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+}
+
+.post-backtop-wrap {
+  margin-top: 0;
+  margin-left: auto;
   display: flex;
   justify-content: flex-end;
 }
@@ -1075,12 +1084,13 @@ html[data-theme="dark"] .post-entry:hover {
   border: 1px solid var(--min-line-color);
   border-radius: 999px;
   min-height: 38px;
-  padding: 0 0.82rem;
+  padding: 0 0.88rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   font-family: var(--font-ui);
-  font-size: 0.88rem;
+  font-size: 0.87rem;
+  font-weight: 600;
   color: var(--min-text-color);
 }
 
@@ -1682,8 +1692,12 @@ body.home-page .copy-toast {
     font-size: 0.8rem;
   }
 
+  .post-actions {
+    gap: 0.55rem;
+  }
+
   .post-backtop-wrap {
-    justify-content: center;
+    justify-content: flex-end;
   }
 
   .reading-progress {
@@ -3110,7 +3124,8 @@ html[data-theme="dark"] .about-pro {
 
 /* post share sheet */
 .bd-share {
-  margin: 18px 0 6px;
+  margin: 0;
+  flex-shrink: 0;
 }
 
 .bd-share-trigger {
@@ -3119,21 +3134,22 @@ html[data-theme="dark"] .about-pro {
   background: transparent;
   color: var(--min-text-color);
   font-family: var(--font-ui);
-  font-size: 0.92rem;
-  font-weight: 700;
-  letter-spacing: 0.01em;
+  font-size: 0.87rem;
+  font-weight: 620;
+  letter-spacing: 0.008em;
   line-height: 1;
-  padding: 11px 16px;
+  min-height: 38px;
+  padding: 0 0.88rem;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   cursor: pointer;
-  transition: transform 0.18s ease, background-color 0.18s ease, color 0.18s ease;
+  transition: transform 0.16s ease, background-color 0.16s ease, color 0.16s ease;
 }
 
 .bd-share-trigger:hover {
   transform: translateY(-1px);
-  background: var(--surface-soft);
+  background: color-mix(in srgb, var(--surface-soft) 84%, transparent);
 }
 
 .bd-share-trigger:focus-visible {
@@ -3142,7 +3158,7 @@ html[data-theme="dark"] .about-pro {
 }
 
 .bd-share-trigger-icon {
-  font-size: 0.96rem;
+  font-size: 0.92rem;
   line-height: 1;
 }
 
@@ -3157,14 +3173,16 @@ body.bd-share-opened {
 .bd-share-sheet {
   position: fixed;
   inset: 0;
-  z-index: 240;
+  z-index: 250;
 }
 
 .bd-share-backdrop {
   position: absolute;
   inset: 0;
   border: 0;
-  background: color-mix(in srgb, var(--min-line-color) 52%, transparent);
+  background: color-mix(in srgb, var(--min-line-color) 54%, transparent);
+  backdrop-filter: blur(1.5px);
+  -webkit-backdrop-filter: blur(1.5px);
   cursor: pointer;
 }
 
@@ -3173,34 +3191,34 @@ body.bd-share-opened {
   left: 50%;
   bottom: max(16px, env(safe-area-inset-bottom));
   transform: translateX(-50%);
-  width: min(460px, calc(100% - 24px));
+  width: min(420px, calc(100% - 22px));
   border: 1px solid var(--min-line-color);
-  border-radius: 18px;
+  border-radius: 16px;
   background: var(--min-bg);
-  box-shadow: 0 18px 54px rgba(0, 0, 0, 0.26);
-  padding: 16px;
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.25);
+  padding: 12px;
 }
 
 .bd-share-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
-  margin-bottom: 12px;
+  gap: 8px;
+  margin-bottom: 10px;
 }
 
 .bd-share-head h3 {
   margin: 0;
   font-family: var(--font-ui);
-  font-size: 1rem;
-  font-weight: 720;
-  letter-spacing: 0.01em;
+  font-size: 0.98rem;
+  font-weight: 700;
+  letter-spacing: 0.012em;
   color: var(--min-text-color);
 }
 
 .bd-share-close {
-  width: 30px;
-  height: 30px;
+  width: 34px;
+  height: 34px;
   border: 1px solid var(--min-line-color);
   border-radius: 999px;
   background: transparent;
@@ -3209,38 +3227,40 @@ body.bd-share-opened {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  font-size: 0.88rem;
+  font-size: 0.9rem;
+  transition: color 0.16s ease, background-color 0.16s ease, transform 0.16s ease;
 }
 
 .bd-share-close:hover {
   color: var(--min-text-color);
   background: var(--surface-soft);
+  transform: translateY(-1px);
 }
 
 .bd-share-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px;
+  gap: 7px;
 }
 
 .bd-share-option {
   border: 1px solid var(--min-line-color);
-  border-radius: 12px;
+  border-radius: 15px;
   background: transparent;
   color: var(--min-text-color);
   font-family: var(--font-ui);
-  font-size: 0.88rem;
-  font-weight: 620;
-  letter-spacing: 0.005em;
-  min-height: 42px;
-  padding: 9px 8px;
+  font-size: 0.85rem;
+  font-weight: 650;
+  letter-spacing: 0.01em;
+  min-height: 40px;
+  padding: 8px 7px;
   cursor: pointer;
   transition: transform 0.16s ease, background-color 0.16s ease, border-color 0.16s ease;
 }
 
 .bd-share-option:hover {
   transform: translateY(-1px);
-  background: var(--surface-soft);
+  background: color-mix(in srgb, var(--surface-soft) 88%, transparent);
 }
 
 .bd-share-option:focus-visible {
@@ -3249,33 +3269,40 @@ body.bd-share-opened {
 }
 
 .bd-share-qr {
-  margin-top: 12px;
-  border-top: 1px dashed color-mix(in srgb, var(--min-line-color) 55%, transparent);
-  padding-top: 12px;
+  margin-top: 10px;
+  border-top: 1px dashed color-mix(in srgb, var(--min-line-color) 48%, transparent);
+  padding-top: 10px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .bd-share-qr img {
-  width: 96px;
-  height: 96px;
-  border-radius: 10px;
+  width: 88px;
+  height: 88px;
+  border-radius: 11px;
   border: 1px solid var(--min-line-color);
   background: #fff;
   object-fit: cover;
+  flex-shrink: 0;
 }
 
 .bd-share-qr p {
   margin: 0;
   color: var(--secondary);
   font-family: var(--font-ui);
-  font-size: 0.84rem;
-  line-height: 1.6;
+  font-size: 0.86rem;
+  line-height: 1.55;
 }
 
 html[data-theme="dark"] .bd-share-panel {
-  box-shadow: 0 24px 56px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 22px 54px rgba(0, 0, 0, 0.5);
+}
+
+html[data-theme="dark"] .bd-share-trigger:hover,
+html[data-theme="dark"] .bd-share-option:hover,
+html[data-theme="dark"] .bd-share-close:hover {
+  background: rgba(237, 241, 250, 0.09);
 }
 
 @media (max-width: 680px) {
@@ -3286,17 +3313,34 @@ html[data-theme="dark"] .bd-share-panel {
     right: 0;
     transform: none;
     bottom: 0;
-    border-radius: 18px 18px 0 0;
+    border-radius: 16px 16px 0 0;
     border-left: none;
     border-right: none;
-    padding: 14px 14px calc(14px + env(safe-area-inset-bottom));
+    padding: 12px 12px calc(12px + env(safe-area-inset-bottom));
   }
 
   .bd-share-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px;
   }
 
   .bd-share-qr {
     align-items: flex-start;
+  }
+
+  .bd-share-qr img {
+    width: 80px;
+    height: 80px;
+  }
+
+  .post-actions {
+    margin-top: 0.8rem;
+  }
+
+  .bd-share-trigger,
+  .post-backtop {
+    min-height: 36px;
+    font-size: 0.82rem;
+    padding: 0 0.72rem;
   }
 }
