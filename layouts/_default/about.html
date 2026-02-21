@@ -169,23 +169,26 @@
     </section>
     <script>
       (function () {
-        const works = document.querySelector(".about-block-works");
+        if (window.BlueDogEnv && window.BlueDogEnv.isWeChatWebView) return;
+        var works = document.querySelector(".about-block-works");
         if (!works) return;
-        const tabs = Array.from(works.querySelectorAll(".about-work-tab"));
-        const panels = Array.from(works.querySelectorAll(".about-work-panel"));
+        var tabs = Array.prototype.slice.call(works.querySelectorAll(".about-work-tab"));
+        var panels = Array.prototype.slice.call(works.querySelectorAll(".about-work-panel"));
         if (!tabs.length || !panels.length) return;
-        const activate = (target) => {
-          tabs.forEach((tab) => {
-            const isActive = tab.dataset.target === target;
+        function activate(target) {
+          tabs.forEach(function (tab) {
+            var isActive = tab.dataset.target === target;
             tab.classList.toggle("is-active", isActive);
             tab.setAttribute("aria-selected", isActive ? "true" : "false");
           });
-          panels.forEach((panel) => {
+          panels.forEach(function (panel) {
             panel.classList.toggle("is-active", panel.dataset.panel === target);
           });
-        };
-        tabs.forEach((tab) => {
-          tab.addEventListener("click", () => activate(tab.dataset.target));
+        }
+        tabs.forEach(function (tab) {
+          tab.addEventListener("click", function () {
+            activate(tab.dataset.target);
+          });
         });
       })();
     </script>

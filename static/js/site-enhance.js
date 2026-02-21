@@ -1,0 +1,448 @@
+  (function () {
+    var toast = document.getElementById("copy-toast");
+    var timer = null;
+    var externalTrackCache = {};
+
+    window.BlueDogEnv = window.BlueDogEnv || {};
+    window.BlueDogEnv.isWeChatWebView = false;
+
+    function showToast(message, tone) {
+      if (!toast) return;
+      toast.textContent = message;
+      toast.classList.remove("is-error", "is-success");
+      toast.classList.add(tone === "error" ? "is-error" : "is-success");
+      toast.classList.add("is-visible");
+      if (timer) window.clearTimeout(timer);
+      timer = window.setTimeout(function () {
+        toast.classList.remove("is-visible");
+      }, 1700);
+    }
+
+    window.BlueDogShowToast = showToast;
+
+    function fallbackCopy(text) {
+      var input = document.createElement("textarea");
+      input.value = text;
+      input.setAttribute("readonly", "");
+      input.style.position = "fixed";
+      input.style.opacity = "0";
+      document.body.appendChild(input);
+      input.select();
+      var copied = false;
+      try {
+        copied = document.execCommand("copy");
+      } catch (error) {
+        copied = false;
+      }
+      document.body.removeChild(input);
+      return copied;
+    }
+
+    function trackEvent(name, props) {
+      if (!name) return;
+      var payload = props || {};
+      try {
+        if (typeof window.plausible === "function") {
+          window.plausible(name, { props: payload });
+        }
+      } catch (error) {
+        console.warn("plausible track failed", error);
+      }
+      try {
+        if (window.umami && typeof window.umami.track === "function") {
+          window.umami.track(name, payload);
+        }
+      } catch (error) {
+        console.warn("umami track failed", error);
+      }
+    }
+
+    window.BlueDogTrack = trackEvent;
+
+    function isEditableTarget(target) {
+      if (!target) return false;
+      var tag = (target.tagName || "").toLowerCase();
+      return target.isContentEditable || tag === "input" || tag === "textarea" || tag === "select";
+    }
+
+    function setupNavShrink() {
+      var header = document.querySelector(".header");
+      if (!header) return;
+      var ticking = false;
+      function updateState() {
+        ticking = false;
+        document.body.classList.toggle("nav-scrolled", window.scrollY > 18);
+      }
+      function onScroll() {
+        if (ticking) return;
+        ticking = true;
+        window.requestAnimationFrame(updateState);
+      }
+      updateState();
+      window.addEventListener("scroll", onScroll, { passive: true });
+    }
+
+    function setupSearchShortcut() {
+      document.addEventListener("keydown", function (event) {
+        if (event.key !== "/") return;
+        if (event.metaKey || event.ctrlKey || event.altKey) return;
+        if (isEditableTarget(event.target)) return;
+        event.preventDefault();
+
+        var path = window.location.pathname || "/";
+        var searchInput = document.querySelector("#search input");
+        var homeInput = document.getElementById("home-search-input");
+
+        if (path.indexOf("/search/") === 0 && searchInput) {
+          searchInput.focus();
+          searchInput.select();
+          return;
+        }
+        if (path === "/" && homeInput) {
+          homeInput.focus();
+          homeInput.select();
+          trackEvent("search_shortcut_focus_home", { page: path });
+          return;
+        }
+        trackEvent("search_shortcut_jump", { page: path });
+        window.location.href = "/search/";
+      });
+    }
+
+    function setupThemeToggleA11y() {
+      var toggle = document.getElementById("theme-toggle");
+      if (!toggle) return;
+
+      function syncThemeState() {
+        var currentTheme = document.documentElement.getAttribute("data-theme");
+        var dark = currentTheme === "dark";
+        toggle.setAttribute("aria-pressed", dark ? "true" : "false");
+        toggle.setAttribute("aria-label", dark ? "Switch to light theme" : "Switch to dark theme");
+        toggle.setAttribute("title", dark ? "Switch to light theme (Alt + T)" : "Switch to dark theme (Alt + T)");
+      }
+
+      syncThemeState();
+      toggle.addEventListener("click", function () {
+        window.setTimeout(syncThemeState, 0);
+      });
+    }
+
+    function setupReadingProgress() {
+      var articleContent = document.querySelector(".post-single .post-content");
+      if (!articleContent) return;
+
+      var bar = document.createElement("div");
+      bar.className = "reading-progress";
+      bar.setAttribute("aria-hidden", "true");
+      document.body.appendChild(bar);
+
+      var ticking = false;
+      function updateProgress() {
+        ticking = false;
+        var viewport = window.innerHeight || 1;
+        var scrollTop = window.scrollY || document.documentElement.scrollTop || 0;
+        var articleTop = articleContent.getBoundingClientRect().top + scrollTop;
+        var articleHeight = Math.max(articleContent.scrollHeight, 1);
+        var start = Math.max(0, articleTop - 110);
+        var end = Math.max(start + 1, articleTop + articleHeight - viewport * 0.42);
+        var progress = (scrollTop - start) / (end - start);
+        progress = Math.min(Math.max(progress, 0), 1);
+        bar.style.transform = "scaleX(" + progress + ")";
+      }
+
+      function onScroll() {
+        if (ticking) return;
+        ticking = true;
+        window.requestAnimationFrame(updateProgress);
+      }
+
+      updateProgress();
+      window.addEventListener("scroll", onScroll, { passive: true });
+      window.addEventListener("resize", onScroll);
+      window.addEventListener("load", onScroll);
+    }
+
+    function setupHeadingHighlight() {
+      var headings = Array.prototype.slice.call(
+        document.querySelectorAll(".post-content h2[id], .post-content h3[id], .post-content h4[id]")
+      );
+      if (headings.length === 0) return;
+
+      var tocMap = {};
+      document.querySelectorAll(".toc a[href^='#']").forEach(function (link) {
+        var id = decodeURIComponent((link.getAttribute("href") || "").slice(1));
+        if (id) tocMap[id] = link;
+      });
+
+      var offsets = [];
+      var activeId = "";
+      var ticking = false;
+
+      function computeOffsets() {
+        offsets = headings.map(function (heading) {
+          return {
+            id: heading.id,
+            top: heading.getBoundingClientRect().top + window.scrollY,
+          };
+        });
+      }
+
+      function setActive(id) {
+        if (!id || id === activeId) return;
+        headings.forEach(function (heading) {
+          heading.classList.toggle("is-active-heading", heading.id === id);
+        });
+        Object.keys(tocMap).forEach(function (key) {
+          tocMap[key].classList.toggle("is-active", key === id);
+        });
+        activeId = id;
+      }
+
+      function updateActiveHeading() {
+        ticking = false;
+        if (!offsets.length) return;
+        var pointer = (window.scrollY || 0) + 136;
+        var nextActive = offsets[0].id;
+        for (var i = 0; i < offsets.length; i++) {
+          if (pointer >= offsets[i].top - 4) {
+            nextActive = offsets[i].id;
+          } else {
+            break;
+          }
+        }
+        setActive(nextActive);
+      }
+
+      function onScroll() {
+        if (ticking) return;
+        ticking = true;
+        window.requestAnimationFrame(updateActiveHeading);
+      }
+
+      computeOffsets();
+      updateActiveHeading();
+      window.addEventListener("resize", function () {
+        computeOffsets();
+        onScroll();
+      });
+      window.addEventListener("load", function () {
+        computeOffsets();
+        onScroll();
+      });
+      window.addEventListener("scroll", onScroll, { passive: true });
+    }
+
+    function setupLightbox() {
+      var images = Array.prototype.slice.call(document.querySelectorAll(".post-content img"));
+      if (images.length === 0) return;
+
+      var items = [];
+      images.forEach(function (img) {
+        var source = img.currentSrc || img.getAttribute("src");
+        if (!source) return;
+        var anchor = img.closest("a[href]");
+        var resolved = source;
+        if (anchor) {
+          try {
+            resolved = new URL(anchor.getAttribute("href"), window.location.origin).href;
+          } catch (error) {
+            resolved = source;
+          }
+          anchor.setAttribute("data-lightbox-anchor", "1");
+        }
+        var index = items.length;
+        items.push({
+          src: resolved,
+          caption: img.getAttribute("alt") || img.getAttribute("title") || "",
+        });
+        img.classList.add("is-lightbox-ready");
+        img.setAttribute("data-lightbox-index", String(index));
+      });
+
+      if (items.length === 0) return;
+
+      var overlay = document.createElement("div");
+      overlay.className = "bd-lightbox";
+      overlay.innerHTML =
+        '<button type="button" class="bd-lightbox-close" aria-label="Close">×</button>' +
+        '<button type="button" class="bd-lightbox-prev" aria-label="Previous">‹</button>' +
+        '<img class="bd-lightbox-img" alt="" />' +
+        '<button type="button" class="bd-lightbox-next" aria-label="Next">›</button>' +
+        '<div class="bd-lightbox-caption"></div>';
+      document.body.appendChild(overlay);
+
+      var closeBtn = overlay.querySelector(".bd-lightbox-close");
+      var prevBtn = overlay.querySelector(".bd-lightbox-prev");
+      var nextBtn = overlay.querySelector(".bd-lightbox-next");
+      var imageEl = overlay.querySelector(".bd-lightbox-img");
+      var captionEl = overlay.querySelector(".bd-lightbox-caption");
+      var activeIndex = -1;
+
+      function render(index) {
+        if (index < 0 || index >= items.length) return;
+        activeIndex = index;
+        var current = items[activeIndex];
+        imageEl.setAttribute("src", current.src);
+        imageEl.setAttribute("alt", current.caption || "Image preview");
+        captionEl.textContent = current.caption || "";
+        prevBtn.style.display = items.length > 1 ? "inline-flex" : "none";
+        nextBtn.style.display = items.length > 1 ? "inline-flex" : "none";
+      }
+
+      function open(index) {
+        render(index);
+        overlay.classList.add("is-open");
+        document.body.classList.add("bd-lightbox-open");
+        trackEvent("image_lightbox_open", {
+          page: window.location.pathname,
+          index: String(index),
+        });
+      }
+
+      function close() {
+        overlay.classList.remove("is-open");
+        document.body.classList.remove("bd-lightbox-open");
+      }
+
+      function next() {
+        if (activeIndex < 0) return;
+        render((activeIndex + 1) % items.length);
+      }
+
+      function prev() {
+        if (activeIndex < 0) return;
+        render((activeIndex - 1 + items.length) % items.length);
+      }
+
+      document.addEventListener("click", function (event) {
+        var img = event.target.closest(".post-content img.is-lightbox-ready");
+        if (!img) return;
+        var anchor = img.closest("a[data-lightbox-anchor='1']");
+        if (anchor) event.preventDefault();
+        var index = parseInt(img.getAttribute("data-lightbox-index") || "-1", 10);
+        if (Number.isNaN(index) || index < 0) return;
+        open(index);
+      });
+
+      closeBtn.addEventListener("click", close);
+      nextBtn.addEventListener("click", next);
+      prevBtn.addEventListener("click", prev);
+      overlay.addEventListener("click", function (event) {
+        if (event.target === overlay) close();
+      });
+
+      document.addEventListener("keydown", function (event) {
+        if (!overlay.classList.contains("is-open")) return;
+        if (event.key === "Escape") close();
+        if (event.key === "ArrowRight") next();
+        if (event.key === "ArrowLeft") prev();
+      });
+    }
+
+    function setupPageTransition() {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      var leaving = false;
+
+      document.addEventListener("click", function (event) {
+        var anchor = event.target.closest("a[href]");
+        if (!anchor || leaving) return;
+        if (anchor.hasAttribute("data-no-transition")) return;
+        if (anchor.target && anchor.target !== "_self") return;
+        if (anchor.hasAttribute("download")) return;
+        if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+
+        var href = anchor.getAttribute("href") || "";
+        if (!href || href.startsWith("#") || href.startsWith("mailto:") || href.startsWith("tel:")) return;
+
+        var nextURL;
+        try {
+          nextURL = new URL(anchor.href, window.location.origin);
+        } catch (error) {
+          return;
+        }
+
+        if (nextURL.origin !== window.location.origin) return;
+        if (nextURL.href === window.location.href) return;
+        if (nextURL.pathname === window.location.pathname && nextURL.search === window.location.search && nextURL.hash) return;
+
+        leaving = true;
+        event.preventDefault();
+        document.body.classList.add("is-page-leaving");
+        window.setTimeout(function () {
+          window.location.href = nextURL.href;
+        }, 140);
+      });
+    }
+
+    function copyEmail(email) {
+      if (!email) return;
+      function onResult(copied) {
+        if (copied) {
+          showToast("邮箱已复制: " + email, "success");
+          trackEvent("email_copy", { email: email, page: window.location.pathname });
+        } else {
+          showToast("复制失败，请手动复制: " + email, "error");
+          trackEvent("email_copy_failed", { page: window.location.pathname });
+        }
+      }
+
+      if (navigator.clipboard && window.isSecureContext && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(email).then(function () {
+          onResult(true);
+        }).catch(function () {
+          onResult(fallbackCopy(email));
+        });
+      } else {
+        onResult(fallbackCopy(email));
+      }
+    }
+
+    document.addEventListener("click", function (event) {
+      var link = event.target.closest("[data-copy-email]");
+      if (!link) return;
+      event.preventDefault();
+      var email = link.getAttribute("data-copy-email");
+      copyEmail(email);
+    });
+
+    document.addEventListener("click", function (event) {
+      var tagAnchor = event.target.closest(".post-tags a");
+      if (tagAnchor) {
+        var tagName = (tagAnchor.getAttribute("data-tag-click") || tagAnchor.textContent || "").trim();
+        if (tagName) {
+          trackEvent("tag_click", { tag: tagName, page: window.location.pathname });
+        }
+      }
+
+      var anchor = event.target.closest("a[href]");
+      if (!anchor) return;
+      var href = anchor.getAttribute("href") || "";
+      if (!href || href.startsWith("#") || href.startsWith("mailto:") || href.startsWith("tel:")) return;
+
+      var targetURL;
+      try {
+        targetURL = new URL(anchor.href, window.location.origin);
+      } catch (error) {
+        return;
+      }
+      if (targetURL.origin === window.location.origin) return;
+
+      var key = targetURL.href + "::" + window.location.pathname;
+      if (externalTrackCache[key]) return;
+      externalTrackCache[key] = true;
+
+      trackEvent("outbound_click", {
+        host: targetURL.host,
+        href: targetURL.href,
+        page: window.location.pathname,
+      });
+    });
+
+    setupThemeToggleA11y();
+    setupNavShrink();
+    setupSearchShortcut();
+    setupReadingProgress();
+    setupHeadingHighlight();
+    setupLightbox();
+    setupPageTransition();
+  })();

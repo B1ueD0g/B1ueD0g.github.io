@@ -3128,6 +3128,19 @@ html[data-theme="dark"] .about-pro {
   flex-shrink: 0;
 }
 
+.bd-share-wechat-tip {
+  display: none;
+  margin: 0;
+  border: 1px solid var(--min-line-color);
+  border-radius: 999px;
+  min-height: 38px;
+  padding: 0 0.82rem;
+  align-items: center;
+  font-family: var(--font-ui);
+  font-size: 0.78rem;
+  color: var(--secondary);
+}
+
 .bd-share-trigger {
   border: 1px solid var(--min-line-color);
   border-radius: 999px;
@@ -3320,6 +3333,13 @@ body.wechat-safe .main {
   transition: none !important;
 }
 
+html.wechat-safe *,
+html.wechat-safe *::before,
+html.wechat-safe *::after {
+  animation: none !important;
+  transition: none !important;
+}
+
 html.wechat-safe,
 body.wechat-safe {
   --font-display: "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
@@ -3332,6 +3352,16 @@ html.wechat-safe .logo a,
 body.wechat-safe .logo a {
   font-family: var(--font-heading);
   letter-spacing: 0.01em;
+}
+
+html.wechat-safe .bd-share-trigger,
+body.wechat-safe .bd-share-trigger {
+  display: none;
+}
+
+html.wechat-safe .bd-share-wechat-tip,
+body.wechat-safe .bd-share-wechat-tip {
+  display: inline-flex;
 }
 
 @media (max-width: 680px) {
