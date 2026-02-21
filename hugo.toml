@@ -1,5 +1,5 @@
 baseURL = "https://bluedog.website/"
-languageCode = "zh-cn"
+languageCode = "zh-CN"
 defaultContentLanguage = "zh"
 title = "BlueDog 's Blog"
 theme = "PaperMod"

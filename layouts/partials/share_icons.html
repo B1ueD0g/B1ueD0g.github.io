@@ -1,14 +1,14 @@
 <div class="bd-share" data-share-root data-share-title="{{ .Title | plainify }}" data-share-url="{{ .Permalink }}">
-  <button class="bd-share-trigger" type="button" data-share-open aria-haspopup="dialog" aria-expanded="false">
+  <button class="bd-share-trigger" type="button" data-share-open aria-haspopup="dialog" aria-expanded="false" aria-controls="bd-share-panel">
     <span class="bd-share-trigger-icon" aria-hidden="true">↗</span>
     <span>转发</span>
   </button>
 
-  <div class="bd-share-sheet" data-share-sheet hidden>
+  <div class="bd-share-sheet" data-share-sheet hidden aria-hidden="true">
     <button class="bd-share-backdrop" type="button" data-share-close aria-label="关闭转发面板"></button>
-    <section class="bd-share-panel" role="dialog" aria-modal="true" aria-label="选择转发渠道">
+    <section class="bd-share-panel" id="bd-share-panel" role="dialog" aria-modal="true" aria-labelledby="bd-share-title" tabindex="-1">
       <header class="bd-share-head">
-        <h3>转发到</h3>
+        <h3 id="bd-share-title">转发到</h3>
         <button class="bd-share-close" type="button" data-share-close aria-label="关闭">✕</button>
       </header>
 

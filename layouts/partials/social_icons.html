@@ -1,10 +1,11 @@
-<div class="social-icons" {{ with .align }}align="{{ . }}" {{ end }}>
+<div class="social-icons{{ with .align }} social-icons-{{ . }}{{ end }}">
   {{- range site.Params.socialIcons -}}
     {{- $rawURL := trim .url " " -}}
+    {{- $iconLabel := (.title | default .name) | title -}}
     {{- if hasPrefix $rawURL "mailto:" -}}
       {{- $email := strings.TrimPrefix "mailto:" $rawURL -}}
       <a
-        href="#"
+        href="{{ $rawURL | safeURL }}"
         data-copy-email="{{ $email }}"
         title="复制邮箱地址"
         aria-label="Copy email address"
@@ -16,7 +17,8 @@
         href="{{ $rawURL | safeURL }}"
         target="_blank"
         rel="noopener noreferrer me"
-        title="{{ (.title | default .name) | title }}"
+        title="{{ $iconLabel }}"
+        aria-label="{{ $iconLabel }}"
       >
         {{ partial "svg.html" . }}
       </a>

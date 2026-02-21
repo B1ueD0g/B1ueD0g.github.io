@@ -6,6 +6,17 @@
     window.BlueDogEnv = window.BlueDogEnv || {};
     window.BlueDogEnv.isWeChatWebView = false;
 
+    function runWhenIdle(task, timeout) {
+      if (typeof task !== "function") return;
+      if ("requestIdleCallback" in window) {
+        window.requestIdleCallback(function () {
+          task();
+        }, { timeout: timeout || 900 });
+        return;
+      }
+      window.setTimeout(task, 0);
+    }
+
     function showToast(message, tone) {
       if (!toast) return;
       toast.textContent = message;
@@ -125,6 +136,24 @@
       toggle.addEventListener("click", function () {
         window.setTimeout(syncThemeState, 0);
       });
+    }
+
+    function setupGeneratedA11yLabels() {
+      var updateLabels = function () {
+        var pagefindInput = document.querySelector(".pagefind-ui__search-input");
+        if (pagefindInput && !pagefindInput.getAttribute("aria-label")) {
+          pagefindInput.setAttribute("aria-label", "Search posts");
+        }
+      };
+
+      updateLabels();
+      var observerRoot = document.getElementById("search") || document.body;
+      if (!observerRoot || !("MutationObserver" in window)) return;
+
+      var observer = new MutationObserver(function () {
+        updateLabels();
+      });
+      observer.observe(observerRoot, { childList: true, subtree: true });
     }
 
     function setupReadingProgress() {
@@ -439,10 +468,11 @@
     });
 
     setupThemeToggleA11y();
+    setupGeneratedA11yLabels();
     setupNavShrink();
     setupSearchShortcut();
     setupReadingProgress();
-    setupHeadingHighlight();
-    setupLightbox();
+    runWhenIdle(setupHeadingHighlight, 800);
+    runWhenIdle(setupLightbox, 1200);
     setupPageTransition();
   })();

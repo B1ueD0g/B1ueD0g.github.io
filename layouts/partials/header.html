@@ -5,6 +5,8 @@
             {{- $mobile_label_text := (site.Params.label.mobileText | default "BlueDog") -}}
             {{- if site.Title }}
             <a href="{{ "" | absLangURL }}" accesskey="h" title="{{ $label_text }} (Alt + H)" aria-label="{{ $label_text }}">
+                {{- $iconHeight := site.Params.label.iconHeight | default 30 -}}
+                {{- $iconWidth := site.Params.label.iconWidth | default $iconHeight -}}
                 {{- if site.Params.label.icon }}
                 {{- $img := resources.Get site.Params.label.icon }}
                 {{- if $img }}
@@ -21,10 +23,18 @@
                         {{- end -}}
                     {{- end -}}
                     <img src="{{ $img.Permalink }}" alt="" aria-hidden="true"
-                        height="{{- site.Params.label.iconHeight | default "30" -}}">
+                        width="{{- $img.Width -}}"
+                        height="{{- $img.Height -}}"
+                        loading="eager"
+                        decoding="async"
+                        fetchpriority="high">
                 {{- else -}}
                 <img src="{{- site.Params.label.icon | absURL -}}" alt="" aria-hidden="true"
-                    height="{{- site.Params.label.iconHeight | default "30" -}}">
+                    width="{{- $iconWidth -}}"
+                    height="{{- $iconHeight -}}"
+                    loading="eager"
+                    decoding="async"
+                    fetchpriority="high">
                 {{- end -}}
                 {{- else if hasPrefix site.Params.label.iconSVG "<svg" -}}
                     {{ site.Params.label.iconSVG | safeHTML }}
@@ -83,14 +93,14 @@
             </div>
         </div>
         {{- $currentPage := . -}}
-        <ul id="menu" role="navigation" aria-label="Main menu">
+        <ul id="menu">
         {{- range site.Menus.main }}
         {{- $menu_item_url := (cond (strings.HasSuffix .URL "/") .URL (printf "%s/" .URL) ) | absLangURL -}}
         {{- $page_url:= $currentPage.Permalink | absLangURL -}}
         {{- $is_current := eq $menu_item_url $page_url -}}
         {{- $is_search := eq (site.GetPage .KeyName).Layout `search` -}}
         <li>
-            <a href="{{ .URL | absLangURL }}"{{ if $is_current }} class="is-current"{{ end }} title="{{ .Title | default .Name }} {{- cond $is_search (" (Alt + /)" | safeHTMLAttr) ("" | safeHTMLAttr ) }}"
+            <a href="{{ .URL | absLangURL }}"{{ if $is_current }} class="is-current" aria-current="page"{{ end }} title="{{ .Title | default .Name }} {{- cond $is_search (" (Alt + /)" | safeHTMLAttr) ("" | safeHTMLAttr ) }}"
                 {{- cond $is_search (" accesskey=/" | safeHTMLAttr) ("" | safeHTMLAttr ) }}>
                     <span {{- if $is_current }} class="active" {{- end }}>
                         {{- .Pre -}}

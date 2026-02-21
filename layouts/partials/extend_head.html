@@ -7,13 +7,19 @@
   })();
 </script>
 <link rel="preload" href="{{ "fonts/RubikBurned-Regular.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="{{ "fonts/BreeSerif-Regular.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
+<meta name="color-scheme" content="light dark">
 <link rel="sitemap" type="application/xml" title="Sitemap" href="{{ "sitemap.xml" | absURL }}">
 <link rel="icon" type="image/svg+xml" href="{{ site.Params.branding.faviconSvgLight | default "/branding/favicon-light.svg" | absURL }}" media="(prefers-color-scheme: light)">
 <link rel="icon" type="image/svg+xml" href="{{ site.Params.branding.faviconSvgDark | default "/branding/favicon-dark.svg" | absURL }}" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="{{ site.Params.branding.themeColorLight | default "#f4f4f2" }}">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="{{ site.Params.branding.themeColorDark | default "#11151c" }}">
 <link rel="manifest" href="{{ "site.webmanifest" | absURL }}">
+{{- with site.Params.analytics -}}
+  {{- if and .enabled (eq (lower (default "" .provider)) "plausible") -}}
+<link rel="preconnect" href="https://plausible.io" crossorigin>
+<link rel="dns-prefetch" href="//plausible.io">
+  {{- end -}}
+{{- end -}}
 
 {{- with site.Params.analytics -}}
   {{- if .enabled -}}

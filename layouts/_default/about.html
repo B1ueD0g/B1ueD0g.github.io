@@ -16,7 +16,7 @@
   <div class="about-profile">
     {{- with $aboutData.profile.roles }}
     <section class="about-block about-block-title">
-      <h2>{{ $aboutData.profile.title | default "Title" }}</h2>
+      <h2>{{ $aboutData.profile.title | default "Roles · 定位" }}</h2>
       <ul class="about-title-list">
         {{- range . }}
         <li>{{ . }}</li>
@@ -75,20 +75,20 @@
     {{- end -}}
     <section class="about-block about-block-works">
       <h2>Works · 成果物</h2>
-      <div class="about-work-tabs" role="tablist" aria-label="Works tabs">
+      <div class="about-work-tabs" aria-label="Works tabs">
         {{- if gt (len $published) 0 }}
-        <button class="about-work-tab{{ if eq $defaultPanel "published" }} is-active{{ end }}" type="button" role="tab" data-target="published" aria-label="已发布（书籍 / 标准）" title="已发布（书籍 / 标准）" aria-selected="{{ if eq $defaultPanel "published" }}true{{ else }}false{{ end }}" aria-controls="about-work-panel-published">已发布</button>
+        <button class="about-work-tab{{ if eq $defaultPanel "published" }} is-active{{ end }}" type="button" data-target="published" aria-label="已发布（书籍 / 标准）" title="已发布（书籍 / 标准）" aria-pressed="{{ if eq $defaultPanel "published" }}true{{ else }}false{{ end }}" aria-controls="about-work-panel-published">已发布</button>
         {{- end }}
         {{- if gt (len $inProgress) 0 }}
-        <button class="about-work-tab{{ if eq $defaultPanel "inprogress" }} is-active{{ end }}" type="button" role="tab" data-target="inprogress" aria-label="待出版 / 待发布（书籍 / 标准）" title="待出版 / 待发布（书籍 / 标准）" aria-selected="{{ if eq $defaultPanel "inprogress" }}true{{ else }}false{{ end }}" aria-controls="about-work-panel-inprogress">待发布</button>
+        <button class="about-work-tab{{ if eq $defaultPanel "inprogress" }} is-active{{ end }}" type="button" data-target="inprogress" aria-label="待出版 / 待发布（书籍 / 标准）" title="待出版 / 待发布（书籍 / 标准）" aria-pressed="{{ if eq $defaultPanel "inprogress" }}true{{ else }}false{{ end }}" aria-controls="about-work-panel-inprogress">待发布</button>
         {{- end }}
         {{- if gt (len $translatedReferences) 0 }}
-        <button class="about-work-tab{{ if eq $defaultPanel "translated" }} is-active{{ end }}" type="button" role="tab" data-target="translated" aria-label="翻译标准/白皮书/报告（节选）" title="翻译标准/白皮书/报告（节选）" aria-selected="{{ if eq $defaultPanel "translated" }}true{{ else }}false{{ end }}" aria-controls="about-work-panel-translated">翻译节选</button>
+        <button class="about-work-tab{{ if eq $defaultPanel "translated" }} is-active{{ end }}" type="button" data-target="translated" aria-label="翻译标准/白皮书/报告（节选）" title="翻译标准/白皮书/报告（节选）" aria-pressed="{{ if eq $defaultPanel "translated" }}true{{ else }}false{{ end }}" aria-controls="about-work-panel-translated">翻译节选</button>
         {{- end }}
       </div>
       <div class="about-work-panels">
         {{- if gt (len $published) 0 }}
-        <section class="about-work-panel{{ if eq $defaultPanel "published" }} is-active{{ end }}" id="about-work-panel-published" data-panel="published" role="tabpanel">
+        <section class="about-work-panel{{ if eq $defaultPanel "published" }} is-active{{ end }}" id="about-work-panel-published" data-panel="published" aria-label="已发布成果物"{{ if ne $defaultPanel "published" }} hidden{{ end }}>
           <ul class="about-work-list">
             {{- range $published }}
             {{- $typeClass := "about-work-type-translation" -}}
@@ -113,7 +113,7 @@
         </section>
         {{- end }}
         {{- if gt (len $inProgress) 0 }}
-        <section class="about-work-panel{{ if eq $defaultPanel "inprogress" }} is-active{{ end }}" id="about-work-panel-inprogress" data-panel="inprogress" role="tabpanel">
+        <section class="about-work-panel{{ if eq $defaultPanel "inprogress" }} is-active{{ end }}" id="about-work-panel-inprogress" data-panel="inprogress" aria-label="待发布成果物"{{ if ne $defaultPanel "inprogress" }} hidden{{ end }}>
           <ul class="about-work-list">
             {{- range $inProgress }}
             {{- $typeClass := "about-work-type-translation" -}}
@@ -138,7 +138,7 @@
         </section>
         {{- end }}
         {{- if gt (len $translatedReferences) 0 }}
-        <section class="about-work-panel{{ if eq $defaultPanel "translated" }} is-active{{ end }}" id="about-work-panel-translated" data-panel="translated" role="tabpanel">
+        <section class="about-work-panel{{ if eq $defaultPanel "translated" }} is-active{{ end }}" id="about-work-panel-translated" data-panel="translated" aria-label="翻译节选"{{ if ne $defaultPanel "translated" }} hidden{{ end }}>
           <ul class="about-work-list">
             {{- range $translatedReferences }}
             {{- $typeClass := "about-work-type-translation" -}}
@@ -179,10 +179,12 @@
           tabs.forEach(function (tab) {
             var isActive = tab.dataset.target === target;
             tab.classList.toggle("is-active", isActive);
-            tab.setAttribute("aria-selected", isActive ? "true" : "false");
+            tab.setAttribute("aria-pressed", isActive ? "true" : "false");
           });
           panels.forEach(function (panel) {
-            panel.classList.toggle("is-active", panel.dataset.panel === target);
+            var panelActive = panel.dataset.panel === target;
+            panel.classList.toggle("is-active", panelActive);
+            panel.hidden = !panelActive;
           });
         }
         tabs.forEach(function (tab) {

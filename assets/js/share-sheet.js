@@ -72,6 +72,21 @@
     return Boolean(document.querySelector(".bd-share[data-share-opened='true']"));
   }
 
+  function getFocusableElements(scope) {
+    if (!scope) return [];
+    var selectors = [
+      "button:not([disabled])",
+      "a[href]",
+      "input:not([disabled])",
+      "select:not([disabled])",
+      "textarea:not([disabled])",
+      "[tabindex]:not([tabindex='-1'])"
+    ].join(",");
+    return Array.prototype.slice.call(scope.querySelectorAll(selectors)).filter(function (el) {
+      return !el.hasAttribute("hidden");
+    });
+  }
+
   function syncBodyLock() {
     document.body.classList.toggle("bd-share-opened", hasOpenSheet());
   }
@@ -79,21 +94,35 @@
   function openSheet(root) {
     var sheet = root.querySelector("[data-share-sheet]");
     if (!sheet) return;
+    root.__shareLastFocus = document.activeElement;
     sheet.hidden = false;
+    sheet.setAttribute("aria-hidden", "false");
     root.dataset.shareOpened = "true";
     var trigger = root.querySelector("[data-share-open]");
     if (trigger) trigger.setAttribute("aria-expanded", "true");
     syncBodyLock();
+    var panel = sheet.querySelector(".bd-share-panel");
+    var focusables = getFocusableElements(panel);
+    if (focusables.length > 0) {
+      focusables[0].focus();
+    } else if (panel) {
+      panel.focus();
+    }
   }
 
   function closeSheet(root) {
     var sheet = root.querySelector("[data-share-sheet]");
     if (!sheet) return;
     sheet.hidden = true;
+    sheet.setAttribute("aria-hidden", "true");
     delete root.dataset.shareOpened;
     var trigger = root.querySelector("[data-share-open]");
     if (trigger) trigger.setAttribute("aria-expanded", "false");
     syncBodyLock();
+    var restoreTarget = root.__shareLastFocus;
+    if (restoreTarget && typeof restoreTarget.focus === "function") {
+      restoreTarget.focus();
+    }
   }
 
   function closeAllSheets() {
@@ -165,7 +194,28 @@
   });
 
   document.addEventListener("keydown", function (event) {
-    if (event.key !== "Escape") return;
-    closeAllSheets();
+    if (event.key === "Escape") {
+      closeAllSheets();
+      return;
+    }
+
+    if (event.key !== "Tab") return;
+    var root = document.querySelector(".bd-share[data-share-opened='true']");
+    if (!root) return;
+    var panel = root.querySelector(".bd-share-panel");
+    var focusables = getFocusableElements(panel);
+    if (focusables.length === 0) return;
+
+    var first = focusables[0];
+    var last = focusables[focusables.length - 1];
+    var active = document.activeElement;
+
+    if (event.shiftKey && active === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && active === last) {
+      event.preventDefault();
+      first.focus();
+    }
   });
 })();

@@ -4,12 +4,13 @@
 
 <!DOCTYPE html>
 {{- $theme := site.Params.defaultTheme | default "auto" -}}
+{{- $langCode := site.LanguageCode | default site.Language.Lang | default "en" | replaceRE "_" "-" -}}
 {{- if eq $theme "dark" -}}
-<html lang="{{ site.Language }}" dir="{{ .Language.LanguageDirection | default "auto" }}" data-theme="dark">
+<html lang="{{ $langCode }}" dir="{{ .Language.LanguageDirection | default "auto" }}" data-theme="dark">
 {{- else if eq $theme "light" -}}
-<html lang="{{ site.Language }}" dir="{{ .Language.LanguageDirection | default "auto" }}" data-theme="light">
+<html lang="{{ $langCode }}" dir="{{ .Language.LanguageDirection | default "auto" }}" data-theme="light">
 {{- else -}}
-<html lang="{{ site.Language }}" dir="{{ .Language.LanguageDirection | default "auto" }}" data-theme="auto">
+<html lang="{{ $langCode }}" dir="{{ .Language.LanguageDirection | default "auto" }}" data-theme="auto">
 {{- end }}
 
 <head>
