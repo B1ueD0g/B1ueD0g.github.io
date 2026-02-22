@@ -115,20 +115,12 @@ html[data-theme="dark"] ::selection {
 .entry-header h2,
 .post-title,
 .about-pro .about-work-title {
-  text-wrap: balance;
+  overflow-wrap: break-word;
 }
 
 .entry-content p,
 .post-content p {
-  text-wrap: pretty;
-}
-
-@supports (content-visibility: auto) {
-  .list .post-entry,
-  .about-pro .about-work-item {
-    content-visibility: auto;
-    contain-intrinsic-size: 1px 240px;
-  }
+  text-wrap: auto;
 }
 
 .skip-link {
@@ -2416,6 +2408,17 @@ body.wechat-safe .post-footer {
   min-width: 0;
 }
 
+html.wechat-safe .entry-content p,
+body.wechat-safe .entry-content p,
+html.wechat-safe .post-content p,
+body.wechat-safe .post-content p,
+html.wechat-safe .entry-header h2,
+body.wechat-safe .entry-header h2,
+html.wechat-safe .post-title,
+body.wechat-safe .post-title {
+  text-wrap: auto !important;
+}
+
 @media (max-width: 900px) {
   html,
   body {
@@ -2515,6 +2518,7 @@ body.wechat-safe .post-footer {
   .post-content :is(p, li, blockquote, h2, h3, h4, strong, em, a) {
     overflow-wrap: anywhere;
     word-break: break-word;
+    text-wrap: auto;
   }
 
   .post-content pre,
