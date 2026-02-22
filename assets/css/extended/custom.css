@@ -2137,6 +2137,7 @@ body.wechat-safe .logo a {
   letter-spacing: 0.07em;
   text-transform: uppercase;
   color: var(--min-text-color);
+  white-space: nowrap;
 }
 
 .about-pro .about-block h2::before {
@@ -2202,6 +2203,20 @@ body.wechat-safe .logo a {
   border-radius: 999px;
   background: color-mix(in srgb, var(--min-line-color) 78%, transparent);
   transform: translateY(-50%);
+}
+
+.about-pro .about-highlight-list li:last-child {
+  padding-left: 0;
+  border-bottom: 0;
+  text-align: center;
+  font-size: 1.05rem;
+  color: var(--min-text-color);
+  letter-spacing: 0.01em;
+}
+
+.about-pro .about-highlight-list li:last-child::before {
+  content: none;
+  display: none;
 }
 
 .about-pro .about-cert-list,
@@ -2452,11 +2467,33 @@ body.wechat-safe .post-footer {
     overflow-wrap: break-word;
   }
 
+  .post-single {
+    overflow-x: clip;
+  }
+
+  .post-content > * {
+    max-width: 100%;
+  }
+
+  .post-content :is(p, li, blockquote, h2, h3, h4, strong, em, a) {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
   .post-content pre,
   .post-content table {
     display: block;
     overflow-x: auto;
     max-width: 100%;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .post-content img,
+  .post-content video,
+  .post-content iframe {
+    max-width: 100%;
+    height: auto;
   }
 
   .post-entry-with-date {
@@ -2506,6 +2543,12 @@ body.wechat-safe .post-footer {
   .about-pro :is(.about-highlight-list li, .about-cert-list li, .about-honor-list li, .about-list li) {
     font-size: 0.93rem;
     line-height: 1.62;
+  }
+
+  .about-pro .about-highlight-list li:last-child {
+    font-size: 0.98rem;
+    line-height: 1.56;
+    padding: 8px 0 4px;
   }
 
   .about-pro .about-cert-list,
