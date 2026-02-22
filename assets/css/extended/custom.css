@@ -2153,7 +2153,7 @@ body.wechat-safe .logo a {
 
 .about-pro .about-title-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 8px 10px;
 }
 
@@ -2161,12 +2161,13 @@ body.wechat-safe .logo a {
   border: 1px solid color-mix(in srgb, var(--min-line-color) 64%, transparent);
   border-radius: 999px;
   background: var(--surface-soft);
-  padding: 6px 11px;
+  padding: 6px 9px;
   text-align: center;
   font-family: var(--font-ui);
-  font-size: 0.9rem;
-  line-height: 1.35;
+  font-size: 0.85rem;
+  line-height: 1.28;
   color: var(--secondary);
+  white-space: nowrap;
 }
 
 .about-pro .about-highlight-lead {
