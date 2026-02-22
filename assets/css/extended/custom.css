@@ -2082,16 +2082,21 @@ body.wechat-safe .logo a {
 }
 
 .main {
-  width: min(var(--layout-max), calc(100% - 44px));
+  width: min(var(--layout-max), 100%);
+  max-width: var(--layout-max);
   margin-left: auto;
   margin-right: auto;
+  padding-left: clamp(12px, 2.2vw, 24px);
+  padding-right: clamp(12px, 2.2vw, 24px);
 }
 
 .nav {
   max-width: var(--layout-max);
-  width: min(var(--layout-max), calc(100% - 44px));
+  width: min(var(--layout-max), 100%);
   margin-left: auto;
   margin-right: auto;
+  padding-left: clamp(8px, 1.8vw, 20px);
+  padding-right: clamp(8px, 1.8vw, 20px);
 }
 
 .post-single .post-header,
@@ -2145,29 +2150,38 @@ body.wechat-safe .logo a {
   display: none;
 }
 
-.about-pro :is(.about-title-list, .about-highlight-list, .about-cert-list, .about-honor-list, .about-list, .about-work-list) {
+.about-pro .about-title-list,
+.about-pro .about-highlight-list,
+.about-pro .about-cert-list,
+.about-pro .about-honor-list,
+.about-pro .about-list,
+.about-pro .about-work-list {
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
 .about-pro .about-title-list {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  display: flex;
+  flex-wrap: nowrap;
   gap: 8px 10px;
 }
 
 .about-pro .about-title-list li {
+  flex: 1 1 0;
+  min-width: 0;
   border: 1px solid color-mix(in srgb, var(--min-line-color) 64%, transparent);
   border-radius: 999px;
   background: var(--surface-soft);
   padding: 6px 9px;
   text-align: center;
   font-family: var(--font-ui);
-  font-size: 0.85rem;
+  font-size: clamp(0.76rem, 0.28vw + 0.72rem, 0.9rem);
   line-height: 1.28;
   color: var(--secondary);
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .about-pro .about-highlight-lead {
@@ -2181,7 +2195,10 @@ body.wechat-safe .logo a {
   color: var(--min-text-color);
 }
 
-.about-pro :is(.about-highlight-list li, .about-cert-list li, .about-honor-list li, .about-list li) {
+.about-pro .about-highlight-list li,
+.about-pro .about-cert-list li,
+.about-pro .about-honor-list li,
+.about-pro .about-list li {
   position: relative;
   border: 0;
   border-bottom: 1px solid color-mix(in srgb, var(--min-line-color) 36%, transparent);
@@ -2194,7 +2211,10 @@ body.wechat-safe .logo a {
   min-height: 0;
 }
 
-.about-pro :is(.about-highlight-list li, .about-cert-list li, .about-honor-list li, .about-list li)::before {
+.about-pro .about-highlight-list li::before,
+.about-pro .about-cert-list li::before,
+.about-pro .about-honor-list li::before,
+.about-pro .about-list li::before {
   content: "";
   position: absolute;
   left: 0;
@@ -2213,11 +2233,16 @@ body.wechat-safe .logo a {
   font-size: 1.05rem;
   color: var(--min-text-color);
   letter-spacing: 0.01em;
+  list-style: none;
 }
 
 .about-pro .about-highlight-list li:last-child::before {
   content: none;
   display: none;
+}
+
+.about-pro .about-highlight-list li:last-child::marker {
+  content: "";
 }
 
 .about-pro .about-cert-list,
@@ -2386,7 +2411,9 @@ html.wechat-safe .post-header,
 body.wechat-safe .post-header,
 html.wechat-safe .post-footer,
 body.wechat-safe .post-footer {
+  width: 100%;
   max-width: 100%;
+  min-width: 0;
 }
 
 @media (max-width: 900px) {
@@ -2397,7 +2424,7 @@ body.wechat-safe .post-footer {
   }
 
   .nav {
-    width: calc(100% - 24px);
+    width: 100%;
     max-width: none;
     padding: 6px 0 8px;
     gap: 6px;
@@ -2447,7 +2474,17 @@ body.wechat-safe .post-footer {
   }
 
   .main {
-    width: calc(100% - 24px);
+    width: 100%;
+    max-width: 100%;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .post-single {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: hidden;
   }
 
   .post-single .post-header,
@@ -2455,7 +2492,9 @@ body.wechat-safe .post-footer {
   .post-single .post-footer,
   .post-single .post-related,
   .post-single .post-meta {
+    width: 100%;
     max-width: 100%;
+    min-width: 0;
   }
 
   .post-title,
@@ -2468,12 +2507,9 @@ body.wechat-safe .post-footer {
     overflow-wrap: break-word;
   }
 
-  .post-single {
-    overflow-x: clip;
-  }
-
   .post-content > * {
     max-width: 100%;
+    min-width: 0;
   }
 
   .post-content :is(p, li, blockquote, h2, h3, h4, strong, em, a) {
@@ -2492,7 +2528,10 @@ body.wechat-safe .post-footer {
 
   .post-content img,
   .post-content video,
-  .post-content iframe {
+  .post-content iframe,
+  .post-content svg,
+  .post-content canvas {
+    display: block;
     max-width: 100%;
     height: auto;
   }
@@ -2541,7 +2580,10 @@ body.wechat-safe .post-footer {
     line-height: 1.62;
   }
 
-  .about-pro :is(.about-highlight-list li, .about-cert-list li, .about-honor-list li, .about-list li) {
+  .about-pro .about-highlight-list li,
+  .about-pro .about-cert-list li,
+  .about-pro .about-honor-list li,
+  .about-pro .about-list li {
     font-size: 0.93rem;
     line-height: 1.62;
   }
