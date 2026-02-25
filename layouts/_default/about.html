@@ -64,7 +64,7 @@
     {{- end }}
 
     {{- with $aboutData.works }}
-    {{- $published := where . "type" "in" (slice "编写-书籍" "翻译-书籍" "编制-标准") -}}
+    {{- $published := where . "type" "in" (slice "编写-书籍" "翻译-书籍" "编制-标准" "媒体-发布") -}}
     {{- $inProgress := where . "type" "in" (slice "编写-书籍（待出版）" "翻译-书籍（待出版）" "编制-标准（待发布）") -}}
     {{- $translatedReferences := where . "type" "in" (slice "翻译-标准" "翻译-白皮书" "翻译-报告") -}}
     {{- $defaultPanel := "published" -}}
