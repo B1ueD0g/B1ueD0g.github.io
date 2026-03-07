@@ -64,16 +64,19 @@
 }
 
 .home-info .entry-header h1 {
-  max-width: 11ch !important;
-  font-size: clamp(3.8rem, 5.4vw, 5.8rem) !important;
+  width: max-content !important;
+  max-width: none !important;
+  font-size: clamp(3.4rem, 4.8vw, 5.2rem) !important;
   line-height: 0.94 !important;
   letter-spacing: -0.05em !important;
+  white-space: nowrap !important;
+  text-wrap: nowrap !important;
 }
 
-.home-search-box input,
-.home-search-box button {
-  font-size: clamp(1rem, 0.96rem + 0.16vw, 1.1rem) !important;
-}
+  .home-search-box input,
+  .home-search-box button {
+    font-size: clamp(1rem, 0.96rem + 0.16vw, 1.1rem) !important;
+  }
 
 .page-header h1 {
   font-size: clamp(2.1rem, 3vw, 3rem) !important;
@@ -330,6 +333,13 @@
     font-size: clamp(1.92rem, 7.6vw, 2.36rem) !important;
     line-height: 0.94 !important;
     padding-block: 6px 10px !important;
+  }
+
+  .home-info .entry-header h1 {
+    width: auto !important;
+    max-width: 9ch !important;
+    white-space: normal !important;
+    text-wrap: balance !important;
   }
 
   .header .logo-switches {
