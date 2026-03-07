@@ -73,10 +73,10 @@
   text-wrap: nowrap !important;
 }
 
-  .home-search-box input,
-  .home-search-box button {
-    font-size: clamp(1rem, 0.96rem + 0.16vw, 1.1rem) !important;
-  }
+.home-search-box input,
+.home-search-box button {
+  font-size: clamp(1rem, 0.96rem + 0.16vw, 1.1rem) !important;
+}
 
 .page-header h1 {
   font-size: clamp(2.1rem, 3vw, 3rem) !important;
@@ -101,25 +101,25 @@
 }
 
 .about-pro .about-block h2 {
-  font-size: clamp(1rem, 0.95rem + 0.12vw, 1.08rem) !important;
+  font-size: clamp(0.92rem, 0.88rem + 0.08vw, 0.98rem) !important;
   letter-spacing: 0.1em !important;
 }
 
 .about-pro .about-title-list li {
-  font-size: clamp(0.96rem, 0.92rem + 0.1vw, 1.03rem) !important;
+  font-size: clamp(0.88rem, 0.84rem + 0.08vw, 0.94rem) !important;
 }
 
 .about-pro .about-highlight-lead {
-  font-size: clamp(1.14rem, 1.06rem + 0.18vw, 1.26rem) !important;
-  line-height: 1.68 !important;
+  font-size: clamp(1rem, 0.96rem + 0.12vw, 1.08rem) !important;
+  line-height: 1.62 !important;
 }
 
 .about-pro .about-highlight-list li,
 .about-pro .about-cert-list li,
 .about-pro .about-honor-list li,
 .about-pro .about-list li {
-  font-size: clamp(1rem, 0.96rem + 0.14vw, 1.1rem) !important;
-  line-height: 1.68 !important;
+  font-size: clamp(0.95rem, 0.92rem + 0.1vw, 1rem) !important;
+  line-height: 1.64 !important;
 }
 
 .about-pro .about-work-tab {
@@ -135,8 +135,8 @@
 }
 
 .about-pro .about-work-title {
-  font-size: clamp(1.2rem, 1.12rem + 0.26vw, 1.38rem) !important;
-  line-height: 1.34 !important;
+  font-size: clamp(1.05rem, 1rem + 0.18vw, 1.16rem) !important;
+  line-height: 1.38 !important;
 }
 
 .about-pro .about-work-open {
@@ -169,7 +169,7 @@
   }
 
   .about-pro .about-hero .post-title {
-    font-size: clamp(4rem, 4.9vw, 5.4rem) !important;
+    font-size: clamp(3.2rem, 3.7vw, 4.2rem) !important;
     margin-inline: auto !important;
     text-align: center !important;
   }
@@ -183,8 +183,8 @@
     margin-inline: auto !important;
     padding-inline: 2px !important;
     text-align: center !important;
-    font-size: clamp(0.96rem, 0.9rem + 0.12vw, 1.02rem) !important;
-    line-height: 1.16 !important;
+    font-size: clamp(0.88rem, 0.84rem + 0.08vw, 0.94rem) !important;
+    line-height: 1.2 !important;
     letter-spacing: -0.012em !important;
     white-space: nowrap !important;
     text-wrap: nowrap !important;
@@ -201,11 +201,11 @@
   }
 
   .about-pro .about-social .social-icons a {
-    width: 68px !important;
-    height: 68px !important;
-    min-width: 68px !important;
-    min-height: 68px !important;
-    border-radius: 22px !important;
+    width: 60px !important;
+    height: 60px !important;
+    min-width: 60px !important;
+    min-height: 60px !important;
+    border-radius: 18px !important;
     padding: 0 !important;
     display: inline-flex !important;
     align-items: center !important;
@@ -222,8 +222,8 @@
 
   .about-pro .about-social .social-icons a svg,
   .about-pro .about-social .social-icons a img {
-    width: 26px !important;
-    height: 26px !important;
+    width: 22px !important;
+    height: 22px !important;
     display: block !important;
     overflow: visible !important;
     flex: 0 0 auto !important;
@@ -249,14 +249,14 @@
   }
 
   .about-pro .about-title-list li {
-    padding: 14px 16px !important;
-    font-size: clamp(1.18rem, 1rem + 0.24vw, 1.34rem) !important;
+    padding: 12px 14px !important;
+    font-size: clamp(0.88rem, 0.84rem + 0.08vw, 0.94rem) !important;
   }
 
   .about-pro .about-highlight-quote {
     margin-top: 20px !important;
     padding-top: 6px !important;
-    font-size: clamp(1.28rem, 1.12rem + 0.18vw, 1.42rem) !important;
+    font-size: clamp(1rem, 0.96rem + 0.08vw, 1.06rem) !important;
     font-style: normal !important;
     font-weight: 600 !important;
     color: var(--primary) !important;
@@ -270,7 +270,7 @@
     padding: 14px 0 0 18px !important;
     border-left: 3px solid var(--bd-border-strong) !important;
     white-space: nowrap !important;
-    font-size: clamp(0.88rem, 0.84rem + 0.12vw, 0.95rem) !important;
+    font-size: clamp(0.82rem, 0.8rem + 0.08vw, 0.88rem) !important;
     line-height: 1.28 !important;
     letter-spacing: -0.01em !important;
   }
@@ -305,7 +305,7 @@
   }
 
   .header .nav {
-    grid-template-columns: minmax(0, 1fr) auto !important;
+    grid-template-columns: 1fr !important;
     width: calc(100% - 32px) !important;
     max-width: calc(100% - 32px) !important;
     padding: 12px 0 14px !important;
@@ -315,6 +315,7 @@
 
   .header .logo {
     display: grid !important;
+    grid-column: 1 / -1 !important;
     grid-template-columns: minmax(0, 1fr) auto !important;
     align-items: flex-start !important;
     min-width: 0 !important;
@@ -345,11 +346,13 @@
   .header .logo-switches {
     min-width: 58px !important;
     flex: 0 0 58px !important;
+    justify-self: end !important;
     margin-left: 0 !important;
   }
 
   .header #menu {
     display: grid !important;
+    grid-column: 1 / -1 !important;
     grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
     align-items: stretch !important;
     width: 100% !important;
@@ -411,15 +414,15 @@
   }
 
   .about-pro .about-hero .post-title {
-    font-size: clamp(3rem, 10vw, 3.8rem) !important;
+    font-size: clamp(2.5rem, 8.2vw, 3.1rem) !important;
     line-height: 0.98 !important;
     margin-inline: auto !important;
     text-align: center !important;
   }
 
   .about-pro .about-hero .post-description {
-    font-size: clamp(0.98rem, 4vw, 1.08rem) !important;
-    line-height: 1.22 !important;
+    font-size: clamp(0.88rem, 3.7vw, 0.96rem) !important;
+    line-height: 1.24 !important;
     margin-inline: auto !important;
     text-align: center !important;
   }
@@ -437,10 +440,10 @@
   }
 
   .about-pro .about-social .social-icons a {
-    width: 58px !important;
-    height: 58px !important;
-    min-width: 58px !important;
-    min-height: 58px !important;
+    width: 52px !important;
+    height: 52px !important;
+    min-width: 52px !important;
+    min-height: 52px !important;
     padding: 0 !important;
     overflow: visible !important;
     line-height: 0 !important;
@@ -448,8 +451,8 @@
 
   .about-pro .about-social .social-icons a svg,
   .about-pro .about-social .social-icons a img {
-    width: 23px !important;
-    height: 23px !important;
+    width: 20px !important;
+    height: 20px !important;
     display: block !important;
     overflow: visible !important;
     transform: none !important;
@@ -462,8 +465,8 @@
   }
 
   .about-pro .about-title-list li {
-    font-size: 0.92rem !important;
-    padding: 12px 10px !important;
+    font-size: 0.84rem !important;
+    padding: 11px 10px !important;
   }
 
   .about-pro .about-block h2::after {

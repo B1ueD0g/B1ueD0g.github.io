@@ -94,6 +94,83 @@
       window.addEventListener("scroll", onScroll, { passive: true });
     }
 
+    function setupLogoResponse() {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+
+      var logo = document.querySelector(".header .logo");
+      var anchor = logo ? logo.querySelector("a") : null;
+      if (!logo || !anchor) return;
+
+      var frame = 0;
+      var nextState = null;
+
+      function commitState() {
+        frame = 0;
+        if (!nextState) return;
+        logo.style.setProperty("--bd-logo-tilt-x", nextState.tiltX + "deg");
+        logo.style.setProperty("--bd-logo-tilt-y", nextState.tiltY + "deg");
+        logo.style.setProperty("--bd-logo-shift-x", nextState.shiftX + "px");
+        logo.style.setProperty("--bd-logo-shift-y", nextState.shiftY + "px");
+        logo.style.setProperty("--bd-logo-focus-x", nextState.focusX + "%");
+        logo.style.setProperty("--bd-logo-focus-y", nextState.focusY + "%");
+        logo.style.setProperty("--bd-logo-glow", String(nextState.glow));
+      }
+
+      function schedule(state) {
+        nextState = state;
+        if (frame) return;
+        frame = window.requestAnimationFrame(commitState);
+      }
+
+      function reset() {
+        schedule({
+          tiltX: 0,
+          tiltY: 0,
+          shiftX: 0,
+          shiftY: 0,
+          focusX: 50,
+          focusY: 50,
+          glow: 0,
+        });
+      }
+
+      anchor.addEventListener("pointermove", function (event) {
+        var rect = anchor.getBoundingClientRect();
+        if (!rect.width || !rect.height) return;
+        var ratioX = (event.clientX - rect.left) / rect.width;
+        var ratioY = (event.clientY - rect.top) / rect.height;
+        var offsetX = ratioX - 0.5;
+        var offsetY = ratioY - 0.5;
+
+        schedule({
+          tiltX: offsetX * 8,
+          tiltY: offsetY * -8,
+          shiftX: offsetX * 6,
+          shiftY: offsetY * 4,
+          focusX: Math.max(0, Math.min(100, ratioX * 100)),
+          focusY: Math.max(0, Math.min(100, ratioY * 100)),
+          glow: 0.9,
+        });
+      });
+
+      anchor.addEventListener("pointerenter", function () {
+        schedule({
+          tiltX: 0,
+          tiltY: 0,
+          shiftX: 0,
+          shiftY: 0,
+          focusX: 50,
+          focusY: 50,
+          glow: 0.45,
+        });
+      });
+
+      anchor.addEventListener("pointerleave", reset);
+      anchor.addEventListener("blur", reset, true);
+      reset();
+    }
+
     function setupSearchShortcut() {
       document.addEventListener("keydown", function (event) {
         if (event.key !== "/") return;
@@ -477,6 +554,7 @@
     setupThemeToggleA11y();
     setupGeneratedA11yLabels();
     setupNavShrink();
+    setupLogoResponse();
     setupSearchShortcut();
     setupReadingProgress();
     runWhenIdle(setupHeadingHighlight, 800);

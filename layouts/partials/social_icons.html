@@ -2,25 +2,88 @@
   {{- range site.Params.socialIcons -}}
     {{- $rawURL := trim .url " " -}}
     {{- $iconLabel := (.title | default .name) | title -}}
+    {{- $iconName := trim .name " " | lower -}}
     {{- if hasPrefix $rawURL "mailto:" -}}
       {{- $email := strings.TrimPrefix "mailto:" $rawURL -}}
       <a
         href="{{ $rawURL | safeURL }}"
+        data-social-icon="{{ $iconName }}"
         data-copy-email="{{ $email }}"
         title="复制邮箱地址"
         aria-label="Copy email address"
       >
+        {{- if eq $iconName "x" -}}
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M5 5l14 14" />
+          <path d="M19 5L5 19" />
+        </svg>
+        {{- else if eq $iconName "linkedin" -}}
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="6.75" cy="6.75" r="1.25" />
+          <path d="M5.5 10.25v7.25" />
+          <path d="M10.25 10.25v7.25" />
+          <path d="M10.25 13.5a3 3 0 0 1 6 0v4" />
+        </svg>
+        {{- else if eq $iconName "telegram" -}}
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 4L10.5 14.5" />
+          <path d="M21 4l-6.5 17-4-6-6-4L21 4z" />
+        </svg>
+        {{- else if or (eq $iconName "email") (eq $iconName "mail") -}}
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3" y="5" width="18" height="14" rx="2" />
+          <path d="M4 7l8 6 8-6" />
+        </svg>
+        {{- else if eq $iconName "rss" -}}
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M5 18a1 1 0 100 2 1 1 0 000-2z" />
+          <path d="M4 11a9 9 0 019 9" />
+          <path d="M4 5a15 15 0 0115 15" />
+        </svg>
+        {{- else -}}
         {{ partial "svg.html" . }}
+        {{- end -}}
       </a>
     {{- else -}}
       <a
         href="{{ $rawURL | safeURL }}"
+        data-social-icon="{{ $iconName }}"
         target="_blank"
         rel="noopener noreferrer me"
         title="{{ $iconLabel }}"
         aria-label="{{ $iconLabel }}"
       >
+        {{- if eq $iconName "x" -}}
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M5 5l14 14" />
+          <path d="M19 5L5 19" />
+        </svg>
+        {{- else if eq $iconName "linkedin" -}}
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="6.75" cy="6.75" r="1.25" />
+          <path d="M5.5 10.25v7.25" />
+          <path d="M10.25 10.25v7.25" />
+          <path d="M10.25 13.5a3 3 0 0 1 6 0v4" />
+        </svg>
+        {{- else if eq $iconName "telegram" -}}
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 4L10.5 14.5" />
+          <path d="M21 4l-6.5 17-4-6-6-4L21 4z" />
+        </svg>
+        {{- else if or (eq $iconName "email") (eq $iconName "mail") -}}
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3" y="5" width="18" height="14" rx="2" />
+          <path d="M4 7l8 6 8-6" />
+        </svg>
+        {{- else if eq $iconName "rss" -}}
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M5 18a1 1 0 100 2 1 1 0 000-2z" />
+          <path d="M4 11a9 9 0 019 9" />
+          <path d="M4 5a15 15 0 0115 15" />
+        </svg>
+        {{- else -}}
         {{ partial "svg.html" . }}
+        {{- end -}}
       </a>
     {{- end -}}
   {{- end -}}
