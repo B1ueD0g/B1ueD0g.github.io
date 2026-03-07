@@ -910,20 +910,33 @@ body *::selection {
 .about-pro .about-list li {
   position: relative;
   break-inside: avoid;
+  list-style: none;
   margin: 0 0 14px;
-  padding: 0 0 14px 18px;
+  padding: 0 0 14px 22px;
   border-bottom: 1px solid var(--bd-border-soft);
   font-size: 1.85rem;
   line-height: 1.58;
 }
 
+.about-pro .about-cert-list li::marker,
+.about-pro .about-honor-list li::marker,
+.about-pro .about-list li::marker {
+  content: "";
+}
+
 .about-pro .about-cert-list li::before,
 .about-pro .about-honor-list li::before,
 .about-pro .about-list li::before {
-  content: "•";
+  content: "";
   position: absolute;
   left: 0;
-  top: 0;
+  top: 0.82em;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.6;
+  transform: translateY(-50%);
 }
 
 .about-pro .about-work-tabs {
@@ -934,6 +947,9 @@ body *::selection {
 }
 
 .about-pro .about-work-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
   min-height: 44px;
   padding: 0 18px;
   border-radius: var(--bd-radius-pill);
@@ -944,6 +960,26 @@ body *::selection {
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+}
+
+.about-pro .about-work-tab-label {
+  display: inline-block;
+}
+
+.about-pro .about-work-tab-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.25em;
+  height: 2.1em;
+  padding: 0 0.5em;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--bd-border-strong) 72%, transparent);
+  background: color-mix(in srgb, var(--bd-panel) 84%, white 16%);
+  font-size: 0.72em;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  line-height: 1;
 }
 
 .about-pro .about-work-tab:hover,
@@ -1083,6 +1119,17 @@ body *::selection {
   text-decoration: none;
 }
 
+.about-pro .about-work-open-icon {
+  width: 16px;
+  height: 16px;
+  display: block;
+  stroke: currentColor;
+  stroke-width: 1.85;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform var(--bd-fast) var(--bd-ease);
+}
+
 .about-pro .about-work-open::before {
   content: "";
   position: absolute;
@@ -1142,9 +1189,9 @@ body *::selection {
   transform: translateX(120%);
 }
 
-.about-pro .about-work-arrow {
-  font-size: 1.18rem;
-  line-height: 1;
+.about-pro .about-work-item:hover .about-work-open-icon,
+.about-pro .about-work-item:focus-within .about-work-open-icon {
+  transform: translate(1px, -1px);
 }
 
 .about-pro .about-work-panel[data-panel="translated"] .about-translation-note {
@@ -1155,6 +1202,39 @@ body *::selection {
   font-size: clamp(1.45rem, 1.12vw, 1.8rem);
   line-height: 1.5;
   white-space: nowrap;
+}
+
+.about-pro .about-block-roadmap .about-list {
+  display: grid;
+  gap: 10px;
+}
+
+.about-pro .about-block-roadmap .about-list li {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+  padding: 14px 0 14px 0;
+}
+
+.about-pro .about-block-roadmap .about-list li::before {
+  display: none;
+}
+
+.about-pro .about-list-index {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  color: var(--secondary);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  line-height: 1.1;
+}
+
+.about-pro .about-list-copy {
+  display: block;
+  min-width: 0;
 }
 
 .search-empty {
@@ -1602,12 +1682,24 @@ body *::selection {
   }
 
   .about-pro .about-work-main {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px;
   }
 
   .about-pro .about-work-open {
-    width: 44px;
-    height: 44px;
+    width: 38px;
+    height: 38px;
+    align-self: start;
+  }
+
+  .about-pro .about-work-open-icon {
+    width: 14px;
+    height: 14px;
+  }
+
+  .about-pro .about-block-roadmap .about-list li {
+    grid-template-columns: 42px minmax(0, 1fr);
+    gap: 12px;
   }
 
   .search-empty::after {

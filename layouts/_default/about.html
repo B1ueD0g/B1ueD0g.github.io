@@ -100,13 +100,22 @@
       <h2>Works · 成果物</h2>
       <div class="about-work-tabs" aria-label="Works tabs">
         {{- if gt (len $published) 0 }}
-        <button class="about-work-tab{{ if eq $defaultPanel "published" }} is-active{{ end }}" type="button" data-target="published" aria-label="已发布（书籍 / 标准）" title="已发布（书籍 / 标准）" aria-pressed="{{ if eq $defaultPanel "published" }}true{{ else }}false{{ end }}" aria-controls="about-work-panel-published">已发布</button>
+        <button class="about-work-tab{{ if eq $defaultPanel "published" }} is-active{{ end }}" type="button" data-target="published" aria-label="已发布（书籍 / 标准）" title="已发布（书籍 / 标准）" aria-pressed="{{ if eq $defaultPanel "published" }}true{{ else }}false{{ end }}" aria-controls="about-work-panel-published">
+          <span class="about-work-tab-label">已发布</span>
+          <span class="about-work-tab-count">{{ printf "%02d" (len $published) }}</span>
+        </button>
         {{- end }}
         {{- if gt (len $inProgress) 0 }}
-        <button class="about-work-tab{{ if eq $defaultPanel "inprogress" }} is-active{{ end }}" type="button" data-target="inprogress" aria-label="待出版 / 待发布（书籍 / 标准）" title="待出版 / 待发布（书籍 / 标准）" aria-pressed="{{ if eq $defaultPanel "inprogress" }}true{{ else }}false{{ end }}" aria-controls="about-work-panel-inprogress">待发布</button>
+        <button class="about-work-tab{{ if eq $defaultPanel "inprogress" }} is-active{{ end }}" type="button" data-target="inprogress" aria-label="待出版 / 待发布（书籍 / 标准）" title="待出版 / 待发布（书籍 / 标准）" aria-pressed="{{ if eq $defaultPanel "inprogress" }}true{{ else }}false{{ end }}" aria-controls="about-work-panel-inprogress">
+          <span class="about-work-tab-label">待发布</span>
+          <span class="about-work-tab-count">{{ printf "%02d" (len $inProgress) }}</span>
+        </button>
         {{- end }}
         {{- if gt (len $translatedReferences) 0 }}
-        <button class="about-work-tab{{ if eq $defaultPanel "translated" }} is-active{{ end }}" type="button" data-target="translated" aria-label="翻译标准/白皮书/报告（节选）" title="翻译标准/白皮书/报告（节选）" aria-pressed="{{ if eq $defaultPanel "translated" }}true{{ else }}false{{ end }}" aria-controls="about-work-panel-translated">翻译节选</button>
+        <button class="about-work-tab{{ if eq $defaultPanel "translated" }} is-active{{ end }}" type="button" data-target="translated" aria-label="翻译标准/白皮书/报告（节选）" title="翻译标准/白皮书/报告（节选）" aria-pressed="{{ if eq $defaultPanel "translated" }}true{{ else }}false{{ end }}" aria-controls="about-work-panel-translated">
+          <span class="about-work-tab-label">翻译节选</span>
+          <span class="about-work-tab-count">{{ printf "%02d" (len $translatedReferences) }}</span>
+        </button>
         {{- end }}
       </div>
       <div class="about-work-panels">
@@ -125,7 +134,12 @@
               <div class="about-work-main">
                 {{- if .url }}
                 <a class="about-work-title" href="{{ .url }}" target="_blank" rel="noopener noreferrer">{{ .title }}</a>
-                <a class="about-work-open" href="{{ .url }}" target="_blank" rel="noopener noreferrer" aria-label="打开成果物链接"><span class="about-work-arrow" aria-hidden="true">↗</span></a>
+                <a class="about-work-open" href="{{ .url }}" target="_blank" rel="noopener noreferrer" aria-label="打开成果物链接">
+                  <svg class="about-work-open-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                    <path d="M6 14L14 6" />
+                    <path d="M7.25 6H14V12.75" />
+                  </svg>
+                </a>
                 {{- else }}
                 <span class="about-work-title">{{ .title }}</span>
                 {{- end }}
@@ -150,7 +164,12 @@
               <div class="about-work-main">
                 {{- if .url }}
                 <a class="about-work-title" href="{{ .url }}" target="_blank" rel="noopener noreferrer">{{ .title }}</a>
-                <a class="about-work-open" href="{{ .url }}" target="_blank" rel="noopener noreferrer" aria-label="打开成果物链接"><span class="about-work-arrow" aria-hidden="true">↗</span></a>
+                <a class="about-work-open" href="{{ .url }}" target="_blank" rel="noopener noreferrer" aria-label="打开成果物链接">
+                  <svg class="about-work-open-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                    <path d="M6 14L14 6" />
+                    <path d="M7.25 6H14V12.75" />
+                  </svg>
+                </a>
                 {{- else }}
                 <span class="about-work-title">{{ .title }}</span>
                 {{- end }}
@@ -175,7 +194,12 @@
               <div class="about-work-main">
                 {{- if .url }}
                 <a class="about-work-title" href="{{ .url }}" target="_blank" rel="noopener noreferrer">{{ .title }}</a>
-                <a class="about-work-open" href="{{ .url }}" target="_blank" rel="noopener noreferrer" aria-label="打开成果物链接"><span class="about-work-arrow" aria-hidden="true">↗</span></a>
+                <a class="about-work-open" href="{{ .url }}" target="_blank" rel="noopener noreferrer" aria-label="打开成果物链接">
+                  <svg class="about-work-open-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                    <path d="M6 14L14 6" />
+                    <path d="M7.25 6H14V12.75" />
+                  </svg>
+                </a>
                 {{- else }}
                 <span class="about-work-title">{{ .title }}</span>
                 {{- end }}
@@ -220,11 +244,14 @@
     {{- end }}
 
     {{- with $aboutData.roadmap }}
-    <section class="about-block">
+    <section class="about-block about-block-roadmap">
       <h2>Next · 进行中</h2>
       <ul class="about-list">
-        {{- range . }}
-        <li>{{ . }}</li>
+        {{- range $index, $item := . }}
+        <li>
+          <span class="about-list-index">{{ printf "%02d" (add $index 1) }}</span>
+          <span class="about-list-copy">{{ $item }}</span>
+        </li>
         {{- end }}
       </ul>
     </section>
