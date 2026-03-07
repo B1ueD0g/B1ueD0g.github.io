@@ -6,114 +6,137 @@
 {{- $posts = where $posts "Params.hiddenInHomeList" "!=" "true" -}}
 {{- $posts = $posts.ByDate.Reverse -}}
 {{- $years := slice -}}
+{{- $filterTags := $quickTags -}}
+{{- $searchRecords := slice -}}
 {{- range $posts -}}
   {{- $years = $years | append (.Date.Format "2006") -}}
-{{- end -}}
-{{- $years = uniq $years -}}
-{{- $filterTags := $quickTags -}}
-{{- range first 18 site.Taxonomies.tags.ByCount -}}
-  {{- if not (in $filterTags .Name) -}}
-    {{- $filterTags = $filterTags | append .Name -}}
+  {{- range (.Params.tags | default (slice)) -}}
+    {{- if not (in $filterTags .) -}}
+      {{- $filterTags = $filterTags | append . -}}
+    {{- end -}}
   {{- end -}}
-{{- end -}}
-{{- if gt (len $filterTags) 16 -}}
-  {{- $filterTags = first 16 $filterTags -}}
-{{- end -}}
-{{- $searchMeta := slice -}}
-{{- range $posts -}}
-  {{- $searchMeta = $searchMeta | append (dict
+  {{- $searchRecords = $searchRecords | append (dict
     "title" .Title
     "permalink" .Permalink
     "relPermalink" .RelPermalink
     "year" (.Date.Format "2006")
     "date" (.Date.Format site.Params.DateFormat)
+    "dateISO" (.Date.Format "2006-01-02")
+    "unix" .Date.Unix
     "tags" (.Params.tags | default (slice))
+    "summary" ((.Summary | plainify) | htmlUnescape)
+    "plain" ((.Plain | plainify) | htmlUnescape)
   ) -}}
 {{- end -}}
-<header class="page-header">
+{{- $years = uniq $years -}}
+{{- if gt (len $filterTags) 16 -}}
+  {{- $filterTags = first 16 $filterTags -}}
+{{- end -}}
+<header class="page-header search-page-header">
+  <p class="search-page-kicker">Archive Search</p>
   <h1>{{ .Title }}</h1>
+  <p class="search-page-lead">搜索文章、书籍、标准、翻译节选与长期研究记录。</p>
 </header>
 
-<link rel="stylesheet" href="{{ "pagefind/pagefind-ui.css" | relURL }}">
-<script src="{{ "pagefind/pagefind-ui.js" | relURL }}" defer></script>
+<section class="search-stage" aria-label="search-stage">
+  <div class="search-command">
+    <div class="search-command-shell">
+      <span class="search-command-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none">
+          <circle cx="11" cy="11" r="6.5"></circle>
+          <path d="M16 16L21 21"></path>
+        </svg>
+      </span>
+      <label class="search-command-label" for="search-query-input">Search archive</label>
+      <input
+        id="search-query-input"
+        type="search"
+        placeholder="输入关键词搜索标题、标签、全文内容"
+        autocomplete="off"
+      />
+      <button type="button" id="search-query-clear" class="search-command-clear" hidden>清除</button>
+    </div>
+    <div class="search-command-meta">
+      <p id="search-status" class="search-status">正在准备可检索档案…</p>
+      <div class="search-shortcuts">
+        <span><kbd>/</kbd> Focus</span>
+        <span><kbd>Enter</kbd> Open First</span>
+      </div>
+    </div>
+  </div>
 
-<section class="search-guide" aria-label="search-guide">
-  <p class="search-guide-text">输入关键词后按回车可跳转首条结果，也可以按年份和标签筛选。</p>
-  <div class="search-guide-tags">
-    <span>Suggested Tags:</span>
-    {{- range $quickTags }}
-    <button type="button" data-search-tag="{{ . }}">#{{ . }}</button>
-    {{- end }}
-  </div>
-  <div class="search-guide-synonyms">
-    <span>Synonyms:</span>
-    {{- range $synonymHints }}
-    <button type="button" data-search-hint="{{ . }}">{{ . }}</button>
-    {{- end }}
-  </div>
+  <section class="search-guide" aria-label="search-guide">
+    <p class="search-guide-text">可直接输入主题词，也可先用年份和标签缩小范围。</p>
+    <div class="search-guide-tags">
+      <span>Suggested Tags:</span>
+      {{- range $quickTags }}
+      <button type="button" data-search-tag="{{ . }}">#{{ . }}</button>
+      {{- end }}
+    </div>
+    <div class="search-guide-synonyms">
+      <span>Synonyms:</span>
+      {{- range $synonymHints }}
+      <button type="button" data-search-hint="{{ . }}">{{ . }}</button>
+      {{- end }}
+    </div>
+  </section>
+
+  <section class="search-filters" aria-label="search-filters">
+    <div class="search-filter-row">
+      <span>Year:</span>
+      <button type="button" data-filter-year="" class="is-active">All</button>
+      {{- range $years }}
+      <button type="button" data-filter-year="{{ . }}">{{ . }}</button>
+      {{- end }}
+    </div>
+    <div class="search-filter-row">
+      <span>Tag:</span>
+      <button type="button" data-filter-tag="" class="is-active">All</button>
+      {{- range $filterTags }}
+      <button type="button" data-filter-tag="{{ . }}">#{{ . }}</button>
+      {{- end }}
+    </div>
+  </section>
 </section>
 
-<section class="search-filters" aria-label="search-filters">
-  <div class="search-filter-row">
-    <span>Year:</span>
-    <button type="button" data-filter-year="" class="is-active">All</button>
-    {{- range $years }}
-    <button type="button" data-filter-year="{{ . }}">{{ . }}</button>
-    {{- end }}
-  </div>
-  <div class="search-filter-row">
-    <span>Tag:</span>
-    <button type="button" data-filter-tag="" class="is-active">All</button>
-    {{- range $filterTags }}
-    <button type="button" data-filter-tag="{{ . }}">#{{ . }}</button>
-    {{- end }}
-  </div>
-</section>
-
-<div id="search"></div>
-<div id="search-loading" class="search-loading">搜索索引加载中…</div>
 <div id="search-recent" class="search-recent" hidden>
   <span>Recent:</span>
   <div id="search-recent-list" class="search-recent-list"></div>
   <button type="button" id="search-recent-clear">Clear</button>
 </div>
-<div id="search-empty" class="search-empty" hidden>
-  <p>没有找到结果，试试更短的关键词，或点击上方推荐标签。</p>
-</div>
 <div id="search-synonym-tip" class="search-synonym-tip" hidden></div>
-<textarea id="search-meta-json" hidden>{{ $searchMeta | jsonify }}</textarea>
+<div id="search-loading" class="search-loading">搜索索引加载中…</div>
+<div id="search-empty" class="search-empty" hidden>
+  <p>没有找到结果，试试更短关键词，或点击推荐标签。</p>
+</div>
+<section class="search-results-shell" aria-label="search-results">
+  <div id="search-results-count" class="search-results-count"></div>
+  <div id="search-results" class="search-results"></div>
+</section>
+<textarea id="search-data-json" hidden>{{ $searchRecords | jsonify }}</textarea>
 
 <script>
   window.addEventListener("DOMContentLoaded", function () {
-    if (typeof PagefindUI === "undefined") {
-      var loading = document.getElementById("search-loading");
-      if (loading) {
-        loading.textContent = "搜索组件加载失败，请刷新页面重试。";
-      }
-      return;
-    }
-    var searchUI = new PagefindUI({
-      element: "#search",
-      showSubResults: true,
-      showImages: false,
-      resetStyles: false,
-      translations: {
-        placeholder: "输入关键词搜索",
-        clear_search: "清除",
-        search_label: "站内搜索"
-      }
-    });
-    void searchUI;
-    var searchRoot = document.getElementById("search");
-    var filterState = { year: "", tag: "" };
-    var synonymMap = {{ $synonyms | jsonify | safeJS }};
-    var synonymLookup = {};
-    var recentStorageKey = "bluedog_recent_searches_v1";
-    var recentMax = 8;
+    var searchDataNode = document.getElementById("search-data-json");
+    var input = document.getElementById("search-query-input");
+    var clearButton = document.getElementById("search-query-clear");
+    var resultsRoot = document.getElementById("search-results");
+    var resultsCount = document.getElementById("search-results-count");
+    var statusNode = document.getElementById("search-status");
+    var searchLoading = document.getElementById("search-loading");
     var recentWrap = document.getElementById("search-recent");
     var recentList = document.getElementById("search-recent-list");
     var recentClear = document.getElementById("search-recent-clear");
-    var searchLoading = document.getElementById("search-loading");
+    var emptyNode = document.getElementById("search-empty");
+    var synonymTip = document.getElementById("search-synonym-tip");
+    var synonymMap = {{ $synonyms | jsonify | safeJS }};
+    var synonymLookup = {};
+    var recentStorageKey = "bluedog_recent_searches_v2";
+    var recentMax = 8;
+    var filterState = { year: "", tag: "" };
+    var autoJumpPending = false;
+    var renderTimer = 0;
+    var dataset = [];
 
     function track(name, props) {
       if (typeof window.BlueDogTrack === "function") {
@@ -121,27 +144,17 @@
       }
     }
 
-    Object.keys(synonymMap || {}).forEach(function (rawKey) {
-      var key = String(rawKey || "").trim().toLowerCase();
-      if (!key) return;
-      var values = Array.isArray(synonymMap[rawKey]) ? synonymMap[rawKey] : [];
-      synonymLookup[key] = values
-        .map(function (item) {
-          return String(item || "").trim();
-        })
-        .filter(function (item) {
-          return item.length > 0;
-        });
-    });
+    function escapeHTML(value) {
+      return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/\"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
 
-    function normalizePath(raw) {
-      if (!raw) return "";
-      try {
-        var url = new URL(raw, window.location.origin);
-        return url.pathname.endsWith("/") ? url.pathname : url.pathname + "/";
-      } catch (error) {
-        return "";
-      }
+    function escapeRegExp(value) {
+      return String(value || "").replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     }
 
     function normalizeTerm(value) {
@@ -151,9 +164,16 @@
         .toLowerCase();
     }
 
+    function normalizeText(value) {
+      return String(value || "")
+        .toLowerCase()
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
     function splitTerms(query) {
       return String(query || "")
-        .split(/[\s,，、]+/)
+        .split(/[\s,，、/]+/)
         .map(function (item) {
           return item.trim();
         })
@@ -162,98 +182,82 @@
         });
     }
 
-    function expandQuery(query) {
-      var raw = String(query || "").trim();
-      if (!raw) return raw;
-      var expanded = [];
+    function uniqueTerms(values) {
       var seen = {};
-
-      function pushTerm(term) {
-        var clean = String(term || "").trim();
-        if (!clean) return;
-        var normalized = normalizeTerm(clean);
-        if (seen[normalized]) return;
+      return (Array.isArray(values) ? values : []).filter(function (item) {
+        var normalized = normalizeTerm(item);
+        if (!normalized || seen[normalized]) return false;
         seen[normalized] = true;
-        expanded.push(clean);
-      }
-
-      pushTerm(raw);
-      splitTerms(raw).forEach(function (term) {
-        pushTerm(term);
-        var normalized = normalizeTerm(term);
-        (synonymLookup[normalized] || []).forEach(pushTerm);
+        return true;
       });
-      (synonymLookup[normalizeTerm(raw)] || []).forEach(pushTerm);
-      return expanded.join(" ");
     }
 
-    var metaMap = {};
-    var metadataScript = document.getElementById("search-meta-json");
-    if (metadataScript) {
+    function buildSynonymLookup() {
+      Object.keys(synonymMap || {}).forEach(function (rawKey) {
+        var key = normalizeTerm(rawKey);
+        if (!key) return;
+        var values = Array.isArray(synonymMap[rawKey]) ? synonymMap[rawKey] : [];
+        synonymLookup[key] = uniqueTerms(values);
+      });
+    }
+
+    function buildQueryBundle(query) {
+      var raw = String(query || "").trim();
+      var primaryTerms = uniqueTerms([raw].concat(splitTerms(raw)));
+      var secondaryTerms = [];
+
+      primaryTerms.forEach(function (term) {
+        (synonymLookup[normalizeTerm(term)] || []).forEach(function (synonym) {
+          secondaryTerms.push(synonym);
+        });
+      });
+
+      return {
+        raw: raw,
+        primaryTerms: primaryTerms,
+        secondaryTerms: uniqueTerms(secondaryTerms).filter(function (term) {
+          return primaryTerms.indexOf(term) === -1;
+        }),
+      };
+    }
+
+    function parseDataset() {
+      if (!searchDataNode) return [];
       try {
-        var metadata = JSON.parse(metadataScript.value || metadataScript.textContent || "[]");
-        if (Array.isArray(metadata) === false) metadata = [];
-        metadata.forEach(function (item) {
-          var keys = [item.permalink, item.relPermalink];
-          keys.forEach(function (key) {
-            var normalized = normalizePath(key);
-            if (normalized) {
-              metaMap[normalized] = item;
-            }
-          });
+        var parsed = JSON.parse(searchDataNode.value || searchDataNode.textContent || "[]");
+        if (typeof parsed === "string") {
+          parsed = JSON.parse(parsed || "[]");
+        }
+        if (!Array.isArray(parsed)) return [];
+        return parsed.map(function (record) {
+          var title = String(record.title || "").trim();
+          var summary = String(record.summary || "")
+            .replace(/\s+/g, " ")
+            .trim();
+          var plain = String(record.plain || "")
+            .replace(/\s+/g, " ")
+            .trim();
+          var tags = Array.isArray(record.tags) ? record.tags : [];
+          return {
+            title: title,
+            permalink: record.permalink || record.relPermalink || "#",
+            relPermalink: record.relPermalink || record.permalink || "#",
+            year: String(record.year || ""),
+            date: String(record.date || ""),
+            dateISO: String(record.dateISO || ""),
+            unix: Number(record.unix || 0),
+            tags: tags,
+            summary: summary,
+            plain: plain,
+            haystackTitle: normalizeText(title),
+            haystackSummary: normalizeText(summary),
+            haystackPlain: normalizeText(plain),
+            haystackTags: normalizeText(tags.join(" ")),
+          };
         });
       } catch (error) {
-        metaMap = {};
+        return [];
       }
-    }
-
-    function showSynonymTip(rawQuery, expandedQuery) {
-      var tip = document.getElementById("search-synonym-tip");
-      if (!tip) return;
-      if (!rawQuery || !expandedQuery || rawQuery === expandedQuery) {
-        tip.hidden = true;
-        tip.textContent = "";
-        return;
-      }
-      tip.textContent = "已启用同义词扩展: " + rawQuery + " → " + expandedQuery;
-      tip.hidden = false;
-    }
-
-    function decorateResultHighlights() {
-      if (!searchRoot) return;
-      searchRoot.querySelectorAll("mark").forEach(function (node) {
-        node.classList.add("search-hit");
-      });
-    }
-
-    function getSearchInput() {
-      return document.querySelector("#search input");
-    }
-
-    function getFirstResultLink() {
-      var results = searchRoot ? searchRoot.querySelectorAll(".pagefind-ui__result") : [];
-      for (var i = 0; i < results.length; i++) {
-        if (results[i].style.display === "none") continue;
-        var link = results[i].querySelector(".pagefind-ui__result-link");
-        if (link) return link;
-      }
-      return null;
-    }
-
-    function setInputQuery(value) {
-      var input = getSearchInput();
-      if (!input) {
-        return false;
-      }
-      input.value = value;
-      input.dispatchEvent(new Event("input", { bubbles: true }));
-      return true;
-    }
-
-    function focusInput() {
-      var input = getSearchInput();
-      if (!input) return;
-      input.focus();
     }
 
     function getRecentSearches() {
@@ -311,49 +315,6 @@
       renderRecentSearches(next);
     }
 
-    function jumpToFirstResult() {
-      var firstLink = getFirstResultLink();
-      if (!firstLink) return false;
-      window.location.href = firstLink.href;
-      return true;
-    }
-
-    function getResultCounts() {
-      if (!searchRoot) return { total: 0, visible: 0 };
-      var rows = searchRoot.querySelectorAll(".pagefind-ui__result");
-      var visible = 0;
-      rows.forEach(function (row) {
-        if (row.style.display !== "none") visible += 1;
-      });
-      return { total: rows.length, visible: visible };
-    }
-
-    function updateEmptyState(visibleCount, totalCount) {
-      var input = getSearchInput();
-      var empty = document.getElementById("search-empty");
-      if (!input || !empty) return;
-      var keyword = input.value.trim();
-      if (!keyword) {
-        empty.hidden = true;
-        return;
-      }
-
-      var counts = getResultCounts();
-      var total = typeof totalCount === "number" ? totalCount : counts.total;
-      var visible = typeof visibleCount === "number" ? visibleCount : counts.visible;
-      if (total === 0) {
-        empty.innerHTML = "<p>没有找到结果，试试更短关键词，或点击推荐标签。</p>";
-        empty.hidden = false;
-        return;
-      }
-      if (visible === 0) {
-        empty.innerHTML = "<p>没有符合筛选条件的结果，请切换 Year/Tag 过滤器。</p>";
-        empty.hidden = false;
-        return;
-      }
-      empty.hidden = true;
-    }
-
     function syncFilterButtons() {
       document.querySelectorAll("[data-filter-year]").forEach(function (button) {
         var value = button.getAttribute("data-filter-year") || "";
@@ -365,201 +326,457 @@
       });
     }
 
-    function syncFilterParams() {
+    function syncURL() {
       var params = new URLSearchParams(window.location.search);
+      var query = input ? input.value.trim() : "";
+      if (query) params.set("q", query);
+      else params.delete("q");
       if (filterState.year) params.set("year", filterState.year);
       else params.delete("year");
       if (filterState.tag) params.set("tag", filterState.tag);
       else params.delete("tag");
-      params.delete("autojump");
+      if (autoJumpPending) params.set("autojump", "1");
+      else params.delete("autojump");
       var next = params.toString();
       var nextURL = window.location.pathname + (next ? "?" + next : "");
       window.history.replaceState({}, "", nextURL);
     }
 
-    function applyFilters() {
-      if (!searchRoot) return;
-      var rows = searchRoot.querySelectorAll(".pagefind-ui__result");
-      var visible = 0;
-      rows.forEach(function (row) {
-        var link = row.querySelector(".pagefind-ui__result-link");
-        var pass = true;
-        if (filterState.year || filterState.tag) {
-          var meta = link ? metaMap[normalizePath(link.getAttribute("href"))] : null;
-          if (!meta) {
-            pass = false;
-          } else {
-            if (filterState.year && meta.year !== filterState.year) pass = false;
-            if (filterState.tag) {
-              var tags = Array.isArray(meta.tags) ? meta.tags : [];
-              if (tags.indexOf(filterState.tag) === -1) pass = false;
-            }
-          }
-        }
-        row.style.display = pass ? "" : "none";
-        if (pass) visible += 1;
+    function highlightText(source, terms) {
+      var safeSource = escapeHTML(source);
+      var list = uniqueTerms(terms).sort(function (left, right) {
+        return right.length - left.length;
       });
-      updateEmptyState(visible, rows.length);
-      decorateResultHighlights();
+      if (list.length === 0) return safeSource;
+      var pattern = new RegExp("(" + list.map(escapeRegExp).join("|") + ")", "gi");
+      return safeSource.replace(pattern, "<mark>$1</mark>");
     }
 
-    function bindInputEvents() {
-      var input = getSearchInput();
-      if (!input) {
-        requestAnimationFrame(bindInputEvents);
+    function buildSnippet(record, terms) {
+      var source = record.summary || record.plain || "";
+      if (!source) return "";
+      var normalizedSource = source.toLowerCase();
+      var bestIndex = -1;
+      var bestTerm = "";
+
+      uniqueTerms(terms).sort(function (left, right) {
+        return right.length - left.length;
+      }).some(function (term) {
+        var index = normalizedSource.indexOf(String(term || "").toLowerCase());
+        if (index !== -1) {
+          bestIndex = index;
+          bestTerm = term;
+          return true;
+        }
+        return false;
+      });
+
+      if (bestIndex === -1) {
+        var fallback = source.slice(0, 180).trim();
+        return highlightText(fallback, terms);
+      }
+
+      var start = Math.max(0, bestIndex - 50);
+      var end = Math.min(source.length, bestIndex + bestTerm.length + 110);
+      var snippet = source.slice(start, end).trim();
+      if (start > 0) snippet = "… " + snippet;
+      if (end < source.length) snippet = snippet + " …";
+      return highlightText(snippet, terms);
+    }
+
+    function buildSynonymTip(bundle, totalMatches) {
+      if (!synonymTip) return;
+      var suggestions = bundle.secondaryTerms.slice(0, 6);
+      if (!bundle.raw || suggestions.length === 0) {
+        synonymTip.hidden = true;
+        synonymTip.innerHTML = "";
         return;
+      }
+
+      var intro = totalMatches > 0 ? "Related terms also matched:" : "Try related terms:";
+      synonymTip.innerHTML =
+        '<span class="search-synonym-intro">' + intro + "</span>" +
+        suggestions.map(function (term) {
+          return '<button type="button" data-synonym-term="' + escapeHTML(term) + '">#' + escapeHTML(term) + "</button>";
+        }).join("");
+      synonymTip.hidden = false;
+    }
+
+    function updateEmptyState(query, totalMatches) {
+      if (!emptyNode) return;
+      if (!query && totalMatches > 0) {
+        emptyNode.hidden = true;
+        return;
+      }
+      if (totalMatches > 0) {
+        emptyNode.hidden = true;
+        return;
+      }
+      if (!query) {
+        emptyNode.hidden = true;
+        return;
+      }
+      emptyNode.hidden = false;
+      emptyNode.innerHTML = "<p>没有找到结果，试试更短关键词、英文别名，或者点击上方推荐标签。</p>";
+    }
+
+    function scoreRecord(record, bundle) {
+      var score = 0;
+      var matchedTerms = [];
+      var primaryHits = 0;
+      var secondaryHits = 0;
+
+      function award(points, term) {
+        score += points;
+        matchedTerms.push(term);
+      }
+
+      bundle.primaryTerms.forEach(function (term) {
+        var normalized = normalizeText(term);
+        if (!normalized) return;
+        if (record.haystackTitle.indexOf(normalized) !== -1) {
+          award(14, term);
+          primaryHits += 1;
+          return;
+        }
+        if (record.haystackTags.indexOf(normalized) !== -1) {
+          award(11, term);
+          primaryHits += 1;
+          return;
+        }
+        if (record.haystackSummary.indexOf(normalized) !== -1) {
+          award(8, term);
+          primaryHits += 1;
+          return;
+        }
+        if (record.haystackPlain.indexOf(normalized) !== -1) {
+          award(4, term);
+          primaryHits += 1;
+        }
+      });
+
+      bundle.secondaryTerms.forEach(function (term) {
+        var normalized = normalizeText(term);
+        if (!normalized) return;
+        if (record.haystackTitle.indexOf(normalized) !== -1) {
+          award(7, term);
+          secondaryHits += 1;
+          return;
+        }
+        if (record.haystackTags.indexOf(normalized) !== -1) {
+          award(6, term);
+          secondaryHits += 1;
+          return;
+        }
+        if (record.haystackSummary.indexOf(normalized) !== -1) {
+          award(4, term);
+          secondaryHits += 1;
+          return;
+        }
+        if (record.haystackPlain.indexOf(normalized) !== -1) {
+          award(2, term);
+          secondaryHits += 1;
+        }
+      });
+
+      if (filterState.year && record.year !== filterState.year) return null;
+      if (filterState.tag && record.tags.indexOf(filterState.tag) === -1) return null;
+
+      if (bundle.raw && primaryHits === 0 && secondaryHits === 0) return null;
+
+      return {
+        record: record,
+        score: score,
+        matchedTerms: uniqueTerms(matchedTerms),
+      };
+    }
+
+    function formatStatus(query, count) {
+      if (!query) return "按时间倒序浏览全部档案。";
+      if (count === 0) return "没有匹配结果，试试换个主题词或点击上方推荐标签。";
+      return '找到 ' + count + " 条与 “" + query + "” 相关的结果。";
+    }
+
+    function renderResults(items, bundle) {
+      if (!resultsRoot || !resultsCount) return;
+      resultsRoot.innerHTML = "";
+      resultsCount.innerHTML = "";
+
+      if (items.length === 0) return;
+
+      resultsCount.innerHTML =
+        '<span class="search-results-label">Results</span>' +
+        '<span class="search-results-total">' + String(items.length).padStart(2, "0") + "</span>";
+
+      var fragment = document.createDocumentFragment();
+      items.forEach(function (item, index) {
+        var record = item.record;
+        var article = document.createElement("article");
+        article.className = "search-result-card bd-reveal is-revealed";
+        article.style.setProperty("--bd-reveal-delay", String((index % 8) * 45) + "ms");
+        article.innerHTML =
+          '<div class="search-result-meta">' +
+            '<span class="search-result-index">' + String(index + 1).padStart(2, "0") + "</span>" +
+            '<span class="search-result-date">' + escapeHTML(record.dateISO || record.date) + "</span>" +
+          "</div>" +
+          '<div class="search-result-body">' +
+            '<div class="search-result-top">' +
+              '<div class="search-result-tags">' +
+                record.tags.slice(0, 4).map(function (tag) {
+                  return '<button type="button" class="search-result-tag" data-result-tag="' + escapeHTML(tag) + '">#' + escapeHTML(tag) + "</button>";
+                }).join("") +
+              "</div>" +
+              '<span class="search-result-year">' + escapeHTML(record.year) + "</span>" +
+            "</div>" +
+            '<h2 class="search-result-title"><a href="' + escapeHTML(record.relPermalink || record.permalink) + '">' + highlightText(record.title, item.matchedTerms) + "</a></h2>" +
+            '<p class="search-result-excerpt">' + buildSnippet(record, item.matchedTerms) + "</p>" +
+          "</div>" +
+          '<a class="search-result-open" href="' + escapeHTML(record.relPermalink || record.permalink) + '" aria-label="打开结果">Open</a>';
+        fragment.appendChild(article);
+      });
+      resultsRoot.appendChild(fragment);
+    }
+
+    function getFilteredResults() {
+      var query = input ? input.value.trim() : "";
+      var bundle = buildQueryBundle(query);
+      var items = [];
+
+      dataset.forEach(function (record) {
+        var scored = scoreRecord(record, bundle);
+        if (!scored) return;
+        items.push(scored);
+      });
+
+      if (!query) {
+        items = dataset
+          .filter(function (record) {
+            if (filterState.year && record.year !== filterState.year) return false;
+            if (filterState.tag && record.tags.indexOf(filterState.tag) === -1) return false;
+            return true;
+          })
+          .map(function (record) {
+            return {
+              record: record,
+              score: record.unix,
+              matchedTerms: [],
+            };
+          });
+      }
+
+      items.sort(function (left, right) {
+        if (right.score !== left.score) return right.score - left.score;
+        return right.record.unix - left.record.unix;
+      });
+
+      return {
+        query: query,
+        bundle: bundle,
+        items: items,
+      };
+    }
+
+    function jumpToFirstResult() {
+      var firstLink = resultsRoot ? resultsRoot.querySelector(".search-result-title a") : null;
+      if (!firstLink) return false;
+      window.location.href = firstLink.href;
+      return true;
+    }
+
+    function renderSearch(autoJumpNow) {
+      var state = getFilteredResults();
+      renderResults(state.items, state.bundle);
+      updateEmptyState(state.query, state.items.length);
+      buildSynonymTip(state.bundle, state.items.length);
+      if (statusNode) {
+        statusNode.textContent = formatStatus(state.query, state.items.length);
+      }
+      if (clearButton) {
+        clearButton.hidden = state.query.length === 0;
       }
       if (searchLoading) {
         searchLoading.classList.add("is-hidden");
       }
+      syncURL();
+
+      if (autoJumpNow && state.query) {
+        autoJumpPending = !jumpToFirstResult();
+        syncURL();
+      } else {
+        autoJumpPending = false;
+        syncURL();
+      }
+    }
+
+    function requestRender(autoJumpNow) {
+      if (renderTimer) {
+        window.clearTimeout(renderTimer);
+      }
+      renderTimer = window.setTimeout(function () {
+        renderSearch(autoJumpNow);
+      }, 90);
+    }
+
+    function applyQuery(value, options) {
+      var query = String(value || "").trim();
+      var config = options || {};
+      if (!input) return;
+      input.value = query;
+      if (config.save !== false && query) {
+        saveRecentSearch(query);
+      }
+      if (config.focus !== false) {
+        input.focus();
+        input.select();
+      }
+      requestRender(Boolean(config.autoJump));
+    }
+
+    function bindEvents() {
+      if (!input) return;
+
+      input.addEventListener("input", function () {
+        requestRender(false);
+      });
+
       input.addEventListener("keydown", function (event) {
         if (event.key !== "Enter") return;
         event.preventDefault();
-        var userKeyword = input.value.trim();
-        var rawKeyword = userKeyword;
-        var expandedKeyword = expandQuery(userKeyword);
-        if (expandedKeyword && expandedKeyword !== rawKeyword) {
-          setInputQuery(expandedKeyword);
-          showSynonymTip(rawKeyword, expandedKeyword);
-          rawKeyword = expandedKeyword;
+        var query = input.value.trim();
+        if (query) {
+          saveRecentSearch(query);
+          track("search_enter", {
+            query: query,
+            year: filterState.year || "all",
+            tag: filterState.tag || "all",
+          });
         }
-        saveRecentSearch(userKeyword || rawKeyword);
-        track("search_enter", {
-          query: rawKeyword,
-          year: filterState.year || "all",
-          tag: filterState.tag || "all",
-        });
-        window.setTimeout(function () {
-          if (!jumpToFirstResult()) {
-            applyFilters();
-          }
-        }, 130);
+        requestRender(true);
       });
-      input.addEventListener("input", function () {
-        window.setTimeout(applyFilters, 120);
-      });
-      focusInput();
-    }
 
-    var observer = new MutationObserver(function () {
-      applyFilters();
-      decorateResultHighlights();
-      if (autoJumpRequested) {
-        autoJumpRequested = !jumpToFirstResult();
+      if (clearButton) {
+        clearButton.addEventListener("click", function () {
+          input.value = "";
+          input.focus();
+          requestRender(false);
+        });
       }
-    });
-    if (searchRoot) {
-      observer.observe(searchRoot, { childList: true, subtree: true });
-    }
 
-    var params = new URLSearchParams(window.location.search);
-    var initialQuery = params.get("q");
-    var autoJumpRequested = params.get("autojump") === "1";
-    filterState.year = params.get("year") || "";
-    filterState.tag = params.get("tag") || "";
-    syncFilterButtons();
-
-    if (initialQuery) {
-      var applyQuery = function () {
-        var expandedInitial = expandQuery(initialQuery);
-        var queryToApply = expandedInitial || initialQuery;
-        if (!setInputQuery(queryToApply)) {
-          requestAnimationFrame(applyQuery);
-          return;
-        }
-        showSynonymTip(initialQuery, queryToApply);
-        focusInput();
-        track("search_prefill", {
-          query: initialQuery,
-          expanded: queryToApply !== initialQuery ? "1" : "0",
+      document.querySelectorAll("[data-search-tag]").forEach(function (button) {
+        button.addEventListener("click", function () {
+          var tag = button.getAttribute("data-search-tag") || "";
+          if (!tag) return;
+          track("search_quick_tag_click", { tag: tag });
+          applyQuery(tag, { autoJump: false });
         });
-        window.setTimeout(function () {
-          applyFilters();
-          if (autoJumpRequested) {
-            autoJumpRequested = !jumpToFirstResult();
+      });
+
+      document.querySelectorAll("[data-search-hint]").forEach(function (button) {
+        button.addEventListener("click", function () {
+          var hint = String(button.getAttribute("data-search-hint") || "");
+          var query = hint.split("↔")[0].trim();
+          if (!query) return;
+          track("search_synonym_hint_click", { hint: hint, query: query });
+          applyQuery(query, { autoJump: false });
+        });
+      });
+
+      document.querySelectorAll("[data-filter-year]").forEach(function (button) {
+        button.addEventListener("click", function () {
+          filterState.year = button.getAttribute("data-filter-year") || "";
+          syncFilterButtons();
+          track("search_filter_year", { year: filterState.year || "all" });
+          requestRender(false);
+        });
+      });
+
+      document.querySelectorAll("[data-filter-tag]").forEach(function (button) {
+        button.addEventListener("click", function () {
+          filterState.tag = button.getAttribute("data-filter-tag") || "";
+          syncFilterButtons();
+          track("search_filter_tag", { tag: filterState.tag || "all" });
+          requestRender(false);
+        });
+      });
+
+      if (recentList) {
+        recentList.addEventListener("click", function (event) {
+          var button = event.target.closest("[data-recent-query]");
+          if (!button) return;
+          var query = button.getAttribute("data-recent-query") || "";
+          if (!query) return;
+          track("search_recent_click", { query: query });
+          applyQuery(query, { save: false, autoJump: false });
+        });
+      }
+
+      if (recentClear) {
+        recentClear.addEventListener("click", function () {
+          try {
+            localStorage.removeItem(recentStorageKey);
+          } catch (error) {
+            return;
           }
-        }, 150);
-      };
-      applyQuery();
+          renderRecentSearches([]);
+          track("search_recent_clear", {});
+        });
+      }
+
+      if (synonymTip) {
+        synonymTip.addEventListener("click", function (event) {
+          var button = event.target.closest("[data-synonym-term]");
+          if (!button) return;
+          var term = button.getAttribute("data-synonym-term") || "";
+          if (!term) return;
+          track("search_synonym_term_click", { query: term });
+          applyQuery(term, { autoJump: false });
+        });
+      }
+
+      if (resultsRoot) {
+        resultsRoot.addEventListener("click", function (event) {
+          var tagButton = event.target.closest("[data-result-tag]");
+          if (tagButton) {
+            var tag = tagButton.getAttribute("data-result-tag") || "";
+            if (!tag) return;
+            filterState.tag = tag;
+            syncFilterButtons();
+            track("search_result_tag_click", { tag: tag });
+            requestRender(false);
+            return;
+          }
+
+          var link = event.target.closest(".search-result-title a, .search-result-open");
+          if (!link) return;
+          var query = input ? input.value.trim() : "";
+          if (query) saveRecentSearch(query);
+          track("search_result_open", {
+            query: query || "browse",
+            href: link.getAttribute("href") || "",
+          });
+        });
+      }
     }
 
-    document.querySelectorAll("[data-search-tag]").forEach(function (button) {
-      button.addEventListener("click", function () {
-        var tag = button.getAttribute("data-search-tag");
-        if (!tag) return;
-        var expandedTag = expandQuery(tag);
-        if (!setInputQuery(expandedTag || tag)) return;
-        showSynonymTip(tag, expandedTag);
-        saveRecentSearch(tag);
-        track("search_quick_tag_click", { tag: tag });
-        focusInput();
-        window.setTimeout(applyFilters, 120);
-      });
-    });
-
-    document.querySelectorAll("[data-search-hint]").forEach(function (button) {
-      button.addEventListener("click", function () {
-        var hint = String(button.getAttribute("data-search-hint") || "");
-        var query = hint.split("↔")[0].trim();
-        if (!query) return;
-        var expanded = expandQuery(query);
-        if (!setInputQuery(expanded || query)) return;
-        showSynonymTip(query, expanded);
-        saveRecentSearch(query);
-        track("search_synonym_hint_click", { hint: hint, query: query });
-        focusInput();
-        window.setTimeout(applyFilters, 120);
-      });
-    });
-
-    document.querySelectorAll("[data-filter-year]").forEach(function (button) {
-      button.addEventListener("click", function () {
-        filterState.year = button.getAttribute("data-filter-year") || "";
-        syncFilterButtons();
-        syncFilterParams();
-        track("search_filter_year", { year: filterState.year || "all" });
-        applyFilters();
-      });
-    });
-
-    document.querySelectorAll("[data-filter-tag]").forEach(function (button) {
-      button.addEventListener("click", function () {
-        filterState.tag = button.getAttribute("data-filter-tag") || "";
-        syncFilterButtons();
-        syncFilterParams();
-        track("search_filter_tag", { tag: filterState.tag || "all" });
-        applyFilters();
-      });
-    });
-
-    if (recentList) {
-      recentList.addEventListener("click", function (event) {
-        var button = event.target.closest("[data-recent-query]");
-        if (!button) return;
-        var term = button.getAttribute("data-recent-query") || "";
-        if (!term) return;
-        if (!setInputQuery(term)) return;
-        focusInput();
-        track("search_recent_click", { query: term });
-        window.setTimeout(applyFilters, 120);
-      });
+    function initFromURL() {
+      var params = new URLSearchParams(window.location.search);
+      var initialQuery = params.get("q") || "";
+      filterState.year = params.get("year") || "";
+      filterState.tag = params.get("tag") || "";
+      autoJumpPending = params.get("autojump") === "1";
+      syncFilterButtons();
+      if (input) input.value = initialQuery;
     }
 
-    if (recentClear) {
-      recentClear.addEventListener("click", function () {
-        try {
-          localStorage.removeItem(recentStorageKey);
-        } catch (error) {
-          return;
-        }
-        renderRecentSearches([]);
-        track("search_recent_clear", {});
-      });
-    }
-
+    buildSynonymLookup();
+    dataset = parseDataset();
     renderRecentSearches();
-    bindInputEvents();
-    window.setTimeout(applyFilters, 120);
+    bindEvents();
+    initFromURL();
+    if (searchLoading) {
+      searchLoading.textContent = dataset.length ? "正在建立可检索档案…" : "搜索数据为空，请检查构建结果。";
+    }
+    requestRender(autoJumpPending);
   });
 </script>
 {{- end }}

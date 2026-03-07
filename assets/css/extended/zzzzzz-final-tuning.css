@@ -10,9 +10,19 @@
 .about-pro .about-social .social-icons a,
 .about-pro .about-work-tab,
 .about-pro .about-work-open,
-.home-index-list a,
+.home-curation-actions a,
+.home-surface-link,
+.home-atlas-list a,
 .home-search-tag-list a,
-.home-search-box button {
+.home-search-box button,
+.search-command-clear,
+.search-filter-row button,
+.search-guide-tags button,
+.search-guide-synonyms button,
+.search-recent-list button,
+.search-result-open,
+.search-result-tag,
+.search-synonym-tip button {
   transition:
     color 160ms cubic-bezier(0.22, 1, 0.36, 1),
     background-color 160ms cubic-bezier(0.22, 1, 0.36, 1),

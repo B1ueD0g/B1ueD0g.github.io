@@ -174,7 +174,7 @@
     function setupRevealOnScroll() {
       var nodes = Array.prototype.slice.call(
         document.querySelectorAll(
-          ".home-info, .home-index-frame, .about-pro .about-block, .about-pro .about-work-item, .post-entry, .post-entry-with-date, .search-empty"
+          ".home-info, .home-curation-intro, .home-surface-card, .about-pro .about-block, .about-pro .about-work-item, .post-entry, .post-entry-with-date, .search-command, .search-guide, .search-filters, .search-recent, .search-empty"
         )
       );
       if (nodes.length === 0) return;
@@ -214,7 +214,9 @@
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
       if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
 
-      var panels = Array.prototype.slice.call(document.querySelectorAll(".home-info, .home-index-frame, .about-block-works"));
+      var panels = Array.prototype.slice.call(
+        document.querySelectorAll(".home-info, .home-curation-intro, .home-surface-card, .about-block-works, .search-command")
+      );
       if (panels.length === 0) return;
 
       panels.forEach(function (panel) {
@@ -309,7 +311,7 @@
         event.preventDefault();
 
         var path = window.location.pathname || "/";
-        var searchInput = document.querySelector("#search input");
+        var searchInput = document.querySelector("#search-query-input, #search input");
         var homeInput = document.getElementById("home-search-input");
 
         if (path.indexOf("/search/") === 0 && searchInput) {

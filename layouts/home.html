@@ -1,6 +1,9 @@
 {{- define "main" }}
 {{- $quickTags := site.Params.searchQuickTags | default (slice "零信任" "AI安全" "数据安全" "漏洞研究" "标准解读") -}}
-{{- $synonyms := site.Params.searchSynonyms | default dict -}}
+{{- $posts := where site.RegularPages "Section" "posts" -}}
+{{- $posts = where $posts "Params.hiddenInHomeList" "!=" "true" -}}
+{{- $posts = $posts.ByDate.Reverse -}}
+{{- $latestPosts := first 4 $posts -}}
 <div class="home-shell">
   <section class="home-stage">
     <article class="first-entry home-info">
@@ -11,16 +14,33 @@
       <header class="entry-header">
         <h1>{{ site.Params.homeInfoParams.Title | default "He is Exploring Everything." }}</h1>
       </header>
+      <p class="home-manifesto">
+        把这里做成一个真正可用的研究入口：搜文章、按主题进入、或者直接从最新写作开始。
+      </p>
 
       <div class="home-search-wrap">
         <div class="home-search-box">
+          <span class="home-search-glyph" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <circle cx="11" cy="11" r="6.5"></circle>
+              <path d="M16 16L21 21"></path>
+            </svg>
+          </span>
           <input
             id="home-search-input"
             type="search"
-            placeholder="输入关键词后回车，可直接跳转到最佳结果"
+            placeholder="搜索标题、标签、书籍、标准、研究记录"
             aria-label="Search posts"
           />
           <button id="home-search-btn" type="button">Search</button>
+        </div>
+
+        <div class="home-search-meta" aria-label="Search hints">
+          <p class="home-search-note">支持标题、标签、全文关键词和中英混合词检索。</p>
+          <div class="home-search-shortcuts">
+            <span><kbd>/</kbd> Focus</span>
+            <span><kbd>Enter</kbd> Best Match</span>
+          </div>
         </div>
 
         <div class="home-search-tags">
@@ -33,25 +53,65 @@
         </div>
       </div>
     </article>
-  </section>
 
-  <aside class="home-index" aria-label="Research index">
-    <div class="home-index-frame">
-      <p class="home-index-kicker">Now Index</p>
-      <div class="home-index-rule" aria-hidden="true"></div>
-      <ul class="home-index-list">
-        {{- range $index, $tag := $quickTags }}
-        {{- if lt $index 5 }}
-        <li>
-          <span class="home-index-count">{{ printf "%02d" (add $index 1) }}</span>
-          <a href="/search/?q={{ $tag | urlquery }}" data-home-search-tag="{{ $tag }}">#{{ $tag }}</a>
-        </li>
-        {{- end }}
-        {{- end }}
-      </ul>
-      <p class="home-index-note">Press <kbd>/</kbd> to jump into search.</p>
-    </div>
-  </aside>
+    <section class="home-curation" aria-label="Home curation">
+      <article class="home-curation-intro">
+        <p class="home-curation-kicker">Field Mode</p>
+        <h2>Search first, then move by stream or theme.</h2>
+        <p>
+          先搜，再按时间流或主题进入内容。首页不再只是静态落地页，而是一个能直接开始工作的入口面板。
+        </p>
+        <div class="home-curation-actions">
+          <a href="/search/">Open Search</a>
+          {{- with index $latestPosts 0 }}
+          <a href="{{ .RelPermalink }}">Latest Essay</a>
+          {{- end }}
+        </div>
+      </article>
+
+      <div class="home-curation-grid">
+        <article class="home-surface-card home-surface-card-stream">
+          <div class="home-surface-head">
+            <p class="home-surface-kicker">Fresh Dispatches</p>
+            <a class="home-surface-link" href="/posts/">Archive</a>
+          </div>
+          <ol class="home-stream-list">
+            {{- range $index, $post := $latestPosts }}
+            <li class="home-stream-item">
+              <span class="home-stream-index">{{ printf "%02d" (add $index 1) }}</span>
+              <a class="home-stream-link" href="{{ $post.RelPermalink }}">
+                <span class="home-stream-date">{{ $post.Date.Format "2006.01.02" }}</span>
+                <strong class="home-stream-title">{{ $post.Title }}</strong>
+                {{- with first 2 ($post.Params.tags | default (slice)) }}
+                <span class="home-stream-tags">
+                  {{- range . }}
+                  <span>#{{ . }}</span>
+                  {{- end }}
+                </span>
+                {{- end }}
+              </a>
+            </li>
+            {{- end }}
+          </ol>
+        </article>
+
+        <article class="home-surface-card home-surface-card-atlas">
+          <div class="home-surface-head">
+            <p class="home-surface-kicker">Theme Atlas</p>
+            <span class="home-surface-caption">快捷进入正在持续写作的研究主题</span>
+          </div>
+          <div class="home-atlas-list">
+            {{- range first 6 $quickTags }}
+            <a href="/search/?q={{ . | urlquery }}" data-home-search-tag="{{ . }}">
+              <span class="home-atlas-name">#{{ . }}</span>
+              <span class="home-atlas-action">Search</span>
+            </a>
+            {{- end }}
+          </div>
+        </article>
+      </div>
+    </section>
+  </section>
 </div>
 
 <script>
@@ -60,70 +120,20 @@
 
     var input = document.getElementById("home-search-input");
     var button = document.getElementById("home-search-btn");
-    var synonymMap = {{ $synonyms | jsonify | safeJS }};
-    var synonymLookup = {};
+    var prompts = [
+      "搜索标题、标签、书籍、标准、研究记录",
+      "Try 零信任 / AI安全 / 数据安全 / 漏洞研究",
+      "输入 CVE、标准名、主题词，直接找到相关文章",
+    ];
+    var promptIndex = 0;
+    var promptTimer = 0;
+
     if (!input || !button) return;
 
     function track(name, props) {
       if (typeof window.BlueDogTrack === "function") {
         window.BlueDogTrack(name, props || {});
       }
-    }
-
-    Object.keys(synonymMap || {}).forEach(function (rawKey) {
-      var key = String(rawKey || "").trim().toLowerCase();
-      if (!key) return;
-      var values = Array.isArray(synonymMap[rawKey]) ? synonymMap[rawKey] : [];
-      synonymLookup[key] = values
-        .map(function (item) {
-          return String(item || "").trim();
-        })
-        .filter(function (item) {
-          return item.length > 0;
-        });
-    });
-
-    function normalizeTerm(value) {
-      return String(value || "")
-        .trim()
-        .replace(/^#/, "")
-        .toLowerCase();
-    }
-
-    function splitTerms(query) {
-      return String(query || "")
-        .split(/[\s,，、]+/)
-        .map(function (item) {
-          return item.trim();
-        })
-        .filter(function (item) {
-          return item.length > 0;
-        });
-    }
-
-    function expandQuery(query) {
-      var raw = String(query || "").trim();
-      if (!raw) return raw;
-      var expanded = [];
-      var seen = {};
-
-      function pushTerm(term) {
-        var clean = String(term || "").trim();
-        if (!clean) return;
-        var normalized = normalizeTerm(clean);
-        if (seen[normalized]) return;
-        seen[normalized] = true;
-        expanded.push(clean);
-      }
-
-      pushTerm(raw);
-      splitTerms(raw).forEach(function (term) {
-        pushTerm(term);
-        var normalized = normalizeTerm(term);
-        (synonymLookup[normalized] || []).forEach(pushTerm);
-      });
-      (synonymLookup[normalizeTerm(raw)] || []).forEach(pushTerm);
-      return expanded.join(" ");
     }
 
     function submitSearch(autoJump) {
@@ -133,21 +143,41 @@
         window.location.href = "/search/";
         return;
       }
-      params.set("q", expandQuery(keyword) || keyword);
+      params.set("q", keyword);
       if (autoJump) params.set("autojump", "1");
       track("search_submit_home", { query: keyword, autoJump: autoJump ? "1" : "0" });
       window.location.href = "/search/?" + params.toString();
     }
 
+    function startPromptCycle() {
+      if (promptTimer) return;
+      promptTimer = window.setInterval(function () {
+        if (document.activeElement === input || input.value.trim()) return;
+        promptIndex = (promptIndex + 1) % prompts.length;
+        input.setAttribute("placeholder", prompts[promptIndex]);
+      }, 3200);
+    }
+
+    function stopPromptCycle() {
+      if (!promptTimer) return;
+      window.clearInterval(promptTimer);
+      promptTimer = 0;
+    }
+
     button.addEventListener("click", function () {
       submitSearch(false);
     });
+
     input.addEventListener("keydown", function (event) {
       if (event.key === "Enter") {
         event.preventDefault();
         submitSearch(true);
       }
     });
+
+    input.addEventListener("focus", stopPromptCycle);
+    input.addEventListener("blur", startPromptCycle);
+    startPromptCycle();
 
     document.querySelectorAll("[data-home-search-tag]").forEach(function (anchor) {
       anchor.addEventListener("click", function () {
