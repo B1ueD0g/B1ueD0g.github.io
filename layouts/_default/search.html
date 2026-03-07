@@ -526,12 +526,16 @@
                   return '<button type="button" class="search-result-tag" data-result-tag="' + escapeHTML(tag) + '">#' + escapeHTML(tag) + "</button>";
                 }).join("") +
               "</div>" +
-              '<span class="search-result-year">' + escapeHTML(record.year) + "</span>" +
+              '<div class="search-result-top-actions">' +
+                '<span class="search-result-year">' + escapeHTML(record.year) + "</span>" +
+              "</div>" +
             "</div>" +
             '<h2 class="search-result-title"><a href="' + escapeHTML(record.relPermalink || record.permalink) + '">' + highlightText(record.title, item.matchedTerms) + "</a></h2>" +
             '<p class="search-result-excerpt">' + buildSnippet(record, item.matchedTerms) + "</p>" +
-          "</div>" +
-          '<a class="search-result-open" href="' + escapeHTML(record.relPermalink || record.permalink) + '" aria-label="打开结果">Open</a>';
+            '<div class="search-result-footer">' +
+              '<a class="search-result-open" href="' + escapeHTML(record.relPermalink || record.permalink) + '" aria-label="打开结果">Open</a>' +
+            "</div>" +
+          "</div>";
         fragment.appendChild(article);
       });
       resultsRoot.appendChild(fragment);
