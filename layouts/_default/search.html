@@ -474,7 +474,8 @@
 
       activeStateNode.innerHTML =
         '<span class="search-active-label">Active</span>' +
-        '<div class="search-active-pills">' + pills.join("") + "</div>";
+        '<div class="search-active-pills">' + pills.join("") + "</div>" +
+        '<button type="button" class="search-active-reset" data-search-reset>Reset</button>';
       activeStateNode.hidden = false;
     }
 
@@ -935,6 +936,20 @@
           if (!term) return;
           track("search_synonym_term_click", { query: term });
           applyQuery(term, { autoJump: false });
+        });
+      }
+
+      if (activeStateNode) {
+        activeStateNode.addEventListener("click", function (event) {
+          var button = event.target.closest("[data-search-reset]");
+          if (!button) return;
+          filterState.year = "";
+          filterState.tag = "";
+          if (input) input.value = "";
+          syncFilterButtons();
+          track("search_reset", {});
+          requestRender(false);
+          if (input) input.focus();
         });
       }
 

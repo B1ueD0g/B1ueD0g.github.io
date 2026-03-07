@@ -1352,8 +1352,8 @@ body *::selection {
   margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 30px 40px;
-  padding-top: clamp(30px, 4vw, 42px);
+  gap: 24px 32px;
+  padding-top: clamp(18px, 2.4vw, 28px);
   counter-reset: about-sections;
 }
 
@@ -1362,7 +1362,7 @@ body *::selection {
   grid-column: 1 / -1;
   counter-increment: about-sections;
   border-top: 1px solid var(--bd-border-strong);
-  padding-top: 18px;
+  padding-top: 14px;
 }
 
 .about-pro .about-block::before {
@@ -1386,7 +1386,7 @@ body *::selection {
 .about-pro .about-block-certifications,
 .about-pro .about-block-honors,
 .about-pro .about-block-roadmap {
-  padding: 26px 24px 24px;
+  padding: 22px 20px 20px;
   border: 1.5px solid var(--bd-border-strong);
   border-radius: 32px;
   background:
@@ -1399,14 +1399,14 @@ body *::selection {
 .about-pro .about-block-certifications::before,
 .about-pro .about-block-honors::before,
 .about-pro .about-block-roadmap::before {
-  top: 24px;
-  right: 22px;
+  top: 20px;
+  right: 18px;
 }
 
 .about-pro .about-block-works {
   --bd-focus-x: 50%;
   --bd-focus-y: 10%;
-  padding: 28px 24px 24px;
+  padding: 24px 20px 20px;
   border: 1.5px solid var(--bd-border-strong);
   border-radius: 32px;
   background:
@@ -1416,8 +1416,8 @@ body *::selection {
 }
 
 .about-pro .about-block-works::before {
-  top: 26px;
-  right: 24px;
+  top: 22px;
+  right: 18px;
 }
 
 .dark .about-pro .about-block-works {
@@ -1719,7 +1719,7 @@ body *::selection {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-size: clamp(1.5rem, 1.2vw, 1.95rem);
+  font-size: clamp(0.96rem, 0.92rem + 0.12vw, 1.04rem);
 }
 
 .about-pro .about-highlight-lead {
@@ -1727,8 +1727,8 @@ body *::selection {
   padding: 24px 28px;
   border-left: 6px solid var(--bd-accent);
   background: var(--bd-panel);
-  font-size: clamp(1.9rem, 1.75vw, 2.35rem);
-  line-height: 1.72;
+  font-size: clamp(1.04rem, 0.98rem + 0.18vw, 1.14rem);
+  line-height: 1.74;
 }
 
 .about-pro .about-highlight-list {
@@ -1749,8 +1749,8 @@ body *::selection {
   padding: 22px 0;
   border-top: 1px solid var(--bd-border-soft);
   list-style: none;
-  font-size: clamp(1.9rem, 1.55vw, 2.3rem);
-  line-height: 1.72;
+  font-size: clamp(1rem, 0.95rem + 0.12vw, 1.08rem);
+  line-height: 1.76;
 }
 
 .about-pro .about-highlight-list li::marker {
@@ -1783,8 +1783,8 @@ body *::selection {
   margin: 20px auto 0;
   padding-top: 18px;
   border-top: 1px solid var(--bd-border-soft);
-  font-size: clamp(2rem, 1.85vw, 2.7rem);
-  line-height: 1.55;
+  font-size: clamp(1.14rem, 1.04rem + 0.28vw, 1.28rem);
+  line-height: 1.62;
   letter-spacing: 0.01em;
   text-align: center;
   font-style: italic;
@@ -1828,8 +1828,8 @@ body *::selection {
   grid-template-columns: 52px minmax(0, 1fr);
   gap: 14px;
   align-items: start;
-  font-size: clamp(1.02rem, 0.96rem + 0.22vw, 1.16rem);
-  line-height: 1.76;
+  font-size: clamp(0.98rem, 0.94rem + 0.16vw, 1.05rem);
+  line-height: 1.72;
 }
 
 .about-pro .about-record-index {

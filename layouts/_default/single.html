@@ -52,9 +52,6 @@
             <strong>{{ printf "%02d" (len $tagTerms) }}</strong>
           </div>
         </div>
-        {{- with .Description }}
-        <p class="post-reading-dek">{{ . }}</p>
-        {{- end }}
         {{- if gt (len $tagTerms) 0 }}
         <div class="post-reading-tags">
           {{- range first 4 $tagTerms }}
