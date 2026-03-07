@@ -5,6 +5,7 @@
 {{- $posts := where site.RegularPages "Section" "posts" -}}
 {{- $posts = where $posts "Params.hiddenInHomeList" "!=" "true" -}}
 {{- $posts = $posts.ByDate.Reverse -}}
+{{- $latestPosts := first 3 $posts -}}
 {{- $years := slice -}}
 {{- $filterTags := $quickTags -}}
 {{- $searchRecords := slice -}}
@@ -108,6 +109,17 @@
 <div id="search-loading" class="search-loading">搜索索引加载中…</div>
 <div id="search-empty" class="search-empty" hidden>
   <p>没有找到结果，试试更短关键词，或点击推荐标签。</p>
+  <div class="search-empty-actions">
+    {{- range first 6 $quickTags }}
+    <button type="button" data-empty-tag="{{ . }}">#{{ . }}</button>
+    {{- end }}
+  </div>
+  <div class="search-empty-latest">
+    <span>Latest Dispatches</span>
+    {{- range $latestPosts }}
+    <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+    {{- end }}
+  </div>
 </div>
 <section class="search-results-shell" aria-label="search-results">
   <div id="search-results-count" class="search-results-count"></div>
@@ -129,6 +141,7 @@
     var recentClear = document.getElementById("search-recent-clear");
     var emptyNode = document.getElementById("search-empty");
     var synonymTip = document.getElementById("search-synonym-tip");
+    var commandPanel = document.querySelector(".search-command");
     var synonymMap = {{ $synonyms | jsonify | safeJS }};
     var synonymLookup = {};
     var recentStorageKey = "bluedog_recent_searches_v2";
@@ -137,11 +150,18 @@
     var autoJumpPending = false;
     var renderTimer = 0;
     var dataset = [];
+    var activeResultIndex = -1;
 
     function track(name, props) {
       if (typeof window.BlueDogTrack === "function") {
         window.BlueDogTrack(name, props || {});
       }
+    }
+
+    function isEditable(target) {
+      if (!target) return false;
+      var tag = (target.tagName || "").toLowerCase();
+      return target.isContentEditable || tag === "input" || tag === "textarea" || tag === "select";
     }
 
     function escapeHTML(value) {
@@ -402,8 +422,63 @@
       synonymTip.hidden = false;
     }
 
+    function flashCommandPanel() {
+      if (!commandPanel) return;
+      commandPanel.classList.remove("is-submitting");
+      void commandPanel.offsetWidth;
+      commandPanel.classList.add("is-submitting");
+      window.setTimeout(function () {
+        commandPanel.classList.remove("is-submitting");
+      }, 620);
+    }
+
+    function getResultCards() {
+      if (!resultsRoot) return [];
+      return Array.prototype.slice.call(resultsRoot.querySelectorAll(".search-result-card"));
+    }
+
+    function setActiveResult(index, options) {
+      var cards = getResultCards();
+      if (!cards.length) {
+        activeResultIndex = -1;
+        return;
+      }
+
+      var nextIndex = Math.max(0, Math.min(cards.length - 1, index));
+      cards.forEach(function (card, cardIndex) {
+        var isActive = cardIndex === nextIndex;
+        card.classList.toggle("is-active", isActive);
+        card.setAttribute("data-active-result", isActive ? "true" : "false");
+      });
+
+      activeResultIndex = nextIndex;
+      if (options && options.scroll === false) return;
+      cards[nextIndex].scrollIntoView({
+        block: "nearest",
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+      });
+    }
+
+    function openActiveResult() {
+      var cards = getResultCards();
+      if (!cards.length) return false;
+      var card = cards[activeResultIndex] || cards[0];
+      var link = card ? card.querySelector(".search-result-title a") : null;
+      if (!link) return false;
+      var query = input ? input.value.trim() : "";
+      if (query) saveRecentSearch(query);
+      track("search_result_open_keyboard", {
+        query: query || "browse",
+        href: link.getAttribute("href") || "",
+        index: String((activeResultIndex >= 0 ? activeResultIndex : 0) + 1),
+      });
+      window.location.href = link.href;
+      return true;
+    }
+
     function updateEmptyState(query, totalMatches) {
       if (!emptyNode) return;
+      var emptyCopy = emptyNode.querySelector("p");
       if (!query && totalMatches > 0) {
         emptyNode.hidden = true;
         return;
@@ -417,7 +492,9 @@
         return;
       }
       emptyNode.hidden = false;
-      emptyNode.innerHTML = "<p>没有找到结果，试试更短关键词、英文别名，或者点击上方推荐标签。</p>";
+      if (emptyCopy) {
+        emptyCopy.textContent = "没有找到结果，试试更短关键词、英文别名，或者点下面的推荐标签与最新文章。";
+      }
     }
 
     function scoreRecord(record, bundle) {
@@ -501,18 +578,22 @@
       if (!resultsRoot || !resultsCount) return;
       resultsRoot.innerHTML = "";
       resultsCount.innerHTML = "";
+      activeResultIndex = -1;
 
       if (items.length === 0) return;
 
       resultsCount.innerHTML =
         '<span class="search-results-label">Results</span>' +
-        '<span class="search-results-total">' + String(items.length).padStart(2, "0") + "</span>";
+        '<span class="search-results-total">' + String(items.length).padStart(2, "0") + "</span>" +
+        '<span class="search-results-help">↑ ↓ Navigate · Enter Open</span>';
 
       var fragment = document.createDocumentFragment();
       items.forEach(function (item, index) {
         var record = item.record;
         var article = document.createElement("article");
         article.className = "search-result-card bd-reveal is-revealed";
+        article.setAttribute("data-result-index", String(index));
+        article.setAttribute("tabindex", "-1");
         article.style.setProperty("--bd-reveal-delay", String((index % 8) * 45) + "ms");
         article.innerHTML =
           '<div class="search-result-meta">' +
@@ -539,6 +620,7 @@
         fragment.appendChild(article);
       });
       resultsRoot.appendChild(fragment);
+      setActiveResult(0, { scroll: false });
     }
 
     function getFilteredResults() {
@@ -644,6 +726,18 @@
       });
 
       input.addEventListener("keydown", function (event) {
+        if (event.key === "ArrowDown") {
+          event.preventDefault();
+          setActiveResult(activeResultIndex + 1);
+          return;
+        }
+
+        if (event.key === "ArrowUp") {
+          event.preventDefault();
+          setActiveResult(activeResultIndex <= 0 ? 0 : activeResultIndex - 1);
+          return;
+        }
+
         if (event.key !== "Enter") return;
         event.preventDefault();
         var query = input.value.trim();
@@ -655,7 +749,11 @@
             tag: filterState.tag || "all",
           });
         }
-        requestRender(true);
+        flashCommandPanel();
+        renderSearch(false);
+        if (!openActiveResult()) {
+          requestRender(true);
+        }
       });
 
       if (clearButton) {
@@ -737,8 +835,24 @@
         });
       }
 
+      if (emptyNode) {
+        emptyNode.addEventListener("click", function (event) {
+          var button = event.target.closest("[data-empty-tag]");
+          if (!button) return;
+          var tag = button.getAttribute("data-empty-tag") || "";
+          if (!tag) return;
+          track("search_empty_tag_click", { tag: tag });
+          applyQuery(tag, { autoJump: false });
+        });
+      }
+
       if (resultsRoot) {
         resultsRoot.addEventListener("click", function (event) {
+          var card = event.target.closest(".search-result-card");
+          if (card) {
+            setActiveResult(Number(card.getAttribute("data-result-index") || "0"), { scroll: false });
+          }
+
           var tagButton = event.target.closest("[data-result-tag]");
           if (tagButton) {
             var tag = tagButton.getAttribute("data-result-tag") || "";
@@ -759,7 +873,35 @@
             href: link.getAttribute("href") || "",
           });
         });
+
+        resultsRoot.addEventListener("pointermove", function (event) {
+          var card = event.target.closest(".search-result-card");
+          if (!card) return;
+          setActiveResult(Number(card.getAttribute("data-result-index") || "0"), { scroll: false });
+        });
       }
+
+      document.addEventListener("keydown", function (event) {
+        if (isEditable(event.target)) return;
+        if (event.metaKey || event.ctrlKey || event.altKey) return;
+
+        if (event.key === "ArrowDown") {
+          event.preventDefault();
+          setActiveResult(activeResultIndex + 1);
+          return;
+        }
+
+        if (event.key === "ArrowUp") {
+          event.preventDefault();
+          setActiveResult(activeResultIndex <= 0 ? 0 : activeResultIndex - 1);
+          return;
+        }
+
+        if (event.key === "Enter" && activeResultIndex >= 0) {
+          event.preventDefault();
+          openActiveResult();
+        }
+      });
     }
 
     function initFromURL() {

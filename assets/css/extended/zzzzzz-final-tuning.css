@@ -175,6 +175,7 @@ body.home-page .home-search-wrap {
 }
 
 .search-result-open {
+  min-width: 110px !important;
   white-space: nowrap !important;
 }
 
@@ -195,14 +196,15 @@ body.home-page .home-search-wrap {
 }
 
 .post-single .post-title {
-  font-size: clamp(2.7rem, 4.2vw, 4rem) !important;
-  line-height: 1.04 !important;
-  letter-spacing: -0.03em !important;
+  max-width: 13ch !important;
+  font-size: clamp(3.4rem, 5vw, 5.25rem) !important;
+  line-height: 0.95 !important;
+  letter-spacing: -0.05em !important;
 }
 
 .post-content {
-  font-size: clamp(1.01rem, 0.98rem + 0.12vw, 1.08rem) !important;
-  line-height: 1.84 !important;
+  font-size: clamp(1.06rem, 1.01rem + 0.12vw, 1.15rem) !important;
+  line-height: 1.92 !important;
 }
 
 .about-pro .about-block h2 {
@@ -358,11 +360,11 @@ body.home-page .home-search-wrap {
   }
 
   .about-pro .about-social .social-icons a {
-    width: 60px !important;
-    height: 60px !important;
-    min-width: 60px !important;
-    min-height: 60px !important;
-    border-radius: 18px !important;
+    width: 64px !important;
+    height: 64px !important;
+    min-width: 64px !important;
+    min-height: 64px !important;
+    border-radius: 20px !important;
     padding: 0 !important;
     display: inline-flex !important;
     align-items: center !important;
@@ -374,8 +376,8 @@ body.home-page .home-search-wrap {
 
   .about-pro .about-social .social-icons a svg,
   .about-pro .about-social .social-icons a img {
-    width: 22px !important;
-    height: 22px !important;
+    width: 24px !important;
+    height: 24px !important;
     display: block !important;
     overflow: visible !important;
     flex: 0 0 auto !important;
@@ -445,6 +447,18 @@ body.home-page .home-search-wrap {
   .header .logo a {
     max-width: calc(100% - 72px) !important;
   }
+}
+
+.post-single .post-header,
+.post-single .post-footer {
+  width: min(1300px, calc(100vw - 72px)) !important;
+  max-width: min(1300px, calc(100vw - 72px)) !important;
+}
+
+.post-single .post-content,
+.post-single .toc {
+  width: min(var(--bd-content-max), calc(100vw - 72px)) !important;
+  max-width: min(var(--bd-content-max), calc(100vw - 72px)) !important;
 }
 
 @media (max-width: 900px) {

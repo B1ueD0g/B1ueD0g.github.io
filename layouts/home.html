@@ -102,6 +102,8 @@
 
     var input = document.getElementById("home-search-input");
     var button = document.getElementById("home-search-btn");
+    var searchBox = document.querySelector(".home-search-box");
+    var searchGlyph = document.querySelector(".home-search-glyph");
     var prompts = [
       "搜索标题、标签、书籍、标准、研究记录",
       "Try 零信任 / AI安全 / 数据安全 / 漏洞研究",
@@ -121,6 +123,11 @@
     function submitSearch(autoJump) {
       var keyword = input.value.trim();
       var params = new URLSearchParams();
+      if (searchBox) {
+        searchBox.classList.remove("is-submitting");
+        void searchBox.offsetWidth;
+        searchBox.classList.add("is-submitting");
+      }
       if (!keyword) {
         window.location.href = "/search/";
         return;
@@ -146,9 +153,21 @@
       promptTimer = 0;
     }
 
+    function setPreviewPrompt(value) {
+      if (!input || document.activeElement === input || input.value.trim()) return;
+      input.setAttribute("placeholder", value || prompts[promptIndex]);
+    }
+
     button.addEventListener("click", function () {
       submitSearch(false);
     });
+
+    if (searchGlyph) {
+      searchGlyph.addEventListener("click", function () {
+        input.focus();
+        input.select();
+      });
+    }
 
     input.addEventListener("keydown", function (event) {
       if (event.key === "Enter") {
@@ -157,11 +176,24 @@
       }
     });
 
-    input.addEventListener("focus", stopPromptCycle);
-    input.addEventListener("blur", startPromptCycle);
+    input.addEventListener("focus", function () {
+      stopPromptCycle();
+      if (searchBox) searchBox.classList.add("is-armed");
+    });
+    input.addEventListener("blur", function () {
+      startPromptCycle();
+      if (searchBox) searchBox.classList.remove("is-armed");
+    });
     startPromptCycle();
 
     document.querySelectorAll("[data-home-search-tag]").forEach(function (anchor) {
+      var tagValue = anchor.getAttribute("data-home-search-tag") || "";
+      anchor.addEventListener("pointerenter", function () {
+        setPreviewPrompt("Try #" + tagValue);
+      });
+      anchor.addEventListener("pointerleave", function () {
+        setPreviewPrompt("");
+      });
       anchor.addEventListener("click", function () {
         track("search_home_tag_click", { tag: anchor.getAttribute("data-home-search-tag") || "" });
       });

@@ -174,7 +174,7 @@
     function setupRevealOnScroll() {
       var nodes = Array.prototype.slice.call(
         document.querySelectorAll(
-          ".home-info, .home-curation-heading, .home-surface-card, .about-pro .about-block, .about-pro .about-work-item, .post-entry, .post-entry-with-date, .search-command, .search-guide, .search-filters, .search-recent, .search-empty"
+          ".home-info, .home-surface-card, .about-pro .about-block, .about-pro .about-work-item, .post-entry, .post-entry-with-date, .search-command, .search-guide, .search-filters, .search-recent, .search-empty, .search-result-card"
         )
       );
       if (nodes.length === 0) return;
@@ -215,7 +215,7 @@
       if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
 
       var panels = Array.prototype.slice.call(
-        document.querySelectorAll(".home-info, .home-curation-heading, .home-surface-card, .about-block-works, .search-command")
+        document.querySelectorAll(".home-info, .home-surface-card, .about-block-works, .search-command")
       );
       if (panels.length === 0) return;
 
@@ -251,6 +251,54 @@
         panel.addEventListener("pointerleave", reset);
         panel.addEventListener("blur", reset, true);
         reset();
+      });
+    }
+
+    function setupMagneticClusters() {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+
+      var clusterConfigs = [
+        { container: ".home-search-tag-list", item: "a" },
+        { container: ".home-atlas-list", item: "a" },
+        { container: ".search-guide-tags", item: "button" },
+        { container: ".search-guide-synonyms", item: "button" }
+      ];
+
+      clusterConfigs.forEach(function (config) {
+        document.querySelectorAll(config.container).forEach(function (cluster) {
+          var items = Array.prototype.slice.call(cluster.querySelectorAll(config.item));
+          if (items.length === 0) return;
+
+          function reset() {
+            items.forEach(function (item) {
+              item.style.setProperty("--bd-magnet-x", "0px");
+              item.style.setProperty("--bd-magnet-y", "0px");
+              item.style.setProperty("--bd-magnet-scale", "1");
+              item.style.setProperty("--bd-magnet-glow", "0");
+            });
+          }
+
+          cluster.addEventListener("pointermove", function (event) {
+            items.forEach(function (item) {
+              var rect = item.getBoundingClientRect();
+              var centerX = rect.left + rect.width / 2;
+              var centerY = rect.top + rect.height / 2;
+              var deltaX = event.clientX - centerX;
+              var deltaY = event.clientY - centerY;
+              var distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+              var strength = Math.max(0, 1 - distance / 160);
+              item.style.setProperty("--bd-magnet-x", (deltaX * 0.045 * strength).toFixed(2) + "px");
+              item.style.setProperty("--bd-magnet-y", (deltaY * 0.032 * strength).toFixed(2) + "px");
+              item.style.setProperty("--bd-magnet-scale", (1 + strength * 0.045).toFixed(3));
+              item.style.setProperty("--bd-magnet-glow", strength.toFixed(3));
+            });
+          });
+
+          cluster.addEventListener("pointerleave", reset);
+          cluster.addEventListener("blur", reset, true);
+          reset();
+        });
       });
     }
 
@@ -690,6 +738,7 @@
     setupRevealOnScroll();
     setupInteractivePanels();
     setupSocialDock();
+    setupMagneticClusters();
     setupSearchShortcut();
     setupReadingProgress();
     runWhenIdle(setupHeadingHighlight, 800);

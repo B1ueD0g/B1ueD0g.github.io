@@ -8,23 +8,28 @@
       <a
         href="{{ $rawURL | safeURL }}"
         data-social-icon="{{ $iconName }}"
-        data-social-label="Copy Email"
+        data-social-label="Email"
         data-copy-email="{{ $email }}"
         title="复制邮箱地址"
         aria-label="Copy email address"
       >
         {{- if eq $iconName "x" -}}
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path d="M18.244 2.25h3.308l-7.228 8.261 8.496 11.239h-6.651l-5.214-6.816-5.965 6.816H1.68l7.73-8.834L1.258 2.25H7.91l4.713 6.227zm-1.161 17.52h1.833L6.914 4.128H5.08z" />
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.15" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M6 5.5L18 18.5" />
+          <path d="M18 5.5L6 18.5" />
         </svg>
         {{- else if eq $iconName "linkedin" -}}
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path d="M6.52 8.76a1.76 1.76 0 1 0 0-3.52 1.76 1.76 0 0 0 0 3.52ZM8.04 10.3H5v8.96h3.04zm4.86 0H9.88v8.96h3.02v-4.7c0-2.62 3.38-2.83 3.38 0v4.7h3.03V13.5c0-4.47-5.1-4.3-6.41-2.11z" />
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="7.1" cy="7.2" r="1.2" fill="currentColor" stroke="none" />
+          <path d="M7.1 10.4V17.4" />
+          <path d="M11.6 17.4V13.2c0-1.35 1.02-2.45 2.42-2.45 1.4 0 2.38 1.1 2.38 2.45v4.2" />
+          <path d="M11.6 13.4V10.4" />
         </svg>
         {{- else if eq $iconName "telegram" -}}
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M21 4L10.5 14.5" />
-          <path d="M21 4l-6.5 17-4-6-6-4L21 4z" />
+          <path d="M21 4.5L10 14.4" />
+          <path d="M21 4.5l-6.8 15-3.9-5.2-5.8-3.3L21 4.5z" />
+          <path d="M10.3 14.2l2.4 1.9" />
         </svg>
         {{- else if or (eq $iconName "email") (eq $iconName "mail") -}}
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -52,17 +57,22 @@
         aria-label="{{ $iconLabel }}"
       >
         {{- if eq $iconName "x" -}}
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path d="M18.244 2.25h3.308l-7.228 8.261 8.496 11.239h-6.651l-5.214-6.816-5.965 6.816H1.68l7.73-8.834L1.258 2.25H7.91l4.713 6.227zm-1.161 17.52h1.833L6.914 4.128H5.08z" />
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.15" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M6 5.5L18 18.5" />
+          <path d="M18 5.5L6 18.5" />
         </svg>
         {{- else if eq $iconName "linkedin" -}}
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path d="M6.52 8.76a1.76 1.76 0 1 0 0-3.52 1.76 1.76 0 0 0 0 3.52ZM8.04 10.3H5v8.96h3.04zm4.86 0H9.88v8.96h3.02v-4.7c0-2.62 3.38-2.83 3.38 0v4.7h3.03V13.5c0-4.47-5.1-4.3-6.41-2.11z" />
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="7.1" cy="7.2" r="1.2" fill="currentColor" stroke="none" />
+          <path d="M7.1 10.4V17.4" />
+          <path d="M11.6 17.4V13.2c0-1.35 1.02-2.45 2.42-2.45 1.4 0 2.38 1.1 2.38 2.45v4.2" />
+          <path d="M11.6 13.4V10.4" />
         </svg>
         {{- else if eq $iconName "telegram" -}}
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M21 4L10.5 14.5" />
-          <path d="M21 4l-6.5 17-4-6-6-4L21 4z" />
+          <path d="M21 4.5L10 14.4" />
+          <path d="M21 4.5l-6.8 15-3.9-5.2-5.8-3.3L21 4.5z" />
+          <path d="M10.3 14.2l2.4 1.9" />
         </svg>
         {{- else if or (eq $iconName "email") (eq $iconName "mail") -}}
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
