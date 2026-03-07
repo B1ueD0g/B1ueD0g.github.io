@@ -106,6 +106,7 @@
   <button type="button" id="search-recent-clear">Clear</button>
 </div>
 <div id="search-synonym-tip" class="search-synonym-tip" hidden></div>
+<div id="search-active-state" class="search-active-state" hidden></div>
 <div id="search-loading" class="search-loading">搜索索引加载中…</div>
 <div id="search-empty" class="search-empty" hidden>
   <p>没有找到结果，试试更短关键词，或点击推荐标签。</p>
@@ -149,6 +150,7 @@
     var recentClear = document.getElementById("search-recent-clear");
     var emptyNode = document.getElementById("search-empty");
     var synonymTip = document.getElementById("search-synonym-tip");
+    var activeStateNode = document.getElementById("search-active-state");
     var commandPanel = document.querySelector(".search-command");
     var previewNode = document.getElementById("search-preview");
     var previewBody = document.getElementById("search-preview-body");
@@ -433,6 +435,49 @@
       synonymTip.hidden = false;
     }
 
+    function buildMatchPills(terms, className) {
+      var list = uniqueTerms(terms).slice(0, 4);
+      if (list.length === 0) return "";
+      return (
+        '<div class="' + className + '">' +
+          list.map(function (term) {
+            return "<span>" + escapeHTML(term) + "</span>";
+          }).join("") +
+        "</div>"
+      );
+    }
+
+    function updateActiveState(state) {
+      if (!activeStateNode) return;
+      var pills = [];
+      var query = state && state.query ? String(state.query) : "";
+      var total = state && Array.isArray(state.items) ? state.items.length : 0;
+
+      if (query) {
+        pills.push('<span class="search-active-pill"><strong>Query</strong><em>' + escapeHTML(query) + "</em></span>");
+      }
+      if (filterState.year) {
+        pills.push('<span class="search-active-pill"><strong>Year</strong><em>' + escapeHTML(filterState.year) + "</em></span>");
+      }
+      if (filterState.tag) {
+        pills.push('<span class="search-active-pill"><strong>Tag</strong><em>#' + escapeHTML(filterState.tag) + "</em></span>");
+      }
+      if (query || filterState.year || filterState.tag) {
+        pills.push('<span class="search-active-pill"><strong>Results</strong><em>' + String(total).padStart(2, "0") + "</em></span>");
+      }
+
+      if (pills.length === 0) {
+        activeStateNode.hidden = true;
+        activeStateNode.innerHTML = "";
+        return;
+      }
+
+      activeStateNode.innerHTML =
+        '<span class="search-active-label">Active</span>' +
+        '<div class="search-active-pills">' + pills.join("") + "</div>";
+      activeStateNode.hidden = false;
+    }
+
     function flashCommandPanel() {
       if (!commandPanel) return;
       commandPanel.classList.remove("is-submitting");
@@ -453,6 +498,7 @@
       }
 
       var record = item.record;
+      var previewMatches = buildMatchPills(item.matchedTerms, "search-preview-match");
       previewBody.innerHTML =
         '<div class="search-preview-meta">' +
           '<span class="search-preview-index">' + String(index + 1).padStart(2, "0") + "</span>" +
@@ -465,6 +511,7 @@
             return '<span>#' + escapeHTML(tag) + "</span>";
           }).join("") +
         "</div>" +
+        previewMatches +
         '<p class="search-preview-excerpt">' + buildSnippet(record, item.matchedTerms) + "</p>" +
         '<a class="search-preview-open" href="' + escapeHTML(record.relPermalink || record.permalink) + '">Open Entry</a>';
       previewNode.hidden = false;
@@ -636,6 +683,7 @@
       var fragment = document.createDocumentFragment();
       items.forEach(function (item, index) {
         var record = item.record;
+        var matchPills = buildMatchPills(item.matchedTerms, "search-result-match");
         var article = document.createElement("article");
         article.className = "search-result-card bd-reveal is-revealed";
         article.setAttribute("data-result-index", String(index));
@@ -659,6 +707,7 @@
             "</div>" +
             '<h2 class="search-result-title"><a href="' + escapeHTML(record.relPermalink || record.permalink) + '">' + highlightText(record.title, item.matchedTerms) + "</a></h2>" +
             '<p class="search-result-excerpt">' + buildSnippet(record, item.matchedTerms) + "</p>" +
+            matchPills +
             '<div class="search-result-footer">' +
               '<a class="search-result-open" href="' + escapeHTML(record.relPermalink || record.permalink) + '" aria-label="打开结果">Open</a>' +
             "</div>" +
@@ -718,6 +767,7 @@
     function renderSearch(autoJumpNow) {
       var state = getFilteredResults();
       renderResults(state.items, state.bundle);
+      updateActiveState(state);
       updateEmptyState(state.query, state.items.length);
       buildSynonymTip(state.bundle, state.items.length);
       if (statusNode) {
@@ -772,6 +822,13 @@
       });
 
       input.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") {
+          event.preventDefault();
+          input.value = "";
+          requestRender(false);
+          return;
+        }
+
         if (event.key === "ArrowDown") {
           event.preventDefault();
           setActiveResult(activeResultIndex + 1);

@@ -75,9 +75,12 @@
     {{- with $aboutData.certifications }}
     <section class="about-block about-block-certifications">
       <h2>Certifications · 证书</h2>
-      <ul class="about-cert-list">
-        {{- range . }}
-        <li>{{ . }}</li>
+      <ul class="about-cert-list about-record-list">
+        {{- range $index, $item := . }}
+        <li>
+          <span class="about-record-index">{{ printf "%02d" (add $index 1) }}</span>
+          <span class="about-record-copy">{{ $item }}</span>
+        </li>
         {{- end }}
       </ul>
     </section>
@@ -86,9 +89,12 @@
     {{- with $aboutData.honors }}
     <section class="about-block about-block-honors">
       <h2>Honors · 荣誉</h2>
-      <ul class="about-honor-list">
-        {{- range . }}
-        <li>{{ . }}</li>
+      <ul class="about-honor-list about-record-list">
+        {{- range $index, $item := . }}
+        <li>
+          <span class="about-record-index">{{ printf "%02d" (add $index 1) }}</span>
+          <span class="about-record-copy">{{ $item }}</span>
+        </li>
         {{- end }}
       </ul>
     </section>

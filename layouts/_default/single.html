@@ -1,4 +1,6 @@
 {{- define "main" }}
+{{- $tagsTaxonomy := .Language.Params.Taxonomies.tag | default "tags" -}}
+{{- $tagTerms := $.GetTerms $tagsTaxonomy -}}
 
 <article class="post-single">
   <header class="post-header">
@@ -34,6 +36,33 @@
   <div class="post-reading-shell{{ if (.Param "ShowToc") }} has-toc{{ end }}">
     {{- if (.Param "ShowToc") }}
     <aside class="post-reading-aside">
+      <section class="post-reading-note" aria-label="Reading frame">
+        <p class="post-reading-kicker">Reading Frame</p>
+        <div class="post-reading-stats">
+          <div>
+            <span>Published</span>
+            <strong>{{ .Date.Format "2006-01-02" }}</strong>
+          </div>
+          <div>
+            <span>Length</span>
+            <strong>{{ printf "%02d min" .ReadingTime }}</strong>
+          </div>
+          <div>
+            <span>Tags</span>
+            <strong>{{ printf "%02d" (len $tagTerms) }}</strong>
+          </div>
+        </div>
+        {{- with .Description }}
+        <p class="post-reading-dek">{{ . }}</p>
+        {{- end }}
+        {{- if gt (len $tagTerms) 0 }}
+        <div class="post-reading-tags">
+          {{- range first 4 $tagTerms }}
+          <a href="{{ .Permalink }}" data-tag-click="{{ .LinkTitle }}">#{{ .LinkTitle }}</a>
+          {{- end }}
+        </div>
+        {{- end }}
+      </section>
       {{- partial "toc.html" . }}
     </aside>
     {{- end }}
@@ -48,9 +77,8 @@
   {{- partial "related_posts.html" . -}}
 
   <footer class="post-footer">
-    {{- $tags := .Language.Params.Taxonomies.tag | default "tags" }}
     <ul class="post-tags">
-      {{- range ($.GetTerms $tags) }}
+      {{- range $tagTerms }}
       <li><a href="{{ .Permalink }}" data-tag-click="{{ .LinkTitle }}">#{{ .LinkTitle }}</a></li>
       {{- end }}
     </ul>

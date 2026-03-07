@@ -4,6 +4,10 @@
 {{- $posts = where $posts "Params.hiddenInHomeList" "!=" "true" -}}
 {{- $posts = $posts.ByDate.Reverse -}}
 {{- $latestPosts := first 4 $posts -}}
+{{- $latestStamp := "" -}}
+{{- if gt (len $latestPosts) 0 -}}
+  {{- $latestStamp = (index $latestPosts 0).Date.Format "2006.01.02" -}}
+{{- end -}}
 <div class="home-shell">
   <section class="home-stage">
     <article class="first-entry home-info">
@@ -54,7 +58,10 @@
       <div class="home-curation-grid">
         <article class="home-surface-card home-surface-card-stream">
           <div class="home-surface-head">
-            <p class="home-surface-kicker">Fresh Dispatches</p>
+            <div class="home-surface-copy">
+              <p class="home-surface-kicker">Fresh Dispatches</p>
+              <p class="home-surface-caption">{{ $latestStamp }} · {{ printf "%02d" (len $posts) }} archive entries</p>
+            </div>
             <a class="home-surface-link" href="/posts/">Archive</a>
           </div>
           <ol class="home-stream-list">
@@ -79,8 +86,10 @@
 
         <article class="home-surface-card home-surface-card-atlas">
           <div class="home-surface-head">
-            <p class="home-surface-kicker">Theme Atlas</p>
-            <span class="home-surface-caption">快捷进入正在持续写作的研究主题</span>
+            <div class="home-surface-copy">
+              <p class="home-surface-kicker">Theme Atlas</p>
+              <span class="home-surface-caption">{{ printf "%02d" (len (first 6 $quickTags)) }} active research lenses</span>
+            </div>
           </div>
           <div class="home-atlas-list">
             {{- range first 6 $quickTags }}
