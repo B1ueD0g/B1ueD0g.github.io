@@ -102,7 +102,7 @@
         <li>
             <a href="{{ .URL | absLangURL }}"{{ if $is_current }} class="is-current" aria-current="page"{{ end }} title="{{ .Title | default .Name }} {{- cond $is_search (" (Alt + /)" | safeHTMLAttr) ("" | safeHTMLAttr ) }}"
                 {{- cond $is_search (" accesskey=/" | safeHTMLAttr) ("" | safeHTMLAttr ) }}>
-                    <span {{- if $is_current }} class="active" {{- end }}>
+                    <span>
                         {{- .Pre -}}
                         {{- .Name -}}
                         {{- .Post -}}

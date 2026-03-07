@@ -3,12 +3,14 @@
 {{- $useProfileData := .Param "useProfileData" | default false -}}
 <article class="post-single about-single about-pro">
   <header class="post-header">
-    <h1 class="post-title entry-hint-parent">{{ .Title }}</h1>
-    {{- with .Description }}
-    <div class="post-description">{{ . }}</div>
-    {{- end }}
-    <div class="about-social">
-      {{- partial "social_icons.html" (dict "align" "left") -}}
+    <div class="about-hero">
+      <h1 class="post-title entry-hint-parent">{{ .Title }}</h1>
+      {{- with .Description }}
+      <div class="post-description">{{ . }}</div>
+      {{- end }}
+      <div class="about-social">
+        {{- partial "social_icons.html" (dict "align" "left") -}}
+      </div>
     </div>
   </header>
 
@@ -26,17 +28,38 @@
     {{- end }}
 
     {{- with $aboutData.highlights }}
+    {{- $highlightLead := "" -}}
+    {{- if gt (len .) 0 }}
+      {{- $highlightLead = index . 0 -}}
+    {{- end }}
+    {{- $highlightTail := slice -}}
+    {{- if gt (len .) 1 }}
+      {{- $highlightTail = after 1 . -}}
+    {{- end }}
+    {{- $highlightQuote := "" -}}
+    {{- $highlightItems := $highlightTail -}}
+    {{- if gt (len $highlightTail) 0 }}
+      {{- $highlightQuote = index $highlightTail (sub (len $highlightTail) 1) -}}
+      {{- if gt (len $highlightTail) 1 }}
+        {{- $highlightItems = first (sub (len $highlightTail) 1) $highlightTail -}}
+      {{- else }}
+        {{- $highlightItems = slice -}}
+      {{- end }}
+    {{- end }}
     <section class="about-block about-block-highlights">
       <h2>Highlights · 亮点</h2>
-      {{- if gt (len .) 0 }}
-      <p class="about-highlight-lead">{{ index . 0 }}</p>
+      {{- if $highlightLead }}
+      <p class="about-highlight-lead">{{ $highlightLead }}</p>
       {{- end }}
-      {{- if gt (len .) 1 }}
+      {{- if gt (len $highlightItems) 0 }}
       <ul class="about-highlight-list">
-        {{- range after 1 . }}
+        {{- range $highlightItems }}
         <li>{{ . }}</li>
         {{- end }}
       </ul>
+      {{- end }}
+      {{- if $highlightQuote }}
+      <p class="about-highlight-quote">{{ $highlightQuote }}</p>
       {{- end }}
     </section>
     {{- end }}

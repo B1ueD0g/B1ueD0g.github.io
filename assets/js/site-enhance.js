@@ -30,6 +30,7 @@
     }
 
     window.BlueDogShowToast = showToast;
+    document.documentElement.classList.add("bd-ready");
 
     function fallbackCopy(text) {
       var input = document.createElement("textarea");
@@ -134,7 +135,13 @@
 
       syncThemeState();
       toggle.addEventListener("click", function () {
+        toggle.classList.remove("is-switching");
+        void toggle.offsetWidth;
+        toggle.classList.add("is-switching");
         window.setTimeout(syncThemeState, 0);
+        window.setTimeout(function () {
+          toggle.classList.remove("is-switching");
+        }, 280);
       });
     }
 

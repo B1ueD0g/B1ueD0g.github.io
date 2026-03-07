@@ -2093,16 +2093,20 @@ body.wechat-safe .logo a {
 }
 
 .logo {
-  flex: 1 1 auto;
+  flex: 0 0 auto;
   min-width: 0;
 }
 
 #menu {
-  flex: 0 0 auto;
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .logo a {
   white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  max-width: none;
 }
 
 .post-single .post-header,
@@ -2659,3 +2663,4139 @@ body.wechat-safe .post-title {
     width: min(420px, calc(100% - 18px));
   }
 }
+
+/* ==================================
+   2026-03 Unified Experience Layer
+   final responsive + interaction pass
+================================== */
+
+:root {
+  --nav-shell-max: 1340px;
+  --page-shell-max: 1080px;
+  --reading-shell-max: 70ch;
+  --about-shell-max: 1160px;
+  --panel-border-soft: color-mix(in srgb, var(--min-line-color) 40%, transparent);
+  --panel-border-strong: color-mix(in srgb, var(--min-line-color) 68%, transparent);
+  --panel-shadow-soft: 0 10px 26px rgba(12, 13, 18, 0.05);
+}
+
+html,
+body {
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+body {
+  text-rendering: optimizeLegibility;
+}
+
+.header,
+.main,
+.post-single,
+.post-content,
+.about-pro,
+.home-stage {
+  overflow-x: clip;
+}
+
+.main {
+  width: min(var(--page-shell-max), 100%);
+  max-width: var(--page-shell-max);
+  padding-left: clamp(18px, 2.8vw, 32px);
+  padding-right: clamp(18px, 2.8vw, 32px);
+}
+
+.header {
+  overflow: clip;
+}
+
+.nav {
+  width: 100%;
+  max-width: min(var(--nav-shell-max), calc(100% - 40px));
+  min-height: 92px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(20px, 2.2vw, 34px);
+  padding: 10px 0;
+}
+
+.logo {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.logo a {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  min-width: max-content;
+  max-width: none;
+  white-space: nowrap;
+  font-size: clamp(2.3rem, 3.05vw, 3.95rem);
+  line-height: 0.96;
+  letter-spacing: 0;
+  padding-bottom: 0.14em;
+}
+
+.logo-text-full,
+.logo-text-mobile {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.logo-switches {
+  flex: 0 0 auto;
+  margin-left: 10px;
+  padding-left: 14px;
+  gap: 10px;
+}
+
+#menu {
+  flex: 0 0 auto;
+  min-width: max-content;
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: clamp(18px, 2.2vw, 38px);
+}
+
+#menu li {
+  min-width: 0;
+}
+
+#menu a {
+  position: relative;
+  min-height: 44px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(1.12rem, 0.9rem + 0.8vw, 1.46rem);
+  line-height: 1.1;
+  transition: transform var(--micro-dur) var(--micro-ease), color var(--micro-dur) var(--micro-ease);
+}
+
+#menu a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 4px;
+  height: 2px;
+  border-radius: 999px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  opacity: 0.92;
+  transition: transform var(--micro-dur) var(--micro-ease);
+}
+
+#menu a:hover,
+#menu a:focus-visible {
+  transform: translate3d(0, -1px, 0);
+}
+
+#menu a:hover::after,
+#menu a.is-current::after {
+  transform: scaleX(1);
+}
+
+#menu a span.active {
+  text-decoration: none;
+}
+
+#theme-toggle {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+#theme-toggle svg {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 20px;
+  height: 20px;
+  transition: transform 220ms var(--micro-ease), opacity 220ms var(--micro-ease);
+}
+
+#moon {
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+}
+
+#sun {
+  opacity: 0;
+  transform: scale(0.62) rotate(-24deg);
+}
+
+html[data-theme="dark"] #moon {
+  opacity: 0;
+  transform: scale(0.62) rotate(18deg);
+}
+
+html[data-theme="dark"] #sun {
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+}
+
+#theme-toggle.is-switching {
+  transform: translate3d(0, -1px, 0) scale(0.98);
+}
+
+body.home-page .main {
+  max-width: 100%;
+  width: 100%;
+}
+
+body.home-page .home-stage {
+  width: min(1040px, 100%);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.home-info {
+  display: grid;
+  gap: 20px;
+  padding: clamp(34px, 8vh, 92px) 0 clamp(28px, 5vh, 54px);
+}
+
+.home-hero-anchor {
+  width: min(82%, 860px);
+  margin: 0 auto;
+}
+
+.home-hero-anchor span {
+  display: block;
+  border-top: 3px solid var(--min-line-color);
+}
+
+.home-info .entry-header h1 {
+  margin: 0;
+  text-align: center;
+  font-size: clamp(2.7rem, 6vw, 5.8rem);
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+.home-search-wrap {
+  width: min(960px, 100%);
+  margin: 0 auto;
+  display: grid;
+  gap: 14px;
+}
+
+.home-search-box {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+}
+
+#home-search-input,
+#home-search-btn {
+  min-height: 58px;
+  border-radius: 16px;
+}
+
+#home-search-input {
+  padding-left: 20px;
+  padding-right: 20px;
+  font-size: 1rem;
+}
+
+#home-search-btn {
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+.home-search-tags {
+  gap: 10px;
+  justify-content: center;
+}
+
+.home-search-tag-list {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.home-search-tags span {
+  font-size: 0.96rem;
+}
+
+.home-search-tags a {
+  border-color: var(--panel-border-strong);
+  transition: transform var(--micro-dur) var(--micro-ease), background-color var(--micro-dur) var(--micro-ease), color var(--micro-dur) var(--micro-ease), border-color var(--micro-dur) var(--micro-ease);
+}
+
+.home-search-tags a:hover {
+  transform: translate3d(0, -1px, 0);
+}
+
+.page-header {
+  margin-bottom: clamp(18px, 4vw, 32px);
+}
+
+.article-year-nav {
+  gap: 8px;
+  margin-top: 0;
+  margin-bottom: 26px;
+}
+
+.article-year-nav a {
+  transition: transform var(--micro-dur) var(--micro-ease), background-color var(--micro-dur) var(--micro-ease), color var(--micro-dur) var(--micro-ease);
+}
+
+.article-year-nav a:hover {
+  transform: translate3d(0, -1px, 0);
+}
+
+.post-entry {
+  padding: 24px 0;
+  transition: background-color var(--micro-dur) var(--micro-ease), transform var(--micro-dur) var(--micro-ease), border-color var(--micro-dur) var(--micro-ease);
+}
+
+.post-entry:hover {
+  transform: none;
+  background: transparent;
+}
+
+.post-entry:hover .entry-header h2 {
+  color: var(--min-hover);
+}
+
+.post-entry-with-date {
+  grid-template-columns: 96px minmax(0, 1fr);
+  column-gap: 28px;
+}
+
+.post-entry-with-date::before {
+  left: 84px;
+  top: 4px;
+  bottom: 4px;
+  opacity: 0.18;
+}
+
+.post-entry-with-date .post-entry-date {
+  font-size: 0.84rem;
+  letter-spacing: 0.05em;
+}
+
+.post-entry-with-date .entry-content p {
+  max-width: 60ch;
+}
+
+.post-single .post-header,
+.post-single .post-content,
+.post-single .post-footer,
+.post-single .post-related,
+.post-single .toc {
+  width: min(var(--reading-shell-max), 100%);
+  max-width: min(var(--reading-shell-max), 100%);
+}
+
+.post-title {
+  text-wrap: balance;
+}
+
+.post-content {
+  overflow-wrap: anywhere;
+}
+
+.post-content > * {
+  max-width: 100%;
+  min-width: 0;
+}
+
+.post-content :is(img, video, iframe, svg, canvas) {
+  max-width: 100%;
+  height: auto;
+}
+
+.post-actions {
+  gap: 12px;
+}
+
+.bd-share-trigger,
+.post-backtop,
+.about-social .social-icons a,
+.about-work-open,
+.not-found-actions a,
+.search-guide-tags button,
+.search-guide-synonyms button,
+.search-filter-row button,
+.search-recent-list button {
+  transition: transform var(--micro-dur) var(--micro-ease), background-color var(--micro-dur) var(--micro-ease), color var(--micro-dur) var(--micro-ease), border-color var(--micro-dur) var(--micro-ease), box-shadow var(--micro-dur) var(--micro-ease);
+}
+
+.bd-share-trigger:hover,
+.post-backtop:hover,
+.about-social .social-icons a:hover,
+.about-work-open:hover,
+.not-found-actions a:hover,
+.search-guide-tags button:hover,
+.search-guide-synonyms button:hover,
+.search-filter-row button:hover,
+.search-recent-list button:hover {
+  transform: translate3d(0, -1px, 0);
+}
+
+.bd-share-panel {
+  width: min(360px, calc(100vw - 28px));
+  border-radius: 18px;
+  box-shadow: 0 22px 60px rgba(12, 13, 18, 0.16);
+}
+
+.search-empty,
+.not-found-card {
+  border-color: var(--panel-border-soft);
+  box-shadow: var(--panel-shadow-soft);
+}
+
+.not-found-hint {
+  margin: 0.5rem 0 0;
+  color: var(--secondary);
+  font-family: var(--font-ui);
+  font-size: 0.9rem;
+}
+
+.about-pro .post-header {
+  width: min(74ch, 100%);
+  max-width: min(74ch, 100%);
+  text-align: center;
+}
+
+.about-single .post-header {
+  padding-bottom: 20px;
+}
+
+.about-social .social-icons {
+  justify-content: center;
+}
+
+.about-pro .about-profile {
+  width: min(var(--about-shell-max), 100%);
+  max-width: min(var(--about-shell-max), 100%);
+  gap: 22px 28px;
+}
+
+.about-pro .about-block {
+  padding-top: 18px;
+}
+
+.about-pro .about-title-list {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.about-pro .about-title-list li {
+  padding: 8px 10px;
+  font-size: 0.88rem;
+}
+
+.about-pro .about-highlight-lead {
+  margin-bottom: 10px;
+  padding: 12px 16px;
+  border-left-width: 4px;
+}
+
+.about-pro .about-highlight-list li {
+  padding: 12px 0 12px 16px;
+}
+
+.about-pro .about-highlight-list li:last-child {
+  padding: 12px 0 12px 16px;
+  border-bottom: 1px solid color-mix(in srgb, var(--min-line-color) 36%, transparent);
+  text-align: left;
+  font-size: 0.98rem;
+  color: var(--secondary);
+}
+
+.about-pro .about-highlight-list li:last-child::before {
+  content: "";
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 1.05em;
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--min-line-color) 78%, transparent);
+  transform: translateY(-50%);
+}
+
+.about-pro .about-highlight-quote {
+  margin: 12px 0 0;
+  padding: 10px 0 0;
+  border-top: 0;
+  text-align: center;
+  font-family: var(--font-heading);
+  font-size: 1.06rem;
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+  color: var(--min-text-color);
+}
+
+.about-pro .about-cert-list,
+.about-pro .about-honor-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 26px;
+}
+
+.about-pro .about-work-tabs {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.about-pro .about-work-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.about-pro .about-work-tab {
+  flex: 0 0 auto;
+}
+
+.about-pro .about-work-list {
+  display: grid;
+  gap: 0;
+}
+
+.about-pro .about-work-item {
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 12px 16px;
+  padding: 14px 0;
+}
+
+.about-pro .about-work-title {
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.16em;
+}
+
+.about-pro .about-work-open {
+  width: 30px;
+  height: 30px;
+}
+
+.about-pro .about-translation-note {
+  margin-top: 14px;
+  padding-left: 12px;
+  border-left-width: 3px;
+}
+
+@media (max-width: 1180px) {
+  .nav {
+    max-width: min(var(--nav-shell-max), calc(100% - 28px));
+  }
+
+  .logo a {
+    font-size: clamp(2rem, 3vw, 3.3rem);
+  }
+
+  .about-pro .about-title-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  html,
+  body,
+  .header,
+  .main,
+  .page,
+  .post-single,
+  .post-content,
+  .post-footer,
+  .post-related,
+  .about-pro,
+  .home-stage {
+    max-width: 100%;
+    overflow-x: clip;
+  }
+
+  .main {
+    width: 100%;
+    max-width: 100%;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .nav {
+    max-width: none;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    padding: 10px 0 12px;
+    min-height: auto;
+  }
+
+  .logo {
+    width: 100%;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .logo a {
+    max-width: calc(100vw - 126px);
+    min-width: 0;
+    font-size: clamp(1.2rem, 10vw, 2rem);
+    line-height: 1;
+    padding-bottom: 0.1em;
+  }
+
+  .logo-text-full {
+    display: none !important;
+  }
+
+  .logo-text-mobile {
+    display: inline-block !important;
+  }
+
+  .logo-switches {
+    margin-left: auto;
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  #menu {
+    width: 100%;
+    min-width: 0;
+    margin-left: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  #menu li {
+    display: flex;
+  }
+
+  #menu a {
+    width: 100%;
+    min-height: 48px;
+    border-radius: 18px;
+    padding: 8px 10px;
+  }
+
+  #menu a.is-current {
+    border: 1px solid var(--panel-border-strong);
+    background: color-mix(in srgb, var(--surface-soft) 90%, transparent);
+  }
+
+  #menu a::after {
+    left: 20%;
+    right: 20%;
+    bottom: 10px;
+  }
+
+  body.home-page .home-stage,
+  .post-single,
+  .post-single .post-header,
+  .post-single .post-content,
+  .post-single .post-footer,
+  .post-single .post-related,
+  .post-single .toc,
+  .about-pro .post-header,
+  .about-pro .about-profile {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  .home-info {
+    padding-top: 24px;
+    padding-bottom: 24px;
+    gap: 16px;
+  }
+
+  .home-hero-anchor {
+    width: 100%;
+  }
+
+  .home-info .entry-header h1 {
+    font-size: clamp(2.3rem, 13vw, 3.8rem);
+    line-height: 1.02;
+  }
+
+  .home-search-wrap {
+    gap: 12px;
+  }
+
+  .home-search-box {
+    grid-template-columns: 1fr;
+  }
+
+  #home-search-input,
+  #home-search-btn {
+    min-height: 52px;
+    border-radius: 14px;
+  }
+
+  .home-search-tags {
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+
+  .home-search-tag-list {
+    justify-content: flex-start;
+    gap: 8px;
+  }
+
+  .page-header h1 {
+    font-size: clamp(2.15rem, 13vw, 3.2rem);
+  }
+
+  .article-year-nav {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 2px;
+    scrollbar-width: none;
+  }
+
+  .article-year-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .article-year-nav span,
+  .article-year-nav a {
+    flex: 0 0 auto;
+  }
+
+  .post-entry {
+    padding: 18px 0;
+  }
+
+  .post-entry-with-date {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 8px;
+  }
+
+  .post-entry-with-date::before {
+    display: none;
+  }
+
+  .post-entry-with-date .post-entry-date {
+    padding-top: 0;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+  }
+
+  .post-entry-with-date .entry-header h2 {
+    font-size: clamp(1.28rem, 8vw, 1.9rem);
+    line-height: 1.28;
+  }
+
+  .post-entry-with-date .entry-content p {
+    max-width: 100%;
+    font-size: 0.96rem;
+    line-height: 1.64;
+  }
+
+  .post-title {
+    font-size: clamp(2rem, 12vw, 3.05rem);
+    line-height: 1.08;
+  }
+
+  .post-description {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  .post-content {
+    font-size: 1.02rem;
+    line-height: 1.84;
+    overflow-x: clip;
+  }
+
+  .post-content :is(p, li, blockquote, h2, h3, h4, strong, em, a, span) {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .post-content pre,
+  .post-content table {
+    width: 100%;
+    max-width: 100%;
+    display: block;
+    overflow-x: auto;
+  }
+
+  .post-content img,
+  .post-content video,
+  .post-content iframe,
+  .post-content svg,
+  .post-content canvas,
+  .post-content figure {
+    max-width: 100% !important;
+    width: auto;
+  }
+
+  .post-actions {
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .bd-share-panel {
+    width: min(340px, calc(100vw - 20px));
+    border-radius: 16px;
+  }
+
+  .about-single .post-header {
+    text-align: left;
+    padding-bottom: 18px;
+    margin-bottom: 24px;
+  }
+
+  .about-social .social-icons {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .about-social .social-icons a {
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+  }
+
+  .about-pro .about-profile {
+    gap: 18px;
+  }
+
+  .about-pro .about-block {
+    padding-top: 16px;
+  }
+
+  .about-pro .about-title-list {
+    display: flex;
+    grid-template-columns: none;
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 2px;
+    scrollbar-width: none;
+  }
+
+  .about-pro .about-title-list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .about-pro .about-title-list li {
+    flex: 0 0 auto;
+    min-width: max-content;
+    white-space: nowrap;
+    font-size: 0.86rem;
+    padding: 8px 14px;
+  }
+
+  .about-pro .about-highlight-lead {
+    padding: 12px 14px;
+    font-size: 0.96rem;
+    line-height: 1.64;
+  }
+
+  .about-pro .about-highlight-list li,
+  .about-pro .about-cert-list li,
+  .about-pro .about-honor-list li,
+  .about-pro .about-list li {
+    padding: 10px 0 10px 14px;
+    font-size: 0.95rem;
+    line-height: 1.64;
+  }
+
+  .about-pro .about-highlight-quote {
+    padding-top: 12px;
+    font-size: 1rem;
+    line-height: 1.62;
+  }
+
+  .about-pro .about-cert-list,
+  .about-pro .about-honor-list {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .about-pro .about-work-tab {
+    min-height: 34px;
+    padding: 5px 11px;
+    font-size: 0.76rem;
+  }
+
+  .about-pro .about-work-item {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 12px 0;
+  }
+
+  .about-pro .about-work-main {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+  }
+
+  .about-pro .about-work-title {
+    font-size: 0.96rem;
+    line-height: 1.52;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #menu a,
+  #menu a::after,
+  #theme-toggle svg {
+    transition: none !important;
+  }
+}
+
+@media (min-width: 901px) {
+  .logo a {
+    display: inline-flex !important;
+    align-items: flex-end;
+    gap: 0;
+  }
+
+  .logo-text-full {
+    display: inline-block !important;
+  }
+
+  .logo-text-mobile {
+    display: none !important;
+  }
+}
+
+@keyframes bdHeroLineReveal {
+  from {
+    opacity: 0.08;
+    transform: scaleX(0.86);
+  }
+  to {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+
+@keyframes bdHeroRise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.logo a {
+  white-space: nowrap;
+}
+
+.logo-text {
+  flex: 0 0 auto;
+}
+
+.home-stage {
+  position: relative;
+}
+
+.home-info {
+  gap: 18px;
+}
+
+.home-hero-anchor span {
+  transform-origin: center;
+}
+
+html.bd-ready .home-hero-anchor span {
+  animation: bdHeroLineReveal 700ms var(--micro-ease) both;
+}
+
+html.bd-ready .home-info .entry-header h1,
+html.bd-ready .home-search-wrap {
+  animation: bdHeroRise 420ms var(--micro-ease) both;
+}
+
+html.bd-ready .home-search-wrap {
+  animation-delay: 70ms;
+}
+
+.home-info .entry-header h1 {
+  letter-spacing: -0.035em;
+}
+
+.home-search-wrap {
+  width: min(920px, 100%);
+  gap: 14px;
+}
+
+#home-search-input {
+  transition: transform var(--micro-dur) var(--micro-ease), border-color var(--micro-dur) var(--micro-ease), box-shadow var(--micro-dur) var(--micro-ease), background-color var(--micro-dur) var(--micro-ease);
+}
+
+#home-search-input:focus {
+  transform: translate3d(0, -1px, 0);
+  border-color: var(--panel-border-strong);
+  box-shadow: 0 10px 24px rgba(12, 13, 18, 0.08);
+}
+
+#home-search-btn {
+  transition: transform var(--micro-dur) var(--micro-ease), border-color var(--micro-dur) var(--micro-ease), background-color var(--micro-dur) var(--micro-ease), color var(--micro-dur) var(--micro-ease), box-shadow var(--micro-dur) var(--micro-ease);
+}
+
+#home-search-btn:hover {
+  transform: translate3d(0, -1px, 0);
+  border-color: var(--panel-border-strong);
+  box-shadow: 0 10px 24px rgba(12, 13, 18, 0.08);
+}
+
+.home-search-tag-list a {
+  position: relative;
+  overflow: hidden;
+}
+
+.home-search-tag-list a::before {
+  content: "";
+  position: absolute;
+  inset: auto 14px 8px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0;
+  transform: scaleX(0.72);
+  transform-origin: center;
+  transition: transform var(--micro-dur) var(--micro-ease), opacity var(--micro-dur) var(--micro-ease);
+}
+
+.home-search-tag-list a:hover::before {
+  opacity: 0.6;
+  transform: scaleX(1);
+}
+
+.about-pro .post-header {
+  width: min(var(--about-shell-max), 100%);
+  max-width: min(var(--about-shell-max), 100%);
+  margin-inline: auto;
+  padding: 12px 0 24px;
+  text-align: center;
+  border-bottom: 0;
+}
+
+.about-pro .about-hero {
+  width: min(840px, 100%);
+  max-width: min(840px, 100%);
+  margin-inline: auto;
+  display: grid;
+  justify-items: center;
+  gap: 16px;
+  text-align: center;
+}
+
+.about-pro .about-hero .post-title {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  margin: 0;
+  text-align: center;
+  text-wrap: balance;
+}
+
+.about-pro .about-hero .post-description {
+  width: auto;
+  max-width: none;
+  margin: 0;
+  font-size: clamp(1rem, 0.94rem + 0.34vw, 1.12rem);
+  line-height: 1.42;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.about-pro .about-social {
+  width: auto;
+}
+
+.about-pro .about-social .social-icons {
+  justify-content: center;
+  gap: 14px;
+}
+
+.about-pro .about-social .social-icons a {
+  position: relative;
+  overflow: visible;
+  transition: transform var(--micro-dur) var(--micro-ease), border-color var(--micro-dur) var(--micro-ease), box-shadow var(--micro-dur) var(--micro-ease), background-color var(--micro-dur) var(--micro-ease);
+}
+
+.about-pro .about-social .social-icons a svg {
+  width: 22px;
+  height: 22px;
+  display: block;
+  flex: 0 0 auto;
+  overflow: visible;
+}
+
+.about-pro .about-social .social-icons a::after {
+  content: "";
+  position: absolute;
+  inset: auto 12px 10px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0;
+  transform: scaleX(0.72);
+  transform-origin: center;
+  transition: transform var(--micro-dur) var(--micro-ease), opacity var(--micro-dur) var(--micro-ease);
+}
+
+.about-pro .about-social .social-icons a:hover::after,
+.about-pro .about-social .social-icons a:focus-visible::after {
+  opacity: 0.55;
+  transform: scaleX(1);
+}
+
+.about-pro .about-social .social-icons a:hover,
+.about-pro .about-social .social-icons a:focus-visible {
+  transform: translate3d(0, -1px, 0);
+  border-color: var(--panel-border-strong);
+  box-shadow: 0 12px 24px rgba(12, 13, 18, 0.06);
+}
+
+.about-pro .about-profile {
+  width: min(var(--about-shell-max), 100%);
+  max-width: min(var(--about-shell-max), 100%);
+  gap: 26px 28px;
+}
+
+.about-pro .about-block {
+  padding-top: 18px;
+}
+
+.about-pro .about-block:first-child {
+  padding-top: 4px;
+}
+
+.about-pro .about-block-title {
+  width: min(var(--about-shell-max), 100%);
+  margin-inline: auto;
+  padding-top: 8px;
+}
+
+.about-pro .about-title-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 12px;
+  overflow: visible;
+  padding: 4px 0 0;
+  scrollbar-width: none;
+}
+
+.about-pro .about-title-list::-webkit-scrollbar {
+  display: none;
+}
+
+.about-pro .about-title-list li {
+  flex: 0 1 auto;
+  min-width: 0;
+  padding: 9px 18px;
+  font-size: 0.89rem;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--surface-soft) 76%, transparent) 0%, transparent 100%);
+  transition: transform var(--micro-dur) var(--micro-ease), border-color var(--micro-dur) var(--micro-ease), box-shadow var(--micro-dur) var(--micro-ease), background-color var(--micro-dur) var(--micro-ease);
+}
+
+.about-pro .about-title-list li:hover {
+  transform: translate3d(0, -1px, 0);
+  border-color: color-mix(in srgb, var(--panel-border-strong) 86%, transparent);
+  box-shadow: 0 12px 24px rgba(12, 13, 18, 0.05);
+}
+
+.about-pro .about-block-highlights {
+  max-width: min(980px, 100%);
+  margin-inline: auto;
+}
+
+.about-pro .about-highlight-lead {
+  margin-bottom: 14px;
+  padding: 14px 18px;
+  border-left-width: 4px;
+}
+
+.about-pro .about-highlight-list li {
+  padding: 12px 0 12px 18px;
+}
+
+.about-pro .about-highlight-quote {
+  width: min(38ch, 100%);
+  margin: 18px auto 0;
+  padding-top: 14px;
+  text-align: center;
+}
+
+.about-pro .about-work-tab {
+  transition: transform var(--micro-dur) var(--micro-ease), border-color var(--micro-dur) var(--micro-ease), background-color var(--micro-dur) var(--micro-ease), color var(--micro-dur) var(--micro-ease), box-shadow var(--micro-dur) var(--micro-ease);
+}
+
+.about-pro .about-work-tab:hover,
+.about-pro .about-work-tab:focus-visible {
+  transform: translate3d(0, -1px, 0);
+  border-color: var(--panel-border-strong);
+  box-shadow: 0 10px 24px rgba(12, 13, 18, 0.06);
+}
+
+.about-pro .about-work-tab.is-active {
+  box-shadow: 0 12px 28px rgba(12, 13, 18, 0.08);
+}
+
+@keyframes bdAboutRise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 8px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+html.bd-ready .about-pro .about-hero > * {
+  animation: bdAboutRise 420ms var(--micro-ease) both;
+}
+
+html.bd-ready .about-pro .about-hero > *:nth-child(2) {
+  animation-delay: 40ms;
+}
+
+html.bd-ready .about-pro .about-hero > *:nth-child(3) {
+  animation-delay: 90ms;
+}
+
+.about-pro .about-block h2 {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.about-pro .about-block h2::after {
+  content: "";
+  flex: 1 1 auto;
+  height: 1px;
+  background: color-mix(in srgb, var(--min-line-color) 34%, transparent);
+  opacity: 0.46;
+  transform: scaleX(0.88);
+  transform-origin: left center;
+  transition: transform var(--micro-dur) var(--micro-ease), opacity var(--micro-dur) var(--micro-ease);
+}
+
+.about-pro .about-block:hover h2::after {
+  opacity: 0.74;
+  transform: scaleX(1);
+}
+
+.header .nav #menu a span {
+  position: relative;
+  display: inline-block;
+  transition: color var(--micro-dur) var(--micro-ease), transform var(--micro-dur) var(--micro-ease);
+}
+
+.header .nav #menu a span::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.18em;
+  height: 1px;
+  background: currentColor;
+  opacity: 0;
+  transform: scaleX(0.72);
+  transform-origin: center;
+  transition: transform var(--micro-dur) var(--micro-ease), opacity var(--micro-dur) var(--micro-ease);
+}
+
+.header .nav #menu a:hover span::after,
+.header .nav #menu a:focus-visible span::after {
+  opacity: 0.52;
+  transform: scaleX(1);
+}
+
+#theme-toggle {
+  transition: transform var(--micro-dur) var(--micro-ease), border-color var(--micro-dur) var(--micro-ease), background-color var(--micro-dur) var(--micro-ease), box-shadow var(--micro-dur) var(--micro-ease);
+}
+
+#theme-toggle:hover,
+#theme-toggle:focus-visible {
+  transform: translate3d(0, -1px, 0);
+  box-shadow: 0 10px 24px rgba(12, 13, 18, 0.08);
+}
+
+#theme-toggle svg {
+  transition: transform 180ms ease, opacity 180ms ease;
+}
+
+html[data-theme="dark"] #theme-toggle #moon {
+  transform: rotate(-12deg) scale(1.03);
+}
+
+html[data-theme="light"] #theme-toggle #sun {
+  transform: rotate(10deg) scale(1.03);
+}
+
+.home-search-wrap {
+  transition: transform var(--micro-dur) var(--micro-ease), box-shadow var(--micro-dur) var(--micro-ease), border-color var(--micro-dur) var(--micro-ease);
+}
+
+.home-search-wrap:focus-within {
+  transform: translate3d(0, -1px, 0);
+  box-shadow: 0 16px 32px rgba(12, 13, 18, 0.06);
+}
+
+.about-pro .about-work-item {
+  position: relative;
+}
+
+.about-pro .about-work-item::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 1px;
+  background: color-mix(in srgb, var(--min-line-color) 72%, transparent);
+  transform: scaleX(0.94);
+  transform-origin: center;
+  opacity: 0;
+  transition: transform var(--micro-dur) var(--micro-ease), opacity var(--micro-dur) var(--micro-ease);
+}
+
+.about-pro .about-work-item:hover::after,
+.about-pro .about-work-item:focus-within::after {
+  opacity: 0.7;
+  transform: scaleX(1);
+}
+
+.about-pro .about-work-tabs {
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.about-pro .about-work-item {
+  align-items: center;
+  gap: 14px 18px;
+  transition: border-color var(--micro-dur) var(--micro-ease), transform var(--micro-dur) var(--micro-ease), background-color var(--micro-dur) var(--micro-ease);
+}
+
+.about-pro .about-work-item:hover {
+  border-color: color-mix(in srgb, var(--min-line-color) 56%, transparent);
+}
+
+.about-pro .about-work-main {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+}
+
+.about-pro .about-work-title {
+  text-decoration: none;
+  transition: color var(--micro-dur) var(--micro-ease), letter-spacing var(--micro-dur) var(--micro-ease);
+}
+
+.about-pro .about-work-title:hover {
+  color: var(--min-hover);
+}
+
+.about-pro .about-work-open {
+  border-color: color-mix(in srgb, var(--min-line-color) 48%, transparent);
+}
+
+.about-pro .about-work-arrow {
+  display: inline-block;
+  transition: transform var(--micro-dur) var(--micro-ease);
+}
+
+.about-pro .about-work-item:hover .about-work-open {
+  transform: translate3d(0, -1px, 0);
+  border-color: var(--panel-border-strong);
+}
+
+.about-pro .about-work-item:hover .about-work-arrow,
+.about-pro .about-work-item:focus-within .about-work-arrow {
+  transform: translate3d(1px, -1px, 0);
+}
+
+.home-search-tag-list a {
+  transition: transform var(--micro-dur) var(--micro-ease), border-color var(--micro-dur) var(--micro-ease), box-shadow var(--micro-dur) var(--micro-ease), background-color var(--micro-dur) var(--micro-ease);
+}
+
+.home-search-tag-list a:hover,
+.home-search-tag-list a:focus-visible {
+  transform: translate3d(0, -1px, 0);
+  border-color: color-mix(in srgb, var(--panel-border-strong) 84%, transparent);
+  box-shadow: 0 12px 24px rgba(12, 13, 18, 0.05);
+}
+
+.article-year-nav a {
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--micro-dur) var(--micro-ease), border-color var(--micro-dur) var(--micro-ease), box-shadow var(--micro-dur) var(--micro-ease), background-color var(--micro-dur) var(--micro-ease);
+}
+
+.article-year-nav a:hover,
+.article-year-nav a:focus-visible {
+  transform: translate3d(0, -1px, 0);
+  border-color: color-mix(in srgb, var(--panel-border-strong) 84%, transparent);
+  box-shadow: 0 12px 24px rgba(12, 13, 18, 0.05);
+}
+
+.post-entry-with-date::before {
+  transition: opacity var(--micro-dur) var(--micro-ease), transform var(--micro-dur) var(--micro-ease);
+}
+
+.post-entry-with-date:hover::before,
+.post-entry-with-date:focus-within::before {
+  opacity: 0.36;
+  transform: scaleY(1.02);
+}
+
+.post-entry-with-date .entry-header h2 {
+  transition: color var(--micro-dur) var(--micro-ease), letter-spacing var(--micro-dur) var(--micro-ease);
+}
+
+.post-entry-with-date:hover .entry-header h2,
+.post-entry-with-date:focus-within .entry-header h2 {
+  letter-spacing: 0.008em;
+}
+
+.about-pro .about-translation-note {
+  max-width: 58ch;
+  margin-top: 18px;
+  padding-left: 14px;
+}
+
+.search-empty,
+.not-found-card {
+  backdrop-filter: saturate(120%) blur(10px);
+}
+
+.search-empty,
+.not-found-card,
+.post-entry,
+.archive-card {
+  transition: transform var(--micro-dur) var(--micro-ease), box-shadow var(--micro-dur) var(--micro-ease), border-color var(--micro-dur) var(--micro-ease);
+}
+
+.search-empty:hover,
+.not-found-card:hover,
+.post-entry:hover,
+.archive-card:hover {
+  transform: translate3d(0, -1px, 0);
+  box-shadow: 0 14px 30px rgba(12, 13, 18, 0.05);
+}
+
+@media (max-width: 1180px) {
+  .about-pro .about-title-list {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 900px) {
+  .about-pro .post-header {
+    padding: 12px 0 22px;
+    margin-bottom: 22px;
+    text-align: left;
+  }
+
+  .about-pro .about-hero {
+    width: 100%;
+    justify-items: start;
+    gap: 14px;
+    text-align: left;
+  }
+
+  .about-pro .about-hero .post-title {
+    display: block;
+    width: 100%;
+    text-align: left;
+  }
+
+  .about-pro .about-hero .post-description {
+    max-width: 18ch;
+    text-align: left;
+    white-space: normal;
+  }
+
+  .about-pro .about-social .social-icons {
+    justify-content: flex-start;
+  }
+
+  .about-pro .about-title-list {
+    justify-content: flex-start;
+    gap: 10px;
+  }
+
+  .about-pro .about-block-highlights {
+    max-width: 100%;
+  }
+
+  .about-pro .about-highlight-quote {
+    width: 100%;
+    margin-top: 14px;
+  }
+
+  .header .nav #menu a span::after {
+    bottom: -0.16em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.bd-ready .home-hero-anchor span,
+  html.bd-ready .home-info .entry-header h1,
+  html.bd-ready .home-search-wrap {
+    animation: none !important;
+  }
+}
+
+/* Final visual normalization: about hero, header nav, social icons */
+.logo-text-full,
+.logo-text-mobile {
+  white-space: nowrap;
+}
+
+#menu .active {
+  text-decoration: none !important;
+}
+
+.header .nav #menu a span::after {
+  display: none !important;
+}
+
+#menu li {
+  overflow: visible;
+}
+
+#menu a {
+  min-height: 50px;
+  padding: 6px 0 12px;
+  overflow: visible;
+}
+
+#menu a span {
+  display: inline-flex;
+  align-items: flex-end;
+  justify-content: center;
+  max-width: none;
+  padding: 0 0.06em 0.08em;
+  line-height: 1;
+  white-space: nowrap;
+  overflow: visible !important;
+  text-overflow: clip;
+}
+
+#menu a::after {
+  left: 0.14em;
+  right: 0.14em;
+  bottom: 4px;
+}
+
+.about-pro .post-header,
+.about-pro .about-profile {
+  width: min(1080px, 100%);
+  max-width: min(1080px, 100%);
+  margin-inline: auto;
+}
+
+.about-pro .post-header {
+  padding: 20px 0 28px;
+}
+
+.about-pro .about-hero {
+  width: 100%;
+  max-width: 100%;
+  margin-inline: auto;
+  display: grid;
+  justify-items: center;
+  gap: 18px;
+  text-align: center;
+}
+
+.about-pro .about-hero .post-title {
+  width: 100%;
+  margin: 0;
+  text-align: center;
+  text-wrap: balance;
+}
+
+.about-pro .about-hero .post-description {
+  width: auto;
+  max-width: none;
+  margin: 0;
+  font-size: clamp(0.96rem, 0.88rem + 0.22vw, 1.06rem);
+  line-height: 1.28;
+  letter-spacing: 0.005em;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.about-pro .about-social {
+  width: auto;
+}
+
+.about-pro .about-social .social-icons {
+  justify-content: center;
+  gap: 16px;
+}
+
+.about-pro .about-social .social-icons a {
+  display: grid;
+  place-items: center;
+  width: 50px;
+  height: 50px;
+  padding: 0;
+  border-radius: 14px;
+  box-sizing: border-box;
+  line-height: 0;
+  overflow: visible;
+}
+
+.about-pro .about-social .social-icons a::before,
+.about-pro .about-social .social-icons a::after {
+  display: none !important;
+}
+
+.about-pro .about-social .social-icons a svg {
+  width: 22px;
+  height: 22px;
+  display: block;
+  flex: 0 0 auto;
+  overflow: visible;
+}
+
+@media (min-width: 901px) {
+  .logo a {
+    max-width: none;
+    overflow: visible;
+  }
+
+  .logo-text-full {
+    display: inline-block !important;
+  }
+
+  .logo-text-mobile {
+    display: none !important;
+  }
+
+  .about-pro .about-hero .post-description {
+    font-size: clamp(0.94rem, 0.88rem + 0.18vw, 1.02rem);
+  }
+}
+
+@media (max-width: 900px) {
+  .logo a {
+    max-width: calc(100% - 52px);
+  }
+
+  .logo-text-full {
+    display: none !important;
+  }
+
+  .logo-text-mobile {
+    display: inline-block !important;
+  }
+
+  #menu {
+    width: 100%;
+    min-width: 0;
+    margin-left: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  #menu li {
+    display: flex;
+    justify-content: center;
+  }
+
+  #menu a {
+    width: 100%;
+    min-height: 50px;
+    padding: 10px 6px 12px;
+    border-radius: 18px;
+  }
+
+  #menu a span {
+    max-width: none;
+    font-size: clamp(1rem, 0.86rem + 1vw, 1.18rem);
+  }
+
+  #menu a::after {
+    left: 18%;
+    right: 18%;
+    bottom: 8px;
+  }
+
+  .about-pro .post-header,
+  .about-pro .about-profile {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .about-pro .post-header {
+    padding: 10px 0 20px;
+    margin-bottom: 20px;
+    text-align: left;
+  }
+
+  .about-pro .about-hero {
+    justify-items: start;
+    gap: 12px;
+    text-align: left;
+  }
+
+  .about-pro .about-hero .post-title {
+    text-align: left;
+  }
+
+  .about-pro .about-hero .post-description {
+    max-width: 100%;
+    font-size: clamp(0.96rem, 0.9rem + 0.62vw, 1.02rem);
+    line-height: 1.38;
+    text-align: left;
+    white-space: normal;
+    text-wrap: pretty;
+  }
+
+  .about-pro .about-social .social-icons {
+    justify-content: flex-start;
+    gap: 12px;
+  }
+
+  .about-pro .about-social .social-icons a {
+    width: 46px;
+    height: 46px;
+  }
+}
+
+/* 2026-03-03 unified layout layer
+   consolidate header/about/mobile reading width and prevent override drift */
+html,
+body {
+  max-width: 100%;
+}
+
+body {
+  overflow-x: clip;
+}
+
+@supports not (overflow: clip) {
+  body {
+    overflow-x: hidden;
+  }
+}
+
+.header,
+.header *,
+.nav,
+.logo,
+.logo a,
+.logo-switches,
+#menu,
+#menu li,
+#menu a,
+#menu a span {
+  overflow: visible !important;
+}
+
+.header .logo .logo-text-full,
+.header .logo .logo-text-mobile {
+  white-space: nowrap !important;
+}
+
+.page,
+.main,
+.post-single,
+.post-single *,
+.about-pro,
+.about-pro * {
+  box-sizing: border-box;
+}
+
+.header .logo .logo-text-full {
+  display: inline-block !important;
+}
+
+.header .logo .logo-text-mobile {
+  display: none !important;
+}
+
+.main {
+  width: min(1180px, calc(100% - 40px)) !important;
+  max-width: 1180px !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.nav {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: clamp(20px, 2vw, 36px) !important;
+  width: min(1280px, calc(100% - 32px)) !important;
+  max-width: min(1280px, calc(100% - 32px)) !important;
+  min-height: 92px !important;
+  margin-inline: auto !important;
+  padding: 10px 4px !important;
+}
+
+.logo {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+}
+
+.logo a {
+  display: inline-flex !important;
+  align-items: flex-end !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  line-height: 1.04 !important;
+  padding-bottom: 0.08em !important;
+  white-space: nowrap !important;
+}
+
+.logo-switches {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin-left: 6px !important;
+  padding-left: 12px !important;
+  border-left: 1px solid var(--min-line-color) !important;
+  flex: 0 0 auto !important;
+}
+
+#theme-toggle {
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 14px !important;
+}
+
+#menu {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  flex: 0 0 auto !important;
+  min-width: 0 !important;
+  margin-left: auto !important;
+  padding: 0 8px 0 0 !important;
+  gap: clamp(18px, 1.8vw, 30px) !important;
+  overflow: visible !important;
+  white-space: normal !important;
+  scrollbar-width: none !important;
+}
+
+#menu::-webkit-scrollbar {
+  display: none !important;
+}
+
+#menu li {
+  display: flex !important;
+  align-items: stretch !important;
+  min-width: 0 !important;
+  list-style: none !important;
+  padding: 0 !important;
+}
+
+#menu a {
+  position: relative !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 64px !important;
+  width: auto !important;
+  min-width: 0 !important;
+  padding: 10px 8px 18px !important;
+  border-radius: 16px !important;
+}
+
+#menu a span {
+  position: relative !important;
+  display: inline-block !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  padding: 0 0.12em 0.22em !important;
+  line-height: 1.02 !important;
+  white-space: nowrap !important;
+  text-overflow: clip !important;
+}
+
+#menu a::after,
+.header .nav #menu a span::after {
+  display: none !important;
+}
+
+#menu .active {
+  position: relative !important;
+  display: inline-block !important;
+  padding-bottom: 0.2em !important;
+}
+
+#menu .active::after {
+  content: "" !important;
+  position: absolute !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: -0.02em !important;
+  height: 4px !important;
+  border-radius: 999px !important;
+  background: currentColor !important;
+}
+
+.about-pro .post-header {
+  width: min(1180px, 100%) !important;
+  max-width: min(1180px, 100%) !important;
+  margin: 0 auto 28px !important;
+  padding: 26px 0 16px !important;
+  text-align: left !important;
+}
+
+.about-pro .about-hero {
+  width: min(1180px, 100%) !important;
+  max-width: min(1180px, 100%) !important;
+  margin-inline: auto !important;
+  display: grid !important;
+  justify-items: start !important;
+  gap: 18px !important;
+  text-align: left !important;
+}
+
+.about-pro .about-hero > * {
+  opacity: 1 !important;
+  transform: none !important;
+  animation: none !important;
+}
+
+.about-pro .about-hero .post-title {
+  width: auto !important;
+  margin: 0 !important;
+  text-align: left !important;
+}
+
+.about-pro .about-hero .post-description {
+  display: block !important;
+  width: auto !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  font-size: clamp(1rem, 0.95rem + 0.22vw, 1.1rem) !important;
+  line-height: 1.12 !important;
+  letter-spacing: 0.003em !important;
+  white-space: nowrap !important;
+  text-wrap: nowrap !important;
+  text-align: left !important;
+}
+
+.about-pro .about-social {
+  width: auto !important;
+  display: flex !important;
+  justify-content: flex-start !important;
+}
+
+.about-pro .about-social .social-icons {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 16px !important;
+}
+
+.about-pro .about-social .social-icons a {
+  display: inline-grid !important;
+  place-items: center !important;
+  width: 62px !important;
+  height: 62px !important;
+  padding: 0 !important;
+  border-radius: 18px !important;
+  line-height: 0 !important;
+  overflow: visible !important;
+}
+
+.about-pro .about-social .social-icons a svg {
+  width: 28px !important;
+  height: 28px !important;
+  max-width: 28px !important;
+  max-height: 28px !important;
+  display: block !important;
+  overflow: visible !important;
+  flex: 0 0 auto !important;
+}
+
+.about-pro .about-social .social-icons a svg * {
+  overflow: visible !important;
+}
+
+.about-pro .about-profile {
+  width: min(1180px, 100%) !important;
+  max-width: min(1180px, 100%) !important;
+  margin-inline: auto !important;
+}
+
+.about-pro .about-title-list {
+  gap: 12px !important;
+}
+
+.about-pro .about-title-list li {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 56px !important;
+  text-align: center !important;
+}
+
+.about-pro .about-highlight-quote {
+  width: min(44ch, 100%) !important;
+  margin: 18px auto 0 !important;
+  text-align: center !important;
+}
+
+.post-single .post-content,
+.post-single .post-content > *,
+.post-single .post-footer,
+.post-single .post-related {
+  min-width: 0 !important;
+}
+
+@media (min-width: 1180px) {
+  .logo a {
+    font-size: clamp(1.72rem, 2.15vw, 2.68rem) !important;
+  }
+
+  #menu a span {
+    font-size: clamp(1.16rem, 1.04rem + 0.22vw, 1.28rem) !important;
+  }
+
+  .about-pro .about-title-list {
+    display: grid !important;
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (min-width: 901px) and (max-width: 1179px) {
+  .logo a {
+    font-size: clamp(1.5rem, 1.65vw, 2rem) !important;
+  }
+
+  #menu a span {
+    font-size: clamp(1rem, 0.94rem + 0.24vw, 1.1rem) !important;
+  }
+
+  .about-pro .about-title-list {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+
+  .about-pro .about-hero .post-description {
+    white-space: normal !important;
+    text-wrap: balance !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .header {
+    border-bottom-width: 2px !important;
+  }
+
+  .nav {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    gap: 10px !important;
+    width: calc(100% - 24px) !important;
+    max-width: calc(100% - 24px) !important;
+    min-height: auto !important;
+    padding: 4px 2px 10px !important;
+  }
+
+  .logo {
+    width: 100% !important;
+    justify-content: space-between !important;
+  }
+
+  .logo a {
+    max-width: calc(100% - 92px) !important;
+    font-size: clamp(1.38rem, 8vw, 1.92rem) !important;
+    line-height: 1.02 !important;
+  }
+
+  .header .logo .logo-text-full {
+    display: none !important;
+  }
+
+  .header .logo .logo-text-mobile {
+    display: inline-block !important;
+  }
+
+  .logo-switches {
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+    border-left: 0 !important;
+  }
+
+  #theme-toggle {
+    width: 56px !important;
+    height: 56px !important;
+    border-radius: 18px !important;
+  }
+
+  #menu {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    padding: 0 6px 0 0 !important;
+    gap: 10px !important;
+    justify-self: stretch !important;
+  }
+
+  #menu li {
+    display: flex !important;
+    justify-content: center !important;
+  }
+
+  #menu a {
+    width: 100% !important;
+    min-height: 54px !important;
+    padding: 10px 4px 14px !important;
+    border-radius: 18px !important;
+  }
+
+  #menu a span {
+    display: block !important;
+    width: 100% !important;
+    text-align: center !important;
+    font-size: clamp(0.98rem, 0.92rem + 0.34vw, 1.06rem) !important;
+    padding: 0 0.04em 0.18em !important;
+  }
+
+  .about-pro .post-header,
+  .about-pro .about-profile {
+    width: auto !important;
+    max-width: 100% !important;
+    margin-inline: 0 !important;
+  }
+
+  .about-pro .post-header {
+    padding: 14px 0 18px !important;
+    margin-bottom: 20px !important;
+    text-align: left !important;
+  }
+
+  .about-pro .about-hero {
+    width: 100% !important;
+    justify-items: start !important;
+    gap: 14px !important;
+    text-align: left !important;
+  }
+
+  .about-pro .about-hero .post-title,
+  .about-pro .about-hero .post-description {
+    text-align: left !important;
+  }
+
+  .about-pro .about-hero .post-description {
+    max-width: none !important;
+    font-size: clamp(0.98rem, 0.94rem + 0.2vw, 1.04rem) !important;
+    line-height: 1.32 !important;
+    white-space: normal !important;
+    text-wrap: balance !important;
+  }
+
+  .about-pro .about-social {
+    justify-content: flex-start !important;
+  }
+
+  .about-pro .about-social .social-icons {
+    justify-content: flex-start !important;
+    gap: 12px !important;
+  }
+
+  .about-pro .about-social .social-icons a {
+    width: 56px !important;
+    height: 56px !important;
+  }
+
+  .about-pro .about-social .social-icons a svg {
+    width: 24px !important;
+    height: 24px !important;
+    max-width: 24px !important;
+    max-height: 24px !important;
+  }
+
+  .about-pro .about-title-list {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+  }
+
+  .about-pro .about-highlight-lead {
+    padding-inline: 16px !important;
+  }
+
+  .post-single .post-header,
+  .post-single .post-content,
+  .post-single .post-footer,
+  .post-single .post-related,
+  .post-single .toc {
+    width: auto !important;
+    max-width: 100% !important;
+    margin-inline: 0 !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    box-sizing: border-box !important;
+  }
+
+  .post-single .post-content {
+    overflow-x: hidden !important;
+  }
+
+  .post-content > * {
+    max-width: 100% !important;
+  }
+
+  .post-content :is(p, ul, ol, li, blockquote, h2, h3, h4, h5, h6, figure, table, pre) {
+    max-width: 100% !important;
+    width: auto !important;
+  }
+
+  .post-content :is(p, li, blockquote) {
+    text-wrap: pretty !important;
+  }
+
+  .post-content h1,
+  .post-content h2,
+  .post-content h3,
+  .post-content h4,
+  .post-content h5,
+  .post-content h6 {
+    max-width: 100% !important;
+    overflow-wrap: break-word !important;
+  }
+
+  .post-content :is(img, video, iframe, svg, canvas, figure, table, pre) {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  .post-content :is(table, pre) {
+    overflow-x: auto !important;
+  }
+}
+
+/* 2026-03-03 final stabilization layer
+   Resolve accumulated header/about/mobile regressions without changing page structure. */
+
+html,
+body,
+.page,
+.main,
+.post-single,
+.post-single .post-content,
+.post-single .post-content > * {
+  max-width: 100%;
+}
+
+body,
+.page,
+.main {
+  overflow-x: clip !important;
+}
+
+@supports not (overflow: clip) {
+  body,
+  .page,
+  .main {
+    overflow-x: hidden !important;
+  }
+}
+
+.home-info .entry-header h1,
+.home-search-wrap {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+html.bd-ready .home-info .entry-header h1,
+html.bd-ready .home-search-wrap {
+  animation: none !important;
+}
+
+.home-hero-anchor span {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+.header .nav {
+  width: min(1320px, calc(100% - 36px)) !important;
+  max-width: min(1320px, calc(100% - 36px)) !important;
+  min-height: 98px !important;
+  padding: 12px 4px !important;
+  gap: 28px !important;
+  overflow: visible !important;
+}
+
+.header .logo {
+  flex: 0 1 auto !important;
+  max-width: min(58vw, 860px) !important;
+}
+
+.header .logo a {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0 !important;
+  max-width: 100% !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+}
+
+.header .logo .logo-text-full,
+.header .logo .logo-text-mobile {
+  font-family: var(--font-brand) !important;
+  line-height: 0.9 !important;
+  letter-spacing: -0.02em !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+}
+
+.header .logo .logo-text-full {
+  display: inline-block !important;
+  font-size: clamp(2.56rem, 2.35rem + 1.28vw, 4.22rem) !important;
+}
+
+.header .logo .logo-text-mobile {
+  display: none !important;
+}
+
+.header .logo-switches {
+  flex: 0 0 auto !important;
+  margin-left: 8px !important;
+  padding-left: 14px !important;
+}
+
+.header #theme-toggle {
+  width: 48px !important;
+  height: 48px !important;
+  border-radius: 15px !important;
+}
+
+.header #menu {
+  flex: 0 0 auto !important;
+  margin-left: auto !important;
+  gap: clamp(22px, 2vw, 34px) !important;
+  padding-right: 0 !important;
+}
+
+.header #menu li,
+.header #menu a,
+.header #menu a span {
+  min-width: 0 !important;
+  overflow: visible !important;
+}
+
+.header #menu a {
+  min-height: 64px !important;
+  padding: 12px 4px 18px !important;
+}
+
+.header #menu a span {
+  font-size: clamp(1.18rem, 1.08rem + 0.36vw, 1.46rem) !important;
+  line-height: 1.02 !important;
+  padding: 0 0.08em 0.28em !important;
+}
+
+.header #menu .active::after {
+  bottom: -0.04em !important;
+  height: 4px !important;
+}
+
+.about-pro .post-header {
+  width: min(1180px, 100%) !important;
+  max-width: min(1180px, 100%) !important;
+  margin: 0 auto 36px !important;
+  padding: 34px 0 24px !important;
+  text-align: center !important;
+}
+
+.about-pro .about-hero {
+  width: min(1080px, 100%) !important;
+  max-width: min(1080px, 100%) !important;
+  margin-inline: auto !important;
+  justify-items: center !important;
+  gap: 18px !important;
+  text-align: center !important;
+}
+
+.about-pro .about-hero .post-title {
+  width: auto !important;
+  margin: 0 !important;
+  text-align: center !important;
+}
+
+.about-pro .about-hero .post-description {
+  width: auto !important;
+  max-width: none !important;
+  margin: 0 !important;
+  font-size: clamp(1.04rem, 0.98rem + 0.28vw, 1.16rem) !important;
+  line-height: 1.16 !important;
+  letter-spacing: 0.002em !important;
+  white-space: nowrap !important;
+  text-wrap: nowrap !important;
+  text-align: center !important;
+}
+
+.about-pro .about-social,
+.about-pro .about-social .social-icons {
+  justify-content: center !important;
+}
+
+.about-pro .about-social .social-icons {
+  gap: 14px !important;
+}
+
+.about-pro .about-social .social-icons a {
+  width: 64px !important;
+  height: 64px !important;
+  min-width: 64px !important;
+  min-height: 64px !important;
+  padding: 2px !important;
+  border-radius: 18px !important;
+  overflow: visible !important;
+}
+
+.about-pro .about-social .social-icons a svg {
+  width: 28px !important;
+  height: 28px !important;
+  max-width: 28px !important;
+  max-height: 28px !important;
+  display: block !important;
+  overflow: visible !important;
+}
+
+.about-pro .about-social .social-icons a svg * {
+  overflow: visible !important;
+}
+
+.about-pro .about-profile {
+  width: min(1180px, 100%) !important;
+  max-width: min(1180px, 100%) !important;
+  margin-inline: auto !important;
+}
+
+.about-pro .about-title-list {
+  display: grid !important;
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+  gap: 12px !important;
+}
+
+.about-pro .about-title-list li {
+  min-height: 56px !important;
+}
+
+.about-pro .about-highlight-quote {
+  width: min(40ch, 100%) !important;
+  margin: 18px auto 0 !important;
+  text-align: center !important;
+}
+
+@media (max-width: 1179px) {
+  .about-pro .about-hero .post-description {
+    white-space: normal !important;
+    text-wrap: balance !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .header .nav {
+    width: calc(100% - 24px) !important;
+    max-width: calc(100% - 24px) !important;
+    min-height: auto !important;
+    padding: 8px 0 10px !important;
+    gap: 10px !important;
+  }
+
+  .header .logo {
+    max-width: none !important;
+    width: 100% !important;
+    justify-content: space-between !important;
+  }
+
+  .header .logo a {
+    max-width: calc(100% - 84px) !important;
+    align-items: center !important;
+  }
+
+  .header .logo .logo-text-full {
+    display: none !important;
+  }
+
+  .header .logo .logo-text-mobile {
+    display: inline-block !important;
+    font-size: clamp(1.78rem, 8.8vw, 2.44rem) !important;
+    line-height: 0.9 !important;
+  }
+
+  .header .logo-switches {
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+    border-left: 0 !important;
+  }
+
+  .header #theme-toggle {
+    width: 56px !important;
+    height: 56px !important;
+    border-radius: 18px !important;
+  }
+
+  .header #menu {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    gap: 8px !important;
+  }
+
+  .header #menu li {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+
+  .header #menu a {
+    width: 100% !important;
+    min-height: 52px !important;
+    padding: 10px 0 12px !important;
+    border-radius: 18px !important;
+  }
+
+  .header #menu a span {
+    width: 100% !important;
+    font-size: clamp(1rem, 4.6vw, 1.12rem) !important;
+    padding: 0 0.02em 0.24em !important;
+    text-align: center !important;
+  }
+
+  .header #menu .active::after {
+    left: 8px !important;
+    right: 8px !important;
+    bottom: 0 !important;
+  }
+
+  .about-pro .post-header,
+  .about-pro .about-profile {
+    width: auto !important;
+    max-width: 100% !important;
+    margin-inline: 0 !important;
+  }
+
+  .about-pro .post-header {
+    padding: 18px 0 18px !important;
+    margin-bottom: 24px !important;
+    text-align: left !important;
+  }
+
+  .about-pro .about-hero {
+    width: 100% !important;
+    justify-items: start !important;
+    gap: 14px !important;
+    text-align: left !important;
+  }
+
+  .about-pro .about-hero .post-title,
+  .about-pro .about-hero .post-description {
+    text-align: left !important;
+  }
+
+  .about-pro .about-hero .post-description {
+    max-width: 100% !important;
+    font-size: clamp(0.98rem, 0.94rem + 0.24vw, 1.06rem) !important;
+    line-height: 1.32 !important;
+    white-space: normal !important;
+    text-wrap: balance !important;
+  }
+
+  .about-pro .about-social,
+  .about-pro .about-social .social-icons {
+    justify-content: flex-start !important;
+  }
+
+  .about-pro .about-social .social-icons {
+    gap: 12px !important;
+  }
+
+  .about-pro .about-social .social-icons a {
+    width: 56px !important;
+    height: 56px !important;
+    min-width: 56px !important;
+    min-height: 56px !important;
+  }
+
+  .about-pro .about-social .social-icons a svg {
+    width: 24px !important;
+    height: 24px !important;
+    max-width: 24px !important;
+    max-height: 24px !important;
+  }
+
+  .about-pro .about-title-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+  }
+
+  .post-single .post-header,
+  .post-single .post-content,
+  .post-single .post-footer,
+  .post-single .post-related,
+  .post-single .toc {
+    width: auto !important;
+    max-width: 100% !important;
+    margin-inline: 0 !important;
+    padding-left: max(16px, env(safe-area-inset-left)) !important;
+    padding-right: max(16px, env(safe-area-inset-right)) !important;
+  }
+
+  .post-single .post-content {
+    overflow-x: clip !important;
+  }
+
+  .post-content :is(p, ul, ol, li, blockquote, h1, h2, h3, h4, h5, h6, figure, table, pre) {
+    max-width: 100% !important;
+    width: auto !important;
+    margin-right: 0 !important;
+  }
+
+  .post-content :is(img, video, iframe, svg, canvas, table, pre) {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+}
+
+/* 2026-03-03 final stabilization layer v2
+   Resolve remaining hero fade, mobile header overflow, and about hero sizing. */
+
+body.home-page .home-stage,
+body.home-page .first-entry.home-info,
+.home-info,
+.home-info .entry-header,
+.home-info .entry-header h1,
+.home-hero-anchor,
+.home-hero-anchor span,
+.home-search-wrap,
+.home-search-box,
+.home-search-tags,
+.home-search-tag-list {
+  opacity: 1 !important;
+  visibility: visible !important;
+  filter: none !important;
+}
+
+body.home-page .first-entry.home-info,
+html.bd-ready body.home-page .first-entry.home-info,
+body.home-page .home-info .entry-header h1,
+body.home-page .home-search-wrap,
+html.bd-ready body.home-page .home-info .entry-header h1,
+html.bd-ready body.home-page .home-search-wrap,
+html.bd-ready body.home-page .home-hero-anchor span {
+  animation: none !important;
+  transform: none !important;
+}
+
+body.home-page .home-stage {
+  transform: none !important;
+}
+
+body.home-page .home-search-wrap,
+body.home-page .home-search-box,
+body.home-page .home-search-tags {
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+.header,
+.header .nav,
+.header .logo,
+.header .logo a,
+.header #menu {
+  box-sizing: border-box !important;
+}
+
+.header {
+  overflow-x: clip !important;
+}
+
+@supports not (overflow: clip) {
+  .header {
+    overflow-x: hidden !important;
+  }
+}
+
+.header .nav {
+  width: min(1320px, calc(100% - 40px)) !important;
+  max-width: min(1320px, calc(100% - 40px)) !important;
+}
+
+.header .logo {
+  min-width: 0 !important;
+  max-width: min(60vw, 920px) !important;
+}
+
+.header .logo a {
+  min-width: 0 !important;
+  flex: 1 1 auto !important;
+}
+
+.header .logo .logo-text-full {
+  font-size: clamp(2.82rem, 2.52rem + 1.34vw, 4.48rem) !important;
+}
+
+.about-pro .post-header {
+  width: min(1120px, 100%) !important;
+  max-width: min(1120px, 100%) !important;
+  padding: 44px 0 24px !important;
+  margin: 0 auto 34px !important;
+}
+
+.about-pro .about-hero {
+  width: min(980px, 100%) !important;
+  max-width: min(980px, 100%) !important;
+  gap: 20px !important;
+}
+
+.about-pro .about-hero .post-description {
+  font-size: clamp(1.12rem, 1.04rem + 0.32vw, 1.28rem) !important;
+  line-height: 1.12 !important;
+  white-space: nowrap !important;
+}
+
+.about-pro .about-social .social-icons a {
+  display: inline-grid !important;
+  place-items: center !important;
+  line-height: 0 !important;
+  padding: 0 !important;
+}
+
+.about-pro .about-social .social-icons a svg {
+  width: 28px !important;
+  height: 28px !important;
+  display: block !important;
+}
+
+@media (max-width: 1180px) {
+  .about-pro .about-hero {
+    width: min(860px, 100%) !important;
+  }
+
+  .about-pro .about-hero .post-description {
+    white-space: normal !important;
+    text-wrap: balance !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .header .nav {
+    width: 100% !important;
+    max-width: none !important;
+    padding: 8px 16px 10px !important;
+    gap: 10px !important;
+    overflow-x: hidden !important;
+  }
+
+  .header .logo {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+  }
+
+  .header .logo a {
+    flex: 1 1 auto !important;
+    max-width: calc(100% - 72px) !important;
+    min-width: 0 !important;
+  }
+
+  .header .logo .logo-text-mobile {
+    font-size: clamp(2rem, 8.2vw, 2.66rem) !important;
+  }
+
+  .header .logo-switches {
+    flex: 0 0 56px !important;
+    width: 56px !important;
+  }
+
+  .header #menu {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    padding: 0 !important;
+    gap: 8px !important;
+    overflow: hidden !important;
+  }
+
+  .header #menu li {
+    min-width: 0 !important;
+  }
+
+  .header #menu a {
+    min-width: 0 !important;
+    width: 100% !important;
+    padding: 10px 4px 12px !important;
+  }
+
+  .header #menu a span {
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    white-space: nowrap !important;
+    text-align: center !important;
+    font-size: clamp(0.98rem, 4.2vw, 1.06rem) !important;
+    line-height: 1.04 !important;
+    padding: 0 0.02em 0.22em !important;
+    letter-spacing: -0.01em !important;
+  }
+
+  .header #menu .active::after {
+    left: 10px !important;
+    right: 10px !important;
+    bottom: 0 !important;
+  }
+
+  .about-pro .post-header {
+    padding: 20px 0 18px !important;
+    margin-bottom: 24px !important;
+  }
+
+  .about-pro .about-hero {
+    width: 100% !important;
+    max-width: 100% !important;
+    justify-items: start !important;
+    text-align: left !important;
+    gap: 14px !important;
+  }
+
+  .about-pro .about-hero .post-title,
+  .about-pro .about-hero .post-description {
+    text-align: left !important;
+  }
+
+  .about-pro .about-hero .post-description {
+    font-size: clamp(1rem, 0.96rem + 0.32vw, 1.08rem) !important;
+    line-height: 1.3 !important;
+  }
+
+  .about-pro .about-social .social-icons a {
+    width: 56px !important;
+    height: 56px !important;
+    min-width: 56px !important;
+    min-height: 56px !important;
+  }
+}
+
+
+/* 2026-03-03 final stabilization layer v3 */
+.about-pro .about-translation-note {
+  max-width: none !important;
+  width: 100% !important;
+  white-space: normal !important;
+}
+
+@media (min-width: 901px) {
+  .about-pro .about-translation-note {
+    white-space: nowrap !important;
+  }
+
+  .about-pro .about-hero .post-description {
+    width: auto !important;
+    max-width: none !important;
+    white-space: nowrap !important;
+    font-size: clamp(1.22rem, 1.12rem + 0.2vw, 1.36rem) !important;
+  }
+
+  .about-pro .about-social .social-icons {
+    gap: 16px !important;
+  }
+
+  .about-pro .about-social .social-icons a {
+    width: 68px !important;
+    height: 68px !important;
+    min-width: 68px !important;
+    min-height: 68px !important;
+    overflow: visible !important;
+  }
+
+  .about-pro .about-social .social-icons a svg {
+    width: 32px !important;
+    height: 32px !important;
+    max-width: none !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+}
+
+@media (max-width: 900px) {
+  html,
+  body {
+    overflow-x: hidden !important;
+  }
+
+  .header,
+  .header .nav,
+  .main,
+  .post-content,
+  .post-single,
+  .post-entry,
+  .post-entry-with-date,
+  .post-entry-content,
+  .post-entry-body,
+  .post-entry-link,
+  .home-stage,
+  .about-pro,
+  .post-content > * {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .header #menu {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    align-items: end !important;
+  }
+
+  .header #menu a {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: end !important;
+    min-height: 48px !important;
+    overflow: visible !important;
+  }
+
+  .header #menu a span {
+    overflow: visible !important;
+    padding: 0 0.16em 0.3em !important;
+    line-height: 1.06 !important;
+  }
+
+  .header #menu .active {
+    border: 2px solid color-mix(in srgb, var(--min-line-color) 64%, transparent) !important;
+    border-radius: 18px !important;
+    padding-bottom: 0 !important;
+  }
+
+  .header #menu .active::after {
+    left: 18px !important;
+    right: 18px !important;
+    bottom: 7px !important;
+  }
+}
+
+/* 2026-03-03 final stabilization layer v4
+   Reconcile about hero, social icon bounds, nav clipping, and mobile overflow. */
+@media (min-width: 901px) {
+  .about-pro .post-header,
+  .about-pro .about-profile {
+    width: min(1220px, calc(100% - 56px)) !important;
+    max-width: min(1220px, calc(100% - 56px)) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  .about-pro .post-header {
+    padding: 28px 0 18px !important;
+    margin-bottom: 28px !important;
+  }
+
+  .about-pro .about-hero {
+    width: min(1120px, 100%) !important;
+    max-width: min(1120px, 100%) !important;
+    gap: 18px !important;
+  }
+
+  .about-pro .about-hero .post-title {
+    max-width: none !important;
+  }
+
+  .about-pro .about-hero .post-description {
+    width: max-content !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+    white-space: nowrap !important;
+    text-wrap: nowrap !important;
+    font-size: clamp(1rem, 0.96rem + 0.14vw, 1.12rem) !important;
+    line-height: 1.1 !important;
+    letter-spacing: 0 !important;
+  }
+
+  .about-pro .about-social,
+  .about-pro .about-social .social-icons {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+
+  .about-pro .about-social .social-icons {
+    gap: 14px !important;
+    flex-wrap: wrap !important;
+  }
+
+  .about-pro .about-social .social-icons a {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 72px !important;
+    height: 72px !important;
+    min-width: 72px !important;
+    min-height: 72px !important;
+    padding: 0 !important;
+    font-size: 0 !important;
+    line-height: 0 !important;
+    overflow: visible !important;
+  }
+
+  .about-pro .about-social .social-icons a svg {
+    width: 30px !important;
+    height: 30px !important;
+    max-width: none !important;
+    max-height: none !important;
+    display: block !important;
+    flex: none !important;
+    overflow: visible !important;
+  }
+
+  .about-pro .about-title-list {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    justify-content: space-between !important;
+    gap: 12px !important;
+  }
+
+  .about-pro .about-title-list li {
+    flex: 1 1 0 !important;
+    width: auto !important;
+    min-width: 0 !important;
+    min-height: 54px !important;
+    padding: 0.92rem 1rem !important;
+    white-space: nowrap !important;
+    font-size: clamp(0.98rem, 0.94rem + 0.09vw, 1.05rem) !important;
+  }
+
+  .about-pro .about-highlight-quote {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 18px auto 0 !important;
+    text-align: center !important;
+  }
+
+  .about-pro .about-translation-note {
+    width: max-content !important;
+    max-width: 100% !important;
+    margin: 18px 0 0 !important;
+    white-space: nowrap !important;
+    font-size: clamp(0.95rem, 0.92rem + 0.08vw, 1rem) !important;
+  }
+}
+
+@media (min-width: 901px) and (max-width: 1240px) {
+  .header .nav {
+    width: min(1180px, calc(100% - 32px)) !important;
+    max-width: min(1180px, calc(100% - 32px)) !important;
+    gap: 18px !important;
+  }
+
+  .header .logo {
+    max-width: min(49vw, 720px) !important;
+  }
+
+  .header .logo .logo-text-full {
+    font-size: clamp(2.18rem, 1.96rem + 0.78vw, 3.18rem) !important;
+  }
+
+  .header #theme-toggle {
+    width: 44px !important;
+    height: 44px !important;
+  }
+
+  .header #menu {
+    gap: clamp(12px, 1.3vw, 20px) !important;
+  }
+
+  .header #menu a {
+    min-height: 58px !important;
+    padding: 10px 0 14px !important;
+  }
+
+  .header #menu a span {
+    font-size: clamp(1rem, 0.96rem + 0.18vw, 1.16rem) !important;
+    padding: 0 0.08em 0.22em !important;
+  }
+}
+
+@media (max-width: 900px) {
+  html,
+  body,
+  .main,
+  .header,
+  .header .nav,
+  .post-single,
+  .post-single .post-header,
+  .post-single .post-content,
+  .post-single .post-footer,
+  .post-single .post-related,
+  .post-single .toc,
+  .about-pro,
+  .post-content > * {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+  }
+
+  .header .nav {
+    width: calc(100vw - 24px) !important;
+    max-width: calc(100vw - 24px) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding: 8px 12px 10px !important;
+    gap: 10px !important;
+  }
+
+  .header .logo {
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    gap: 12px !important;
+  }
+
+  .header .logo a {
+    max-width: calc(100% - 72px) !important;
+    min-width: 0 !important;
+  }
+
+  .header .logo .logo-text-mobile {
+    font-size: clamp(1.86rem, 7.5vw, 2.26rem) !important;
+    line-height: 0.92 !important;
+  }
+
+  .header .logo-switches {
+    width: 56px !important;
+    flex: 0 0 56px !important;
+  }
+
+  .header #menu {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    align-items: stretch !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    gap: 10px !important;
+    overflow: hidden !important;
+  }
+
+  .header #menu li {
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+
+  .header #menu a {
+    display: grid !important;
+    place-items: end center !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 50px !important;
+    padding: 8px 2px 10px !important;
+    border-radius: 18px !important;
+    overflow: visible !important;
+  }
+
+  .header #menu a.is-current {
+    border: 2px solid color-mix(in srgb, var(--min-line-color) 58%, transparent) !important;
+  }
+
+  .header #menu a span {
+    display: block !important;
+    width: auto !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    padding: 0 0.12em 0.18em !important;
+    white-space: nowrap !important;
+    line-height: 1.02 !important;
+    font-size: clamp(0.98rem, 4vw, 1.08rem) !important;
+    text-align: center !important;
+    overflow: visible !important;
+  }
+
+  .header #menu .active {
+    border: 0 !important;
+    border-radius: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
+  .header #menu .active::after {
+    left: 0.1em !important;
+    right: 0.1em !important;
+    bottom: -0.02em !important;
+    height: 3px !important;
+  }
+
+  .about-pro .post-header,
+  .about-pro .about-profile {
+    width: calc(100vw - 32px) !important;
+    max-width: calc(100vw - 32px) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  .about-pro .post-header {
+    padding: 18px 0 16px !important;
+    margin-bottom: 22px !important;
+  }
+
+  .about-pro .about-hero {
+    width: 100% !important;
+    max-width: 100% !important;
+    justify-items: start !important;
+    text-align: left !important;
+    gap: 14px !important;
+  }
+
+  .about-pro .about-hero .post-title,
+  .about-pro .about-hero .post-description {
+    text-align: left !important;
+  }
+
+  .about-pro .about-hero .post-description {
+    width: 100% !important;
+    max-width: 100% !important;
+    font-size: clamp(0.96rem, 0.93rem + 0.22vw, 1.02rem) !important;
+    line-height: 1.28 !important;
+    white-space: normal !important;
+    text-wrap: pretty !important;
+  }
+
+  .about-pro .about-social,
+  .about-pro .about-social .social-icons {
+    justify-content: flex-start !important;
+    gap: 10px !important;
+  }
+
+  .about-pro .about-social .social-icons a {
+    width: 56px !important;
+    height: 56px !important;
+    min-width: 56px !important;
+    min-height: 56px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    line-height: 0 !important;
+  }
+
+  .about-pro .about-social .social-icons a svg {
+    width: 24px !important;
+    height: 24px !important;
+    display: block !important;
+  }
+
+  .about-pro .about-title-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+  }
+
+  .about-pro .about-highlight-quote {
+    text-align: center !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .post-single {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .post-single .post-header,
+  .post-single .post-content,
+  .post-single .post-footer,
+  .post-single .post-related,
+  .post-single .toc {
+    width: calc(100vw - 32px) !important;
+    max-width: calc(100vw - 32px) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .post-single .post-content,
+  .post-single .post-content > * {
+    overflow-x: hidden !important;
+  }
+
+  .post-content :is(p, ul, ol, li, blockquote, h1, h2, h3, h4, h5, h6, figure, table, pre, details, summary) {
+    width: auto !important;
+    max-width: 100% !important;
+    margin-right: 0 !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  .post-content :is(img, video, iframe, svg, canvas, table, pre) {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  .post-content pre,
+  .post-content table {
+    overflow-x: auto !important;
+  }
+}
+
+/* 2026-03-04 final polish */
+.about-pro .post-header,
+.about-pro .about-profile {
+  width: min(1240px, calc(100% - 56px)) !important;
+  max-width: min(1240px, calc(100% - 56px)) !important;
+}
+
+.about-pro .post-header {
+  padding: 44px 0 30px !important;
+  margin-bottom: 38px !important;
+}
+
+.about-pro .about-hero {
+  max-width: 1120px !important;
+  margin: 0 auto !important;
+  gap: 18px !important;
+}
+
+.about-pro .about-hero .post-description {
+  width: auto !important;
+  max-width: min(100%, 1120px) !important;
+  font-size: clamp(1rem, 0.96rem + 0.18vw, 1.14rem) !important;
+}
+
+.about-pro .about-social .social-icons a {
+  width: 62px !important;
+  height: 62px !important;
+  min-width: 62px !important;
+  min-height: 62px !important;
+}
+
+.about-pro .about-social .social-icons a svg {
+  width: 29px !important;
+  height: 29px !important;
+}
+
+.about-pro .about-translation-note {
+  display: inline-block !important;
+  width: auto !important;
+  max-width: 100% !important;
+  white-space: nowrap !important;
+  font-size: clamp(0.88rem, 0.86rem + 0.08vw, 0.95rem) !important;
+}
+
+@media (max-width: 900px) {
+  html,
+  body,
+  .main,
+  .header,
+  .header .nav,
+  .post-single,
+  .about-pro,
+  .home-stage {
+    overflow-x: hidden !important;
+  }
+
+  .header .nav {
+    width: calc(100% - 12px) !important;
+    max-width: calc(100% - 12px) !important;
+    padding: 10px 6px 12px 0 !important;
+    gap: 8px !important;
+  }
+
+  .header .logo {
+    gap: 8px !important;
+  }
+
+  .header .logo a {
+    min-width: 0 !important;
+    max-width: calc(100% - 60px) !important;
+  }
+
+  .header .logo .logo-text-mobile {
+    font-size: clamp(1.62rem, 7vw, 1.92rem) !important;
+  }
+
+  .header .logo-switches {
+    min-width: 52px !important;
+  }
+
+  .header #theme-toggle {
+    width: 52px !important;
+    height: 52px !important;
+  }
+
+  .header #menu {
+    width: 100% !important;
+    max-width: 100% !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 4px !important;
+    padding: 0 16px 0 0 !important;
+  }
+
+  .header #menu a {
+    min-height: 50px !important;
+    padding: 8px 0 15px !important;
+  }
+
+  .header #menu a span {
+    font-size: clamp(0.96rem, 4vw, 1.08rem) !important;
+    padding: 0 0.04em 0.18em !important;
+  }
+
+  .header #menu a.is-current::after {
+    left: 20% !important;
+    right: 20% !important;
+    bottom: 7px !important;
+  }
+
+  .home-search-tags {
+    width: 100% !important;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    gap: 10px !important;
+  }
+
+  .home-search-tag-list {
+    width: 100% !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: flex-start !important;
+    gap: 8px !important;
+  }
+
+  .home-search-tag-list a {
+    max-width: 100% !important;
+  }
+
+  .about-pro .post-header,
+  .about-pro .about-profile,
+  .post-single .post-header,
+  .post-single .post-content,
+  .post-single .post-footer,
+  .post-single .post-related,
+  .post-single .toc {
+    width: calc(100% - 26px) !important;
+    max-width: calc(100% - 26px) !important;
+  }
+
+  .about-pro .post-header {
+    padding: 18px 0 18px !important;
+    margin-bottom: 22px !important;
+  }
+
+  .about-pro .about-hero {
+    gap: 12px !important;
+  }
+
+  .about-pro .about-hero .post-description {
+    font-size: 0.98rem !important;
+    line-height: 1.22 !important;
+  }
+
+  .about-pro .about-social .social-icons a {
+    width: 52px !important;
+    height: 52px !important;
+    min-width: 52px !important;
+    min-height: 52px !important;
+  }
+
+  .about-pro .about-social .social-icons a svg {
+    width: 24px !important;
+    height: 24px !important;
+  }
+
+  .about-pro .about-translation-note {
+    display: block !important;
+    white-space: normal !important;
+  }
+
+  .post-content .anchor {
+    display: none !important;
+  }
+}
+
+/* 2026-03-04 final authoritative visual system */
+.header .nav {
+  padding-right: max(14px, env(safe-area-inset-right)) !important;
+  box-sizing: border-box !important;
+}
+
+.header #menu,
+.header #menu li,
+.header #menu a,
+.header #menu a span {
+  overflow: visible !important;
+}
+
+.header #menu a span {
+  display: inline-block !important;
+  line-height: 1.02 !important;
+}
+
+.about-pro .post-header,
+.about-pro .about-profile {
+  width: min(1240px, calc(100% - 64px)) !important;
+  max-width: min(1240px, calc(100% - 64px)) !important;
+}
+
+.about-pro .post-header {
+  padding: 32px 0 26px !important;
+  margin-bottom: 38px !important;
+}
+
+.about-pro .about-hero {
+  width: 100% !important;
+  max-width: 1080px !important;
+  margin: 0 auto !important;
+  gap: 18px !important;
+  justify-items: center !important;
+  text-align: center !important;
+}
+
+.about-pro .about-hero .post-title {
+  width: auto !important;
+  max-width: 100% !important;
+  margin: 0 auto !important;
+  text-align: center !important;
+}
+
+.about-pro .about-hero .post-description {
+  width: auto !important;
+  max-width: none !important;
+  margin: 0 auto !important;
+  white-space: nowrap !important;
+  text-wrap: nowrap !important;
+  line-height: 1.08 !important;
+  letter-spacing: 0.002em !important;
+  font-size: clamp(0.98rem, 0.95rem + 0.14vw, 1.08rem) !important;
+}
+
+.about-pro .about-social {
+  width: 100% !important;
+  justify-content: center !important;
+}
+
+.about-pro .about-social .social-icons {
+  justify-content: center !important;
+  gap: 14px !important;
+}
+
+.about-pro .about-social .social-icons a {
+  width: 68px !important;
+  height: 68px !important;
+  min-width: 68px !important;
+  min-height: 68px !important;
+  padding: 0 !important;
+  display: grid !important;
+  place-items: center !important;
+  line-height: 0 !important;
+  overflow: visible !important;
+}
+
+.about-pro .about-social .social-icons a svg,
+.about-pro .about-social .social-icons a svg * {
+  overflow: visible !important;
+}
+
+.about-pro .about-social .social-icons a svg {
+  width: 30px !important;
+  height: 30px !important;
+  flex: none !important;
+}
+
+.about-pro .about-title-list {
+  display: grid !important;
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+  gap: 14px !important;
+  align-items: stretch !important;
+}
+
+.about-pro .about-title-list li {
+  min-width: 0 !important;
+}
+
+.about-pro .about-highlight-lead,
+.about-pro .about-highlight-list,
+.about-pro .about-highlight-quote {
+  max-width: min(100%, 1120px) !important;
+}
+
+.about-pro .about-highlight-quote {
+  text-align: center !important;
+  font-style: italic !important;
+}
+
+.about-pro .about-translation-note {
+  display: block !important;
+  width: auto !important;
+  max-width: none !important;
+  white-space: nowrap !important;
+  font-size: 0.94rem !important;
+}
+
+@media (min-width: 901px) {
+  .header .nav {
+    width: min(1248px, calc(100% - 56px)) !important;
+    max-width: min(1248px, calc(100% - 56px)) !important;
+  }
+
+  .header .logo {
+    max-width: min(56vw, 820px) !important;
+    min-width: 0 !important;
+  }
+
+  .header .logo .logo-text-full {
+    display: inline-block !important;
+    white-space: nowrap !important;
+    text-wrap: nowrap !important;
+    font-size: clamp(2.2rem, 1.92rem + 0.86vw, 3.12rem) !important;
+    line-height: 0.92 !important;
+  }
+
+  .header .logo .logo-text-mobile {
+    display: none !important;
+  }
+}
+
+@media (max-width: 900px) {
+  html,
+  body,
+  .main,
+  .header,
+  .header .nav,
+  .post-single,
+  .post-single .post-content,
+  .post-single .post-content > *,
+  .about-pro {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+    box-sizing: border-box !important;
+  }
+
+  .header .nav {
+    width: calc(100% - 24px) !important;
+    max-width: calc(100% - 24px) !important;
+    padding: 10px max(20px, env(safe-area-inset-right)) 12px 0 !important;
+    gap: 10px !important;
+  }
+
+  .header .logo {
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    gap: 10px !important;
+  }
+
+  .header .logo .logo-text-full {
+    display: none !important;
+  }
+
+  .header .logo .logo-text-mobile {
+    display: inline-block !important;
+    white-space: nowrap !important;
+    text-wrap: nowrap !important;
+    font-size: clamp(1.56rem, 6.4vw, 2rem) !important;
+    line-height: 0.9 !important;
+  }
+
+  .header #menu {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 4px !important;
+    padding: 0 max(16px, env(safe-area-inset-right)) 0 0 !important;
+  }
+
+  .header #menu a {
+    min-height: 50px !important;
+    padding: 8px 0 13px !important;
+    place-items: end center !important;
+  }
+
+  .header #menu a span {
+    font-size: clamp(0.98rem, 4.05vw, 1.12rem) !important;
+    padding: 0 0 0.18em !important;
+    line-height: 1 !important;
+  }
+
+  .header #menu a.is-current::after {
+    left: 18% !important;
+    right: 18% !important;
+    bottom: 7px !important;
+  }
+
+  .about-pro .post-header,
+  .about-pro .about-profile,
+  .post-single .post-header,
+  .post-single .post-content,
+  .post-single .post-footer,
+  .post-single .post-related,
+  .post-single .toc {
+    width: calc(100% - 32px) !important;
+    max-width: calc(100% - 32px) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  .about-pro .post-header {
+    padding: 18px 0 18px !important;
+    margin-bottom: 24px !important;
+  }
+
+  .about-pro .about-hero {
+    max-width: 100% !important;
+    justify-items: start !important;
+    text-align: left !important;
+    gap: 14px !important;
+  }
+
+  .about-pro .about-hero .post-title,
+  .about-pro .about-hero .post-description {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    text-align: left !important;
+  }
+
+  .about-pro .about-hero .post-description {
+    white-space: normal !important;
+    text-wrap: pretty !important;
+    font-size: clamp(0.94rem, 0.9rem + 0.26vw, 1.01rem) !important;
+    line-height: 1.24 !important;
+  }
+
+  .about-pro .about-social,
+  .about-pro .about-social .social-icons {
+    justify-content: flex-start !important;
+  }
+
+  .about-pro .about-social .social-icons {
+    gap: 10px !important;
+  }
+
+  .about-pro .about-social .social-icons a {
+    width: 52px !important;
+    height: 52px !important;
+    min-width: 52px !important;
+    min-height: 52px !important;
+  }
+
+  .about-pro .about-social .social-icons a svg {
+    width: 24px !important;
+    height: 24px !important;
+  }
+
+  .about-pro .about-title-list {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+    justify-content: flex-start !important;
+  }
+
+  .about-pro .about-highlight-lead,
+  .about-pro .about-highlight-list,
+  .about-pro .about-highlight-quote {
+    max-width: 100% !important;
+  }
+
+  .about-pro .about-translation-note {
+    max-width: 100% !important;
+    white-space: normal !important;
+    font-size: 0.92rem !important;
+  }
+
+  .post-content :is(p, ul, ol, li, blockquote, h1, h2, h3, h4, h5, h6, figure, table, pre, details, summary) {
+    max-width: 100% !important;
+    margin-right: 0 !important;
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
+  }
+
+  .post-content :is(img, video, iframe, svg, canvas, table, pre) {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+}
+
+/* 2026-03-04 authoritative final overrides */
+@media (min-width: 901px) {
+  .about-pro .post-header {
+    display: flex !important;
+    justify-content: center !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 auto 34px !important;
+    padding: 18px 0 28px !important;
+    border-bottom: 0 !important;
+  }
+
+  .about-pro .about-hero {
+    width: min(1120px, calc(100% - 32px)) !important;
+    max-width: min(1120px, calc(100% - 32px)) !important;
+    margin: 0 auto !important;
+    display: grid !important;
+    justify-items: center !important;
+    gap: 18px !important;
+    text-align: center !important;
+  }
+
+  .about-pro .about-hero .post-title {
+    width: auto !important;
+    max-width: none !important;
+    margin: 0 !important;
+    text-align: center !important;
+  }
+
+  .about-pro .about-hero .post-description {
+    width: auto !important;
+    max-width: none !important;
+    margin: 0 !important;
+    white-space: nowrap !important;
+    text-wrap: nowrap !important;
+    font-size: clamp(0.92rem, 0.88rem + 0.12vw, 1rem) !important;
+    line-height: 1.15 !important;
+    letter-spacing: 0.01em !important;
+    text-align: center !important;
+  }
+
+  .about-pro .about-social {
+    justify-content: center !important;
+  }
+
+  .about-pro .about-social .social-icons {
+    justify-content: center !important;
+    gap: 12px !important;
+  }
+
+  .about-pro .about-social .social-icons a {
+    width: 58px !important;
+    height: 58px !important;
+    min-width: 58px !important;
+    min-height: 58px !important;
+    padding: 0 !important;
+    display: grid !important;
+    place-items: center !important;
+    overflow: visible !important;
+    line-height: 1 !important;
+  }
+
+  .about-pro .about-social .social-icons a svg,
+  .about-pro .about-social .social-icons a svg * {
+    width: 24px !important;
+    height: 24px !important;
+    overflow: visible !important;
+    vector-effect: non-scaling-stroke !important;
+  }
+
+  .about-pro .about-profile {
+    width: min(1340px, calc(100% - 48px)) !important;
+    max-width: min(1340px, calc(100% - 48px)) !important;
+  }
+
+  .about-pro .about-title-list {
+    justify-content: center !important;
+    gap: 14px !important;
+  }
+
+  .about-pro .about-title-list li {
+    white-space: nowrap !important;
+  }
+
+  .about-pro .about-highlight-quote {
+    display: block !important;
+    max-width: min(720px, 100%) !important;
+    margin: 0 auto !important;
+    text-align: center !important;
+  }
+
+  .about-pro .about-translation-note {
+    display: inline-block !important;
+    width: max-content !important;
+    max-width: none !important;
+    margin-top: 18px !important;
+    white-space: nowrap !important;
+    text-wrap: nowrap !important;
+    font-size: clamp(0.88rem, 0.84rem + 0.08vw, 0.93rem) !important;
+  }
+}
+
+@media (max-width: 900px) {
+  html,
+  body {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+  }
+
+  body {
+    position: relative !important;
+  }
+
+  .header,
+  .header .nav,
+  .main,
+  .main > *,
+  .page,
+  .post-single,
+  .post-single > *,
+  .about-pro,
+  .home-stage,
+  .first-entry.home-info {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+    box-sizing: border-box !important;
+  }
+
+  .header .nav {
+    width: calc(100% - 28px) !important;
+    max-width: calc(100% - 28px) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding: 10px 0 12px !important;
+    gap: 10px !important;
+  }
+
+  .header .logo {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    align-items: start !important;
+    gap: 12px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .header .logo a {
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+  }
+
+  .header .logo .logo-text-full {
+    display: none !important;
+  }
+
+  .header .logo .logo-text-mobile {
+    display: inline-block !important;
+    font-size: clamp(1.64rem, 7.1vw, 1.92rem) !important;
+    line-height: 0.92 !important;
+    white-space: nowrap !important;
+    text-wrap: nowrap !important;
+  }
+
+  .header .logo-switches {
+    min-width: 56px !important;
+    align-self: start !important;
+  }
+
+  .header .logo-switches::before {
+    display: none !important;
+  }
+
+  .header #theme-toggle {
+    width: 54px !important;
+    height: 54px !important;
+  }
+
+  .header #theme-toggle svg {
+    width: 23px !important;
+    height: 23px !important;
+  }
+
+  .header #menu {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    align-items: stretch !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    gap: 4px !important;
+    padding: 0 calc(env(safe-area-inset-right, 0px) + 16px) 0 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  .header #menu li {
+    min-width: 0 !important;
+    overflow: visible !important;
+  }
+
+  .header #menu a {
+    width: 100% !important;
+    min-height: 48px !important;
+    padding: 8px 4px 14px !important;
+    display: grid !important;
+    place-items: end center !important;
+    overflow: visible !important;
+  }
+
+  .header #menu a span {
+    display: inline-block !important;
+    max-width: 100% !important;
+    font-size: clamp(0.96rem, 3.8vw, 1.06rem) !important;
+    line-height: 1 !important;
+    padding: 0 0.05em 0.16em !important;
+  }
+
+  .header #menu a.is-current::after {
+    left: 14px !important;
+    right: 14px !important;
+    bottom: 8px !important;
+  }
+
+  .about-pro .post-header,
+  .about-pro .about-profile,
+  .post-single .post-header,
+  .post-single .post-content,
+  .post-single .post-footer,
+  .post-single .post-related,
+  .post-single .toc {
+    width: calc(100% - 28px) !important;
+    max-width: calc(100% - 28px) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  .about-pro .post-header {
+    padding: 18px 0 18px !important;
+    margin-bottom: 20px !important;
+    border-bottom: 0 !important;
+  }
+
+  .about-pro .about-hero {
+    width: 100% !important;
+    max-width: 100% !important;
+    justify-items: start !important;
+    text-align: left !important;
+    gap: 14px !important;
+  }
+
+  .about-pro .about-hero .post-title,
+  .about-pro .about-hero .post-description {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    text-align: left !important;
+  }
+
+  .about-pro .about-hero .post-description {
+    white-space: normal !important;
+    text-wrap: balance !important;
+    line-height: 1.24 !important;
+    font-size: clamp(0.94rem, 0.9rem + 0.35vw, 1rem) !important;
+  }
+
+  .about-pro .about-social,
+  .about-pro .about-social .social-icons {
+    justify-content: flex-start !important;
+  }
+
+  .about-pro .about-social .social-icons {
+    gap: 10px !important;
+  }
+
+  .about-pro .about-social .social-icons a {
+    width: 52px !important;
+    height: 52px !important;
+    min-width: 52px !important;
+    min-height: 52px !important;
+    padding: 0 !important;
+    display: grid !important;
+    place-items: center !important;
+    overflow: visible !important;
+  }
+
+  .about-pro .about-social .social-icons a svg,
+  .about-pro .about-social .social-icons a svg * {
+    width: 22px !important;
+    height: 22px !important;
+    overflow: visible !important;
+  }
+
+  .about-pro .about-title-list {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+    justify-content: flex-start !important;
+  }
+
+  .about-pro .about-highlight-lead,
+  .about-pro .about-highlight-list,
+  .about-pro .about-highlight-quote,
+  .about-pro .about-translation-note {
+    max-width: 100% !important;
+  }
+
+  .about-pro .about-highlight-quote {
+    text-align: center !important;
+  }
+
+  .about-pro .about-translation-note {
+    white-space: normal !important;
+    text-wrap: pretty !important;
+  }
+
+  .post-single,
+  .post-single .post-content,
+  .post-single .post-content > * {
+    width: auto !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+    box-sizing: border-box !important;
+  }
+
+  .post-content {
+    padding-right: 0 !important;
+  }
+
+  .post-content :is(p, ul, ol, li, blockquote, h1, h2, h3, h4, h5, h6, figure, table, pre, details, summary) {
+    width: auto !important;
+    max-width: 100% !important;
+    margin-right: 0 !important;
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
+    box-sizing: border-box !important;
+  }
+
+  .post-content p {
+    max-width: 100% !important;
+  }
+
+  .post-content :is(img, video, iframe, svg, canvas, table, pre) {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  .post-content pre,
+  .post-content table {
+    display: block !important;
+    overflow-x: auto !important;
+  }
+}
+
+
+/* Late header/about/mobile overrides were moved into zzzz-editorial-polish.css and zzzzzz-final-tuning.css. */

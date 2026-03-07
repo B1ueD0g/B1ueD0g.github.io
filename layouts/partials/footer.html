@@ -36,18 +36,17 @@
   (function () {
     var menu = document.getElementById("menu");
     if (menu) {
-      try {
-        var scrollPosition = localStorage.getItem("menu-scroll-position");
-        if (scrollPosition) {
-          menu.scrollLeft = parseInt(scrollPosition, 10);
-        }
-      } catch (error) {}
-
-      menu.onscroll = function () {
+      function resetMenuScroll() {
+        menu.scrollLeft = 0;
         try {
-          localStorage.setItem("menu-scroll-position", String(menu.scrollLeft));
+          localStorage.removeItem("menu-scroll-position");
         } catch (error) {}
-      };
+      }
+
+      resetMenuScroll();
+      try {
+        window.addEventListener("resize", resetMenuScroll, { passive: true });
+      } catch (error) {}
     }
 
     if (window.BlueDogEnv && window.BlueDogEnv.isWeChatWebView) return;

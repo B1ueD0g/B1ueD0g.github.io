@@ -1,0 +1,592 @@
+/* Final tuning layer: unify editorial rhythm and contain historical overrides. */
+
+:root {
+  --bd-hero-narrow: 920px;
+  --bd-hero-shell: 1080px;
+}
+
+.header #menu a,
+.header #menu a span,
+.about-pro .about-social .social-icons a,
+.about-pro .about-work-tab,
+.about-pro .about-work-open,
+.home-search-tag-list a,
+.home-search-box button {
+  transition:
+    color 160ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 160ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 160ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 180ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 160ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.home-search-box:focus-within input::placeholder {
+  opacity: 0.56;
+}
+
+.home-search-tag-list a:hover,
+.home-search-tag-list a:focus-visible,
+.about-pro .about-work-tab:hover,
+.about-pro .about-work-tab:focus-visible,
+.about-pro .about-work-open:hover,
+.about-pro .about-work-open:focus-visible {
+  box-shadow: 0 12px 26px rgba(15, 23, 42, 0.08);
+}
+
+.dark .home-search-tag-list a:hover,
+.dark .home-search-tag-list a:focus-visible,
+.dark .about-pro .about-work-tab:hover,
+.dark .about-pro .about-work-tab:focus-visible,
+.dark .about-pro .about-work-open:hover,
+.dark .about-pro .about-work-open:focus-visible {
+  box-shadow: 0 16px 36px rgba(2, 8, 23, 0.24);
+}
+
+.about-pro .about-work-item:hover .about-work-title,
+.about-pro .about-work-item:focus-within .about-work-title {
+  text-decoration-thickness: 2px;
+}
+
+.about-pro .about-work-item:hover .about-work-arrow,
+.about-pro .about-work-item:focus-within .about-work-arrow {
+  transform: translate(1px, -1px);
+}
+
+.header .logo .logo-text-full {
+  font-size: clamp(3.2rem, 3.8vw, 4.8rem) !important;
+  line-height: 0.86 !important;
+}
+
+.header #menu a span {
+  font-size: clamp(1.28rem, 1.12rem + 0.42vw, 1.56rem) !important;
+  line-height: 1.02 !important;
+  letter-spacing: -0.025em !important;
+}
+
+.home-info .entry-header h1 {
+  max-width: 11ch !important;
+  font-size: clamp(3.8rem, 5.4vw, 5.8rem) !important;
+  line-height: 0.94 !important;
+  letter-spacing: -0.05em !important;
+}
+
+.home-search-box input,
+.home-search-box button {
+  font-size: clamp(1rem, 0.96rem + 0.16vw, 1.1rem) !important;
+}
+
+.page-header h1 {
+  font-size: clamp(2.1rem, 3vw, 3rem) !important;
+  line-height: 1.14 !important;
+}
+
+.post-entry .entry-header h2,
+.post-entry-with-date .entry-header h2 {
+  font-size: clamp(1.22rem, 1.12rem + 0.3vw, 1.4rem) !important;
+  line-height: 1.36 !important;
+}
+
+.post-single .post-title {
+  font-size: clamp(2.7rem, 4.2vw, 4rem) !important;
+  line-height: 1.04 !important;
+  letter-spacing: -0.03em !important;
+}
+
+.post-content {
+  font-size: clamp(1.01rem, 0.98rem + 0.12vw, 1.08rem) !important;
+  line-height: 1.84 !important;
+}
+
+.about-pro .about-block h2 {
+  font-size: clamp(1rem, 0.95rem + 0.12vw, 1.08rem) !important;
+  letter-spacing: 0.1em !important;
+}
+
+.about-pro .about-title-list li {
+  font-size: clamp(0.96rem, 0.92rem + 0.1vw, 1.03rem) !important;
+}
+
+.about-pro .about-highlight-lead {
+  font-size: clamp(1.14rem, 1.06rem + 0.18vw, 1.26rem) !important;
+  line-height: 1.68 !important;
+}
+
+.about-pro .about-highlight-list li,
+.about-pro .about-cert-list li,
+.about-pro .about-honor-list li,
+.about-pro .about-list li {
+  font-size: clamp(1rem, 0.96rem + 0.14vw, 1.1rem) !important;
+  line-height: 1.68 !important;
+}
+
+.about-pro .about-work-tab {
+  min-height: 42px !important;
+  font-size: 0.9rem !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+}
+
+.about-pro .about-work-type {
+  padding: 8px 14px !important;
+  font-size: 0.88rem !important;
+}
+
+.about-pro .about-work-title {
+  font-size: clamp(1.2rem, 1.12rem + 0.26vw, 1.38rem) !important;
+  line-height: 1.34 !important;
+}
+
+.about-pro .about-work-open {
+  width: 40px !important;
+  height: 40px !important;
+}
+
+.about-pro .about-work-arrow {
+  font-size: 1.15rem !important;
+}
+
+@media (min-width: 901px) {
+  .about-pro > .post-header {
+    width: min(var(--bd-about-max), calc(100% - 72px)) !important;
+    max-width: min(var(--bd-about-max), calc(100% - 72px)) !important;
+    padding-top: 44px !important;
+    padding-bottom: 24px !important;
+    margin-bottom: 26px !important;
+    display: flex !important;
+    justify-content: center !important;
+  }
+
+  .about-pro .about-hero {
+    width: min(var(--bd-hero-shell), 100%) !important;
+    max-width: min(var(--bd-hero-narrow), 100%) !important;
+    margin-inline: auto !important;
+    gap: 18px !important;
+    justify-items: center !important;
+    text-align: center !important;
+  }
+
+  .about-pro .about-hero .post-title {
+    font-size: clamp(4rem, 4.9vw, 5.4rem) !important;
+    margin-inline: auto !important;
+    text-align: center !important;
+  }
+
+  .about-pro .about-hero .post-description {
+    max-width: none !important;
+    width: auto !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-inline: auto !important;
+    padding-inline: 2px !important;
+    text-align: center !important;
+    font-size: clamp(0.96rem, 0.9rem + 0.12vw, 1.02rem) !important;
+    line-height: 1.16 !important;
+    letter-spacing: -0.012em !important;
+    white-space: nowrap !important;
+    text-wrap: nowrap !important;
+  }
+
+  .about-pro .about-social,
+  .about-pro .about-social .social-icons {
+    width: auto !important;
+    margin-inline: auto !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 16px !important;
+    overflow: visible !important;
+  }
+
+  .about-pro .about-social .social-icons a {
+    width: 68px !important;
+    height: 68px !important;
+    min-width: 68px !important;
+    min-height: 68px !important;
+    border-radius: 22px !important;
+    padding: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    overflow: visible !important;
+    line-height: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  .about-pro .about-social .social-icons a::before,
+  .about-pro .about-social .social-icons a::after {
+    display: none !important;
+  }
+
+  .about-pro .about-social .social-icons a svg,
+  .about-pro .about-social .social-icons a img {
+    width: 26px !important;
+    height: 26px !important;
+    display: block !important;
+    overflow: visible !important;
+    flex: 0 0 auto !important;
+    transform: none !important;
+  }
+
+  .about-pro .about-block h2 {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .about-pro .about-block h2::after {
+    content: "";
+    flex: 1 1 auto;
+    height: 1px;
+    background: var(--bd-border-soft);
+    opacity: 0.82;
+  }
+
+  .about-pro .about-title-list {
+    gap: 10px !important;
+  }
+
+  .about-pro .about-title-list li {
+    padding: 14px 16px !important;
+    font-size: clamp(1.18rem, 1rem + 0.24vw, 1.34rem) !important;
+  }
+
+  .about-pro .about-highlight-quote {
+    margin-top: 20px !important;
+    padding-top: 6px !important;
+    font-size: clamp(1.28rem, 1.12rem + 0.18vw, 1.42rem) !important;
+    font-style: normal !important;
+    font-weight: 600 !important;
+    color: var(--primary) !important;
+  }
+
+  .about-pro .about-work-panel[data-panel="translated"] .about-translation-note {
+    display: inline-flex !important;
+    align-items: center !important;
+    width: max-content !important;
+    max-width: 100% !important;
+    padding: 14px 0 0 18px !important;
+    border-left: 3px solid var(--bd-border-strong) !important;
+    white-space: nowrap !important;
+    font-size: clamp(0.88rem, 0.84rem + 0.12vw, 0.95rem) !important;
+    line-height: 1.28 !important;
+    letter-spacing: -0.01em !important;
+  }
+}
+
+@media (max-width: 1024px) {
+  .header .nav,
+  .about-pro > .post-header,
+  .about-pro .about-profile,
+  .post-single .post-header,
+  .post-single .post-content,
+  .post-single .post-footer,
+  .post-single .post-related,
+  .post-single .toc {
+    width: calc(100% - 24px) !important;
+    max-width: calc(100% - 24px) !important;
+    margin-inline: auto !important;
+  }
+
+  .header .logo a {
+    max-width: calc(100% - 72px) !important;
+  }
+}
+
+@media (max-width: 900px) {
+  html,
+  body,
+  .main {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+  }
+
+  .header .nav {
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    width: calc(100% - 32px) !important;
+    max-width: calc(100% - 32px) !important;
+    padding: 12px 0 14px !important;
+    gap: 12px !important;
+    overflow: visible !important;
+  }
+
+  .header .logo {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    align-items: flex-start !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    gap: 12px !important;
+  }
+
+  .header .logo a {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .header .logo .logo-text-mobile {
+    font-size: clamp(1.92rem, 7.6vw, 2.36rem) !important;
+    line-height: 0.94 !important;
+    padding-block: 6px 10px !important;
+  }
+
+  .header .logo-switches {
+    min-width: 58px !important;
+    flex: 0 0 58px !important;
+    margin-left: 0 !important;
+  }
+
+  .header #menu {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    align-items: stretch !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    gap: 8px !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+
+  .header #menu li {
+    display: flex !important;
+    min-width: 0 !important;
+    overflow: visible !important;
+  }
+
+  .header #menu a {
+    min-height: 54px !important;
+    width: 100% !important;
+    padding: 10px 6px 16px !important;
+    place-items: center !important;
+    overflow: visible !important;
+  }
+
+  .header #menu a span {
+    display: inline-block !important;
+    width: 100% !important;
+    text-align: center !important;
+    font-size: clamp(0.92rem, 3.5vw, 0.98rem) !important;
+    line-height: 1.08 !important;
+    letter-spacing: -0.02em !important;
+    padding: 0 0.04em 0.2em !important;
+    overflow: visible !important;
+  }
+
+  .header #menu a.is-current {
+    background: var(--bd-accent-soft) !important;
+    border: 1px solid var(--bd-border-strong) !important;
+  }
+
+  .header #menu a.is-current::after {
+    display: none !important;
+  }
+
+  .about-pro > .post-header {
+    width: calc(100% - 32px) !important;
+    max-width: calc(100% - 32px) !important;
+    padding-top: 26px !important;
+    padding-bottom: 18px !important;
+    display: flex !important;
+    justify-content: center !important;
+  }
+
+  .about-pro .about-hero {
+    width: min(100%, 30rem) !important;
+    max-width: 100% !important;
+    gap: 16px !important;
+    justify-items: center !important;
+    text-align: center !important;
+  }
+
+  .about-pro .about-hero .post-title {
+    font-size: clamp(3rem, 10vw, 3.8rem) !important;
+    line-height: 0.98 !important;
+    margin-inline: auto !important;
+    text-align: center !important;
+  }
+
+  .about-pro .about-hero .post-description {
+    font-size: clamp(0.98rem, 4vw, 1.08rem) !important;
+    line-height: 1.22 !important;
+    margin-inline: auto !important;
+    text-align: center !important;
+  }
+
+  .about-pro .about-social {
+    margin-inline: auto !important;
+    width: auto !important;
+    overflow: visible !important;
+  }
+
+  .about-pro .about-social .social-icons {
+    justify-content: center !important;
+    gap: 12px !important;
+    overflow: visible !important;
+  }
+
+  .about-pro .about-social .social-icons a {
+    width: 58px !important;
+    height: 58px !important;
+    min-width: 58px !important;
+    min-height: 58px !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    line-height: 0 !important;
+  }
+
+  .about-pro .about-social .social-icons a svg,
+  .about-pro .about-social .social-icons a img {
+    width: 23px !important;
+    height: 23px !important;
+    display: block !important;
+    overflow: visible !important;
+    transform: none !important;
+  }
+
+  .about-pro .about-title-list {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+  }
+
+  .about-pro .about-title-list li {
+    font-size: 0.92rem !important;
+    padding: 12px 10px !important;
+  }
+
+  .about-pro .about-block h2::after {
+    display: none;
+  }
+
+  .about-pro .about-highlight-quote {
+    padding-top: 4px !important;
+  }
+
+  .about-pro .about-work-panel[data-panel="translated"] .about-translation-note {
+    width: 100% !important;
+    max-width: 100% !important;
+    white-space: normal !important;
+  }
+
+  .post-single,
+  .post-single article,
+  .post-single .post-content,
+  .post-single .post-content > *,
+  .main {
+    width: auto !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+    box-sizing: border-box !important;
+    min-width: 0 !important;
+  }
+
+  .post-single,
+  .post-single article,
+  .post-single .post-content,
+  .post-single .post-content * {
+    min-width: 0 !important;
+  }
+
+  .post-single .post-content {
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
+  }
+
+  .post-single .toc,
+  .post-single .toc details,
+  .post-single .toc .inner,
+  .post-actions,
+  .bd-share,
+  .bd-share-trigger,
+  .post-backtop-wrap,
+  .post-backtop {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .post-single .toc {
+    overflow: hidden !important;
+  }
+
+  .post-single .toc .inner {
+    margin: 6px 0 0 !important;
+    padding: 0 10px !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  .bd-share-panel {
+    width: min(100%, 320px) !important;
+    max-width: calc(100vw - 24px) !important;
+    box-sizing: border-box !important;
+  }
+
+  .post-single .post-content [class*="anchor"],
+  .post-single .post-content a[href^="#"] {
+    display: none !important;
+  }
+
+  .post-single .post-header,
+  .post-single .post-content,
+  .post-single .post-footer,
+  .post-single .post-related,
+  .post-single .toc {
+    width: calc(100% - 32px) !important;
+    max-width: calc(100% - 32px) !important;
+  }
+
+  .post-content {
+    font-size: 1rem !important;
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
+  }
+
+  .post-content :is(p, ul, ol, li, blockquote, h1, h2, h3, h4, h5, h6, figure, details, summary, pre, table) {
+    width: auto !important;
+    max-width: 100% !important;
+    margin-inline: 0 !important;
+  }
+
+  .post-content :is(dt, dd) {
+    width: 100% !important;
+    padding-inline-start: 0 !important;
+  }
+
+  .post-content :is(img, svg, video, iframe, canvas, figure) {
+    display: block;
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  .post-content iframe {
+    width: 100% !important;
+  }
+
+  .post-content :is(pre, table, .highlight, .highlighttable) {
+    display: block !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+  }
+
+  .post-content .highlighttable {
+    table-layout: auto !important;
+  }
+
+  .post-content .highlighttable td {
+    min-width: 0 !important;
+    width: auto !important;
+  }
+
+  .post-content :is(ul, ol) > li > .highlight,
+  .post-content :is(ul, ol) pre {
+    margin-inline: 0 !important;
+  }
+
+  .post-content .anchor,
+  .post-content .anchor-link,
+  .post-content :is(h1, h2, h3, h4, h5, h6) > a[href^="#"] {
+    display: none !important;
+  }
+}
