@@ -3356,11 +3356,16 @@ body.is-page-leaving .footer {
 }
 
 .post-reading-aside {
+  grid-column: 2;
   position: sticky;
   top: 112px;
   align-self: start;
   display: grid;
   gap: 18px;
+}
+
+.post-reading-shell.has-toc .post-content {
+  grid-column: 1;
 }
 
 .post-reading-note {
@@ -3477,21 +3482,22 @@ body.is-page-leaving .footer {
 
 .post-single .post-title {
   grid-area: title;
-  max-width: 14ch;
+  max-width: 16ch;
   margin: 0;
-  font-size: clamp(3.7rem, 5.2vw, 5.7rem);
-  line-height: 0.95;
+  font-size: clamp(3rem, 4.2vw, 4.8rem);
+  line-height: 0.98;
   letter-spacing: -0.055em;
+  text-wrap: balance;
 }
 
 .post-single .post-description {
   grid-area: dek;
   align-self: end;
-  max-width: 34ch;
+  max-width: 38ch;
   margin: 0;
   color: var(--secondary);
-  font-size: clamp(1.08rem, 1.02rem + 0.18vw, 1.2rem);
-  line-height: 1.78;
+  font-size: clamp(1rem, 0.94rem + 0.16vw, 1.12rem);
+  line-height: 1.7;
 }
 
 .post-single .post-meta {
