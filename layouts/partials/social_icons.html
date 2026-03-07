@@ -8,21 +8,18 @@
       <a
         href="{{ $rawURL | safeURL }}"
         data-social-icon="{{ $iconName }}"
+        data-social-label="Copy Email"
         data-copy-email="{{ $email }}"
         title="复制邮箱地址"
         aria-label="Copy email address"
       >
         {{- if eq $iconName "x" -}}
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M5 5l14 14" />
-          <path d="M19 5L5 19" />
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M18.244 2.25h3.308l-7.228 8.261 8.496 11.239h-6.651l-5.214-6.816-5.965 6.816H1.68l7.73-8.834L1.258 2.25H7.91l4.713 6.227zm-1.161 17.52h1.833L6.914 4.128H5.08z" />
         </svg>
         {{- else if eq $iconName "linkedin" -}}
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <circle cx="6.75" cy="6.75" r="1.25" />
-          <path d="M5.5 10.25v7.25" />
-          <path d="M10.25 10.25v7.25" />
-          <path d="M10.25 13.5a3 3 0 0 1 6 0v4" />
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M6.52 8.76a1.76 1.76 0 1 0 0-3.52 1.76 1.76 0 0 0 0 3.52ZM8.04 10.3H5v8.96h3.04zm4.86 0H9.88v8.96h3.02v-4.7c0-2.62 3.38-2.83 3.38 0v4.7h3.03V13.5c0-4.47-5.1-4.3-6.41-2.11z" />
         </svg>
         {{- else if eq $iconName "telegram" -}}
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -48,22 +45,19 @@
       <a
         href="{{ $rawURL | safeURL }}"
         data-social-icon="{{ $iconName }}"
+        data-social-label="{{ $iconLabel }}"
         target="_blank"
         rel="noopener noreferrer me"
         title="{{ $iconLabel }}"
         aria-label="{{ $iconLabel }}"
       >
         {{- if eq $iconName "x" -}}
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M5 5l14 14" />
-          <path d="M19 5L5 19" />
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M18.244 2.25h3.308l-7.228 8.261 8.496 11.239h-6.651l-5.214-6.816-5.965 6.816H1.68l7.73-8.834L1.258 2.25H7.91l4.713 6.227zm-1.161 17.52h1.833L6.914 4.128H5.08z" />
         </svg>
         {{- else if eq $iconName "linkedin" -}}
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <circle cx="6.75" cy="6.75" r="1.25" />
-          <path d="M5.5 10.25v7.25" />
-          <path d="M10.25 10.25v7.25" />
-          <path d="M10.25 13.5a3 3 0 0 1 6 0v4" />
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M6.52 8.76a1.76 1.76 0 1 0 0-3.52 1.76 1.76 0 0 0 0 3.52ZM8.04 10.3H5v8.96h3.04zm4.86 0H9.88v8.96h3.02v-4.7c0-2.62 3.38-2.83 3.38 0v4.7h3.03V13.5c0-4.47-5.1-4.3-6.41-2.11z" />
         </svg>
         {{- else if eq $iconName "telegram" -}}
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">

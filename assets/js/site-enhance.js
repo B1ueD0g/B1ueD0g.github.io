@@ -171,6 +171,136 @@
       reset();
     }
 
+    function setupRevealOnScroll() {
+      var nodes = Array.prototype.slice.call(
+        document.querySelectorAll(
+          ".home-info, .home-index-frame, .about-pro .about-block, .about-pro .about-work-item, .post-entry, .post-entry-with-date, .search-empty"
+        )
+      );
+      if (nodes.length === 0) return;
+
+      nodes.forEach(function (node, index) {
+        node.classList.add("bd-reveal");
+        node.style.setProperty("--bd-reveal-delay", String((index % 7) * 55) + "ms");
+      });
+
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || !("IntersectionObserver" in window)) {
+        nodes.forEach(function (node) {
+          node.classList.add("is-revealed");
+        });
+        return;
+      }
+
+      var observer = new IntersectionObserver(
+        function (entries, currentObserver) {
+          entries.forEach(function (entry) {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add("is-revealed");
+            currentObserver.unobserve(entry.target);
+          });
+        },
+        {
+          rootMargin: "0px 0px -8% 0px",
+          threshold: 0.08,
+        }
+      );
+
+      nodes.forEach(function (node) {
+        observer.observe(node);
+      });
+    }
+
+    function setupInteractivePanels() {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+
+      var panels = Array.prototype.slice.call(document.querySelectorAll(".home-info, .home-index-frame, .about-block-works"));
+      if (panels.length === 0) return;
+
+      panels.forEach(function (panel) {
+        var frame = 0;
+        var nextState = null;
+
+        function commit() {
+          frame = 0;
+          if (!nextState) return;
+          panel.style.setProperty("--bd-focus-x", nextState.x + "%");
+          panel.style.setProperty("--bd-focus-y", nextState.y + "%");
+        }
+
+        function schedule(x, y) {
+          nextState = { x: x, y: y };
+          if (frame) return;
+          frame = window.requestAnimationFrame(commit);
+        }
+
+        function reset() {
+          schedule(50, 18);
+        }
+
+        panel.addEventListener("pointermove", function (event) {
+          var rect = panel.getBoundingClientRect();
+          if (!rect.width || !rect.height) return;
+          var x = ((event.clientX - rect.left) / rect.width) * 100;
+          var y = ((event.clientY - rect.top) / rect.height) * 100;
+          schedule(Math.max(0, Math.min(100, x)), Math.max(0, Math.min(100, y)));
+        });
+
+        panel.addEventListener("pointerleave", reset);
+        panel.addEventListener("blur", reset, true);
+        reset();
+      });
+    }
+
+    function setupSocialDock() {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+
+      var rows = Array.prototype.slice.call(document.querySelectorAll(".about-pro .about-social .social-icons"));
+      if (rows.length === 0) return;
+
+      rows.forEach(function (row) {
+        var icons = Array.prototype.slice.call(row.querySelectorAll("a"));
+        if (icons.length === 0) return;
+
+        function reset() {
+          icons.forEach(function (icon) {
+            icon.style.setProperty("--bd-social-scale", "1");
+            icon.style.setProperty("--bd-social-lift", "0px");
+            icon.style.setProperty("--bd-social-glow", "0");
+            icon.style.setProperty("--bd-mag-x", "0px");
+            icon.style.setProperty("--bd-mag-y", "0px");
+          });
+        }
+
+        row.addEventListener("pointermove", function (event) {
+          icons.forEach(function (icon) {
+            var rect = icon.getBoundingClientRect();
+            var centerX = rect.left + rect.width / 2;
+            var centerY = rect.top + rect.height / 2;
+            var deltaX = event.clientX - centerX;
+            var deltaY = event.clientY - centerY;
+            var distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+            var strength = Math.max(0, 1 - distance / 150);
+            var scale = 1 + strength * 0.16;
+            var lift = strength * -10;
+            var magX = deltaX * 0.06 * strength;
+            var magY = deltaY * 0.04 * strength;
+
+            icon.style.setProperty("--bd-social-scale", scale.toFixed(3));
+            icon.style.setProperty("--bd-social-lift", lift.toFixed(2) + "px");
+            icon.style.setProperty("--bd-social-glow", strength.toFixed(3));
+            icon.style.setProperty("--bd-mag-x", magX.toFixed(2) + "px");
+            icon.style.setProperty("--bd-mag-y", magY.toFixed(2) + "px");
+          });
+        });
+
+        row.addEventListener("pointerleave", reset);
+        row.addEventListener("blur", reset, true);
+        reset();
+      });
+    }
+
     function setupSearchShortcut() {
       document.addEventListener("keydown", function (event) {
         if (event.key !== "/") return;
@@ -555,6 +685,9 @@
     setupGeneratedA11yLabels();
     setupNavShrink();
     setupLogoResponse();
+    setupRevealOnScroll();
+    setupInteractivePanels();
+    setupSocialDock();
     setupSearchShortcut();
     setupReadingProgress();
     runWhenIdle(setupHeadingHighlight, 800);

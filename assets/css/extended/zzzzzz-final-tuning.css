@@ -10,6 +10,7 @@
 .about-pro .about-social .social-icons a,
 .about-pro .about-work-tab,
 .about-pro .about-work-open,
+.home-index-list a,
 .home-search-tag-list a,
 .home-search-box button {
   transition:
@@ -50,6 +51,18 @@
 .about-pro .about-work-item:hover .about-work-open-icon,
 .about-pro .about-work-item:focus-within .about-work-open-icon {
   transform: translate(1px, -1px);
+}
+
+.bd-ready .bd-reveal {
+  opacity: 0;
+  filter: blur(10px);
+  transform: translate3d(0, 28px, 0);
+}
+
+.bd-ready .bd-reveal.is-revealed {
+  opacity: 1;
+  filter: blur(0);
+  transform: translate3d(0, 0, 0);
 }
 
 .header .logo .logo-text-full {
@@ -173,6 +186,20 @@
   height: 15px !important;
 }
 
+.about-pro .about-social .social-icons a::before {
+  display: block !important;
+  inset: 6px !important;
+  border-radius: 16px !important;
+}
+
+.about-pro .about-social .social-icons a::after {
+  display: inline-flex !important;
+  top: calc(100% + 10px) !important;
+  padding: 7px 9px !important;
+  font-size: 0.66rem !important;
+  letter-spacing: 0.1em !important;
+}
+
 @media (min-width: 901px) {
   .about-pro > .post-header {
     width: min(var(--bd-about-max), calc(100% - 72px)) !important;
@@ -238,11 +265,6 @@
     overflow: visible !important;
     line-height: 0 !important;
     box-sizing: border-box !important;
-  }
-
-  .about-pro .about-social .social-icons a::before,
-  .about-pro .about-social .social-icons a::after {
-    display: none !important;
   }
 
   .about-pro .about-social .social-icons a svg,
@@ -492,6 +514,16 @@
   .about-pro .about-title-list li {
     font-size: 0.84rem !important;
     padding: 11px 10px !important;
+  }
+
+  .about-pro .about-social .social-icons a::before {
+    display: block !important;
+    inset: 5px !important;
+    border-radius: 14px !important;
+  }
+
+  .about-pro .about-social .social-icons a::after {
+    display: none !important;
   }
 
   .about-pro .about-cert-list li::before,
