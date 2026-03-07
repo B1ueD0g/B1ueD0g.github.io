@@ -174,7 +174,7 @@
     function setupRevealOnScroll() {
       var nodes = Array.prototype.slice.call(
         document.querySelectorAll(
-          ".home-info, .home-curation-intro, .home-surface-card, .about-pro .about-block, .about-pro .about-work-item, .post-entry, .post-entry-with-date, .search-command, .search-guide, .search-filters, .search-recent, .search-empty"
+          ".home-info, .home-curation-heading, .home-surface-card, .about-pro .about-block, .about-pro .about-work-item, .post-entry, .post-entry-with-date, .search-command, .search-guide, .search-filters, .search-recent, .search-empty"
         )
       );
       if (nodes.length === 0) return;
@@ -215,7 +215,7 @@
       if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
 
       var panels = Array.prototype.slice.call(
-        document.querySelectorAll(".home-info, .home-curation-intro, .home-surface-card, .about-block-works, .search-command")
+        document.querySelectorAll(".home-info, .home-curation-heading, .home-surface-card, .about-block-works, .search-command")
       );
       if (panels.length === 0) return;
 

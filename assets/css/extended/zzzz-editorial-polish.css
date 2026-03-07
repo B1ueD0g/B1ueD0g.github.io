@@ -910,7 +910,6 @@ body *::selection {
     radial-gradient(circle at 82% 48%, rgba(148, 163, 184, 0.12), transparent 58%);
 }
 
-.dark .home-curation-intro,
 .dark .home-surface-card,
 .dark .search-command,
 .dark .search-guide,
@@ -1031,30 +1030,10 @@ body *::selection {
   margin-bottom: clamp(56px, 8vw, 104px);
 }
 
-.home-curation-intro {
-  --bd-focus-x: 50%;
-  --bd-focus-y: 18%;
-  position: relative;
-  overflow: hidden;
-  padding: clamp(24px, 3vw, 34px);
-  border: 1.5px solid var(--bd-border-strong);
-  border-radius: 32px;
-  background:
-    radial-gradient(circle at 18% 18%, var(--bd-accent-warm), transparent 28%),
-    radial-gradient(circle at 86% 18%, var(--bd-accent-cool), transparent 30%),
-    linear-gradient(180deg, rgba(15, 23, 42, 0.04), rgba(15, 23, 42, 0.015)),
-    radial-gradient(circle at var(--bd-focus-x) var(--bd-focus-y), rgba(15, 23, 42, 0.06), transparent 60%);
-  box-shadow: var(--bd-shadow-card);
-}
-
-.home-curation-intro::before {
-  content: "";
-  position: absolute;
-  inset: 10px;
-  border: 1px solid var(--bd-border-soft);
-  border-radius: 24px;
-  opacity: 0.72;
-  pointer-events: none;
+.home-curation-heading {
+  max-width: 860px;
+  display: grid;
+  gap: 10px;
 }
 
 .home-surface-card::before,
@@ -1071,17 +1050,17 @@ body *::selection {
   text-transform: uppercase;
 }
 
-.home-curation-intro h2 {
-  max-width: 16ch;
+.home-curation-heading h2 {
+  max-width: 14ch;
   margin: 0;
   font-size: clamp(2rem, 2.8vw, 3rem);
   line-height: 1.02;
   letter-spacing: -0.04em;
 }
 
-.home-curation-intro > p:last-of-type {
+.home-curation-heading > p:last-of-type {
   max-width: 48ch;
-  margin: 16px 0 0;
+  margin: 0;
   color: var(--secondary);
   font-size: 1rem;
   line-height: 1.74;
@@ -3072,7 +3051,6 @@ body *::selection {
     align-items: flex-start;
   }
 
-  .home-curation-intro,
   .home-surface-card,
   .search-guide,
   .search-filters,
@@ -3081,7 +3059,7 @@ body *::selection {
     border-radius: 24px;
   }
 
-  .home-curation-intro h2 {
+  .home-curation-heading h2 {
     font-size: clamp(1.56rem, 8vw, 2rem);
   }
 

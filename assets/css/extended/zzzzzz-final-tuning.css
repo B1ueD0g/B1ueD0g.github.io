@@ -87,13 +87,68 @@
 }
 
 .home-info .entry-header h1 {
-  width: max-content !important;
-  max-width: none !important;
+  width: auto !important;
+  max-width: 11ch !important;
   font-size: clamp(3.4rem, 4.8vw, 5.2rem) !important;
   line-height: 0.94 !important;
   letter-spacing: -0.05em !important;
-  white-space: nowrap !important;
-  text-wrap: nowrap !important;
+  white-space: normal !important;
+  text-wrap: balance !important;
+  display: block !important;
+  margin-inline: auto !important;
+}
+
+body.home-page .home-shell {
+  display: block !important;
+  width: min(var(--bd-shell-max), calc(100vw - 48px)) !important;
+  margin-inline: auto !important;
+}
+
+body.home-page .home-stage {
+  width: 100% !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  display: grid !important;
+  gap: clamp(28px, 4vw, 54px) !important;
+  justify-content: initial !important;
+  align-items: stretch !important;
+  transform: none !important;
+}
+
+body.home-page .first-entry.home-info {
+  width: min(var(--bd-hero-max), 100%) !important;
+  min-height: 0 !important;
+  margin: clamp(56px, 8vh, 92px) auto clamp(34px, 5vh, 56px) !important;
+  display: grid !important;
+  justify-content: initial !important;
+  align-items: stretch !important;
+}
+
+body.home-page .home-info .entry-header {
+  width: 100% !important;
+  overflow: visible !important;
+  display: block !important;
+  -webkit-line-clamp: unset !important;
+  -webkit-box-orient: initial !important;
+  text-align: center !important;
+}
+
+body.home-page .home-curation {
+  width: 100% !important;
+  display: grid !important;
+  gap: clamp(22px, 3vw, 34px) !important;
+}
+
+body.home-page .home-curation-heading {
+  max-width: 860px !important;
+  width: 100% !important;
+}
+
+body.home-page .home-curation-grid {
+  width: 100% !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr) !important;
+  gap: 22px !important;
 }
 
 .home-search-box input,

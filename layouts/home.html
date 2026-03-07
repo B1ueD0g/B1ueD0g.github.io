@@ -55,20 +55,6 @@
     </article>
 
     <section class="home-curation" aria-label="Home curation">
-      <article class="home-curation-intro">
-        <p class="home-curation-kicker">Field Mode</p>
-        <h2>Search first, then move by stream or theme.</h2>
-        <p>
-          先搜，再按时间流或主题进入内容。首页不再只是静态落地页，而是一个能直接开始工作的入口面板。
-        </p>
-        <div class="home-curation-actions">
-          <a href="/search/">Open Search</a>
-          {{- with index $latestPosts 0 }}
-          <a href="{{ .RelPermalink }}">Latest Essay</a>
-          {{- end }}
-        </div>
-      </article>
-
       <div class="home-curation-grid">
         <article class="home-surface-card home-surface-card-stream">
           <div class="home-surface-head">
