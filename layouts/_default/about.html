@@ -4,12 +4,16 @@
 <article class="post-single about-single about-pro">
   <header class="post-header">
     <div class="about-hero">
-      <h1 class="post-title entry-hint-parent">{{ .Title }}</h1>
-      {{- with .Description }}
-      <div class="post-description">{{ . }}</div>
-      {{- end }}
-      <div class="about-social">
-        {{- partial "social_icons.html" (dict "align" "left") -}}
+      <div class="about-hero-copy">
+        <h1 class="post-title entry-hint-parent">{{ .Title }}</h1>
+        {{- with .Description }}
+        <div class="post-description">{{ . }}</div>
+        {{- end }}
+      </div>
+      <div class="about-hero-connect">
+        <div class="about-social">
+          {{- partial "social_icons.html" (dict "align" "center") -}}
+        </div>
       </div>
     </div>
   </header>
@@ -53,8 +57,12 @@
       {{- end }}
       {{- if gt (len $highlightItems) 0 }}
       <ul class="about-highlight-list">
-        {{- range $highlightItems }}
-        <li>{{ . }}</li>
+        {{- range $index, $item := $highlightItems }}
+        {{- $cleanItem := replaceRE "^\\s*[0-9０-９]+[）\\)\\.、]\\s*" "" $item -}}
+        <li>
+          <span class="about-highlight-index">{{ printf "%02d" (add $index 1) }}</span>
+          <span class="about-highlight-copy">{{ $cleanItem }}</span>
+        </li>
         {{- end }}
       </ul>
       {{- end }}

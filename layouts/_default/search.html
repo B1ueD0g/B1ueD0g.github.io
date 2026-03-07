@@ -122,8 +122,16 @@
   </div>
 </div>
 <section class="search-results-shell" aria-label="search-results">
-  <div id="search-results-count" class="search-results-count"></div>
-  <div id="search-results" class="search-results"></div>
+  <div class="search-results-main">
+    <div id="search-results-count" class="search-results-count"></div>
+    <div id="search-results" class="search-results"></div>
+  </div>
+  <aside id="search-preview" class="search-preview" hidden aria-label="search-preview">
+    <div class="search-preview-shell">
+      <p class="search-preview-kicker">Preview</p>
+      <div id="search-preview-body" class="search-preview-body"></div>
+    </div>
+  </aside>
 </section>
 <textarea id="search-data-json" hidden>{{ $searchRecords | jsonify }}</textarea>
 
@@ -142,6 +150,8 @@
     var emptyNode = document.getElementById("search-empty");
     var synonymTip = document.getElementById("search-synonym-tip");
     var commandPanel = document.querySelector(".search-command");
+    var previewNode = document.getElementById("search-preview");
+    var previewBody = document.getElementById("search-preview-body");
     var synonymMap = {{ $synonyms | jsonify | safeJS }};
     var synonymLookup = {};
     var recentStorageKey = "bluedog_recent_searches_v2";
@@ -151,6 +161,7 @@
     var renderTimer = 0;
     var dataset = [];
     var activeResultIndex = -1;
+    var renderedItems = [];
 
     function track(name, props) {
       if (typeof window.BlueDogTrack === "function") {
@@ -432,6 +443,33 @@
       }, 620);
     }
 
+    function updatePreview(item, index, total) {
+      if (!previewNode || !previewBody) return;
+
+      if (!item || !item.record) {
+        previewNode.hidden = true;
+        previewBody.innerHTML = "";
+        return;
+      }
+
+      var record = item.record;
+      previewBody.innerHTML =
+        '<div class="search-preview-meta">' +
+          '<span class="search-preview-index">' + String(index + 1).padStart(2, "0") + "</span>" +
+          '<span class="search-preview-total">/ ' + String(total).padStart(2, "0") + "</span>" +
+        "</div>" +
+        '<h2 class="search-preview-title"><a href="' + escapeHTML(record.relPermalink || record.permalink) + '">' + highlightText(record.title, item.matchedTerms) + "</a></h2>" +
+        '<p class="search-preview-date">' + escapeHTML(record.dateISO || record.date) + " · " + escapeHTML(record.year) + "</p>" +
+        '<div class="search-preview-tags">' +
+          record.tags.slice(0, 5).map(function (tag) {
+            return '<span>#' + escapeHTML(tag) + "</span>";
+          }).join("") +
+        "</div>" +
+        '<p class="search-preview-excerpt">' + buildSnippet(record, item.matchedTerms) + "</p>" +
+        '<a class="search-preview-open" href="' + escapeHTML(record.relPermalink || record.permalink) + '">Open Entry</a>';
+      previewNode.hidden = false;
+    }
+
     function getResultCards() {
       if (!resultsRoot) return [];
       return Array.prototype.slice.call(resultsRoot.querySelectorAll(".search-result-card"));
@@ -452,6 +490,7 @@
       });
 
       activeResultIndex = nextIndex;
+      updatePreview(renderedItems[nextIndex], nextIndex, renderedItems.length);
       if (options && options.scroll === false) return;
       cards[nextIndex].scrollIntoView({
         block: "nearest",
@@ -481,6 +520,7 @@
       var emptyCopy = emptyNode.querySelector("p");
       if (!query && totalMatches > 0) {
         emptyNode.hidden = true;
+        updatePreview(null);
         return;
       }
       if (totalMatches > 0) {
@@ -489,9 +529,11 @@
       }
       if (!query) {
         emptyNode.hidden = true;
+        updatePreview(null);
         return;
       }
       emptyNode.hidden = false;
+      updatePreview(null);
       if (emptyCopy) {
         emptyCopy.textContent = "没有找到结果，试试更短关键词、英文别名，或者点下面的推荐标签与最新文章。";
       }
@@ -579,8 +621,12 @@
       resultsRoot.innerHTML = "";
       resultsCount.innerHTML = "";
       activeResultIndex = -1;
+      renderedItems = items.slice();
 
-      if (items.length === 0) return;
+      if (items.length === 0) {
+        updatePreview(null);
+        return;
+      }
 
       resultsCount.innerHTML =
         '<span class="search-results-label">Results</span>' +
