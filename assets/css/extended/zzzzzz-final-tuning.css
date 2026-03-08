@@ -1704,3 +1704,211 @@ body.home-page .home-search-wrap {
     font-size: clamp(1.2rem, 4.6vw, 1.42rem) !important;
   }
 }
+
+/* 2026-03-08 article baseline reset */
+
+@media (min-width: 901px) {
+  .post-single .post-header,
+  .post-reading-shell,
+  .post-single .post-footer,
+  .post-single .post-related {
+    width: min(860px, calc(100vw - 64px)) !important;
+    max-width: min(860px, calc(100vw - 64px)) !important;
+  }
+
+  .post-single .post-title {
+    max-width: 11.5ch !important;
+    font-size: clamp(2.4rem, 3.1vw, 3.55rem) !important;
+    line-height: 1.08 !important;
+  }
+
+  .post-single .post-description,
+  .post-single .post-meta {
+    max-width: 100% !important;
+  }
+
+  .post-reading-shell {
+    display: block !important;
+  }
+
+  .post-single .toc {
+    margin: 0 0 22px !important;
+    border: 1px solid var(--bd-border-soft) !important;
+    border-radius: 18px !important;
+    background: color-mix(in srgb, var(--bd-panel) 72%, white 28%) !important;
+    box-shadow: none !important;
+  }
+
+  .post-single .toc details summary {
+    padding: 14px 16px !important;
+  }
+
+  .post-single .toc .details {
+    font-size: 0.78rem !important;
+    letter-spacing: 0.14em !important;
+  }
+
+  .post-single .toc .inner {
+    padding: 0 16px 14px !important;
+  }
+
+  .post-single .toc ul {
+    padding-left: 18px !important;
+  }
+
+  .post-single .toc li {
+    margin: 8px 0 !important;
+  }
+
+  .post-content {
+    display: block !important;
+    font-size: 1rem !important;
+    line-height: 1.86 !important;
+  }
+
+  .post-content > :is(
+    p,
+    ul,
+    ol,
+    blockquote,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    hr,
+    details,
+    dl,
+    .footnotes
+  ) {
+    width: 100% !important;
+    max-width: none !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    text-align: left !important;
+  }
+
+  .post-content > p:first-of-type {
+    max-width: none !important;
+    font-size: inherit !important;
+    line-height: inherit !important;
+  }
+
+  .post-content > p:first-of-type::first-letter {
+    float: none !important;
+    margin: 0 !important;
+    font-size: inherit !important;
+    line-height: inherit !important;
+    letter-spacing: inherit !important;
+  }
+
+  .post-content h2 {
+    margin: 42px 0 14px !important;
+    padding: 0 !important;
+    border-top: 0 !important;
+    border-bottom: 0 !important;
+    text-decoration: none !important;
+    font-size: clamp(1.62rem, 1.48rem + 0.4vw, 1.96rem) !important;
+    line-height: 1.24 !important;
+    letter-spacing: -0.02em !important;
+  }
+
+  .post-content h3 {
+    margin: 30px 0 12px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    font-size: clamp(1.26rem, 1.18rem + 0.2vw, 1.42rem) !important;
+    line-height: 1.3 !important;
+    letter-spacing: -0.01em !important;
+  }
+
+  .post-content ul,
+  .post-content ol {
+    padding-left: 1.35em !important;
+  }
+
+  .post-content li {
+    margin: 0.42em 0 !important;
+  }
+
+  .post-content blockquote {
+    margin: 24px 0 !important;
+    padding: 16px 18px !important;
+    border: 1px solid var(--bd-border-soft) !important;
+    border-left: 3px solid var(--bd-border-strong) !important;
+    border-radius: 16px !important;
+    background: var(--bd-panel) !important;
+    box-shadow: none !important;
+  }
+
+  .post-content blockquote::before {
+    display: none !important;
+  }
+
+  .post-content hr {
+    margin: 26px 0 !important;
+    background: var(--bd-border-soft) !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .post-single .post-header,
+  .post-reading-shell,
+  .post-single .post-footer,
+  .post-single .post-related {
+    width: calc(100vw - 20px) !important;
+    max-width: calc(100vw - 20px) !important;
+  }
+
+  .post-single .toc {
+    border-radius: 16px !important;
+    box-shadow: none !important;
+  }
+
+  .post-content > :is(
+    p,
+    ul,
+    ol,
+    blockquote,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    hr,
+    details,
+    dl,
+    .footnotes
+  ) {
+    width: 100% !important;
+    max-width: none !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    text-align: left !important;
+  }
+
+  .post-content h2 {
+    margin: 34px 0 12px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    text-decoration: none !important;
+    line-height: 1.28 !important;
+  }
+
+  .post-content h3 {
+    margin: 24px 0 10px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    line-height: 1.3 !important;
+  }
+
+  .post-content blockquote {
+    padding: 14px 16px !important;
+    border-radius: 14px !important;
+    box-shadow: none !important;
+  }
+
+  .post-content blockquote::before {
+    display: none !important;
+  }
+}
