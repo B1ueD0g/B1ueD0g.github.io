@@ -714,20 +714,6 @@
       });
     }
 
-    function setupEditorialTocState() {
-      var details = document.querySelector(".post-single-editorial .editorial-toc details");
-      if (!details) return;
-
-      function syncState() {
-        if (window.innerWidth > 900) {
-          details.setAttribute("open", "open");
-        }
-      }
-
-      syncState();
-      window.addEventListener("resize", syncState);
-    }
-
     function setupPageTransition() {
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
       var leaving = false;
@@ -840,7 +826,6 @@
     runWhenIdle(setupHeadingHighlight, 800);
     runWhenIdle(setupFootnotePreview, 950);
     runWhenIdle(setupEditorialTables, 1100);
-    runWhenIdle(setupEditorialTocState, 1120);
     runWhenIdle(setupLightbox, 1200);
     setupPageTransition();
   })();

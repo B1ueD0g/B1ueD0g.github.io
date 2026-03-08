@@ -55,14 +55,6 @@
             {{- partial "post_canonical.html" . -}}
           </div>
         </section>
-        {{- if and .Content (.Param "ShowToc") }}
-        <section class="editorial-panel editorial-outline-panel" aria-label="Table of contents">
-          <p class="editorial-panel-label">Outline</p>
-          <div class="editorial-toc">
-            {{- partial "toc.html" . }}
-          </div>
-        </section>
-        {{- end }}
       </aside>
     </div>
   </header>
@@ -70,6 +62,14 @@
   <div class="editorial-body">
     <div class="editorial-main">
       {{- partial "cover.html" (dict "cxt" . "IsSingle" true "isHidden" $isHidden) }}
+      {{- if and .Content (.Param "ShowToc") }}
+      <section class="editorial-outline-block" aria-label="Table of contents">
+        <p class="editorial-outline-label">Outline</p>
+        <div class="editorial-toc">
+          {{- partial "toc.html" . }}
+        </div>
+      </section>
+      {{- end }}
       {{- if .Content }}
       <div class="editorial-flow">
         <div class="editorial-content">
