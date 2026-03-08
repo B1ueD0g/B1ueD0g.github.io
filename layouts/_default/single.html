@@ -7,6 +7,9 @@
     {{ partial "breadcrumbs.html" . }}
     <div class="editorial-hero">
       <div class="editorial-headline">
+        {{- if gt (len $tagTerms) 0 }}
+        <p class="editorial-kicker">#{{ (index $tagTerms 0).LinkTitle }}</p>
+        {{- end }}
         <h1 class="editorial-title entry-hint-parent">
           {{ .Title }}
           {{- if .Draft }}
@@ -19,25 +22,52 @@
           {{- end }}
         </h1>
       </div>
-      <div class="editorial-deck">
+      <aside class="editorial-aside" aria-label="Article information">
         {{- if .Description }}
-        <div class="editorial-description">
-          {{ .Description }}
-        </div>
+        <section class="editorial-panel editorial-summary-panel">
+          <p class="editorial-panel-label">Abstract</p>
+          <div class="editorial-description">
+            {{ .Description }}
+          </div>
+        </section>
         {{- end }}
-        {{- if not (.Param "hideMeta") }}
-        <div class="editorial-meta">
-          {{- partial "post_meta.html" . -}}
-          {{- partial "translation_list.html" . -}}
-          {{- partial "edit_post.html" . -}}
-          {{- partial "post_canonical.html" . -}}
-        </div>
+        <section class="editorial-panel editorial-meta-panel" aria-label="Article details">
+          <p class="editorial-panel-label">Entry</p>
+          <dl class="editorial-meta-list">
+            <div class="editorial-meta-item">
+              <dt>Published</dt>
+              <dd>{{ .Date.Format "2006-01-02" }}</dd>
+            </div>
+            <div class="editorial-meta-item">
+              <dt>Reading</dt>
+              <dd>{{ printf "%02d min" .ReadingTime }}</dd>
+            </div>
+            {{- if gt (len $tagTerms) 0 }}
+            <div class="editorial-meta-item">
+              <dt>Filed</dt>
+              <dd>#{{ (index $tagTerms 0).LinkTitle }}</dd>
+            </div>
+            {{- end }}
+          </dl>
+          <div class="editorial-meta-utility">
+            {{- partial "translation_list.html" . -}}
+            {{- partial "edit_post.html" . -}}
+            {{- partial "post_canonical.html" . -}}
+          </div>
+        </section>
+        {{- if and .Content (.Param "ShowToc") }}
+        <section class="editorial-panel editorial-outline-panel" aria-label="Table of contents">
+          <p class="editorial-panel-label">Outline</p>
+          <div class="editorial-toc">
+            {{- partial "toc.html" . }}
+          </div>
+        </section>
         {{- end }}
-      </div>
+      </aside>
     </div>
   </header>
   {{- $isHidden := (.Param "cover.hiddenInSingle") | default (.Param "cover.hidden") | default false }}
-  <div class="editorial-body{{ if (.Param "ShowToc") }} has-rail{{ end }}">
+  <div class="editorial-body">
     <div class="editorial-main">
       {{- partial "cover.html" (dict "cxt" . "IsSingle" true "isHidden" $isHidden) }}
       {{- if .Content }}
@@ -50,13 +80,6 @@
       </div>
       {{- end }}
     </div>
-    {{- if and .Content (.Param "ShowToc") }}
-    <aside class="editorial-rail" aria-label="Reading outline">
-      <section class="editorial-toc" aria-label="Table of contents">
-        {{- partial "toc.html" . }}
-      </section>
-    </aside>
-    {{- end }}
   </div>
 
   {{- partial "related_posts.html" . -}}
