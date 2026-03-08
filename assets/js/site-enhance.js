@@ -847,8 +847,8 @@
     setupMagneticClusters();
     setupSearchShortcut();
     setupReadingProgress();
+    setupEditorialTocRail();
     runWhenIdle(setupHeadingHighlight, 800);
-    runWhenIdle(setupEditorialTocRail, 900);
     runWhenIdle(setupFootnotePreview, 950);
     runWhenIdle(setupEditorialTables, 1100);
     runWhenIdle(setupLightbox, 1200);

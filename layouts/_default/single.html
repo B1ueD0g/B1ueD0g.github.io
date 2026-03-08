@@ -18,27 +18,6 @@
           </span>
           {{- end }}
         </h1>
-        {{- if .Description }}
-        <div class="editorial-dek">
-          {{ .Description }}
-        </div>
-        {{- end }}
-        <dl class="editorial-entry-strip" aria-label="Article details">
-          <div class="editorial-entry-item">
-            <dt>Published</dt>
-            <dd>{{ .Date.Format "2006-01-02" }}</dd>
-          </div>
-          <div class="editorial-entry-item">
-            <dt>Reading</dt>
-            <dd>{{ printf "%02d min" .ReadingTime }}</dd>
-          </div>
-          {{- if gt (len $tagTerms) 0 }}
-          <div class="editorial-entry-item">
-            <dt>Filed</dt>
-            <dd>#{{ (index $tagTerms 0).LinkTitle }}</dd>
-          </div>
-          {{- end }}
-        </dl>
       </div>
     </div>
   </header>
