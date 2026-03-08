@@ -421,7 +421,7 @@
     }
 
     function setupReadingProgress() {
-      var articleContent = document.querySelector(".post-single .post-content");
+      var articleContent = document.querySelector(".post-single .editorial-content, .post-single .post-content");
       if (!articleContent) return;
 
       var bar = document.createElement("div");
@@ -457,7 +457,7 @@
 
     function setupHeadingHighlight() {
       var headings = Array.prototype.slice.call(
-        document.querySelectorAll(".post-content h2[id], .post-content h3[id], .post-content h4[id]")
+        document.querySelectorAll(".editorial-content h2[id], .editorial-content h3[id], .editorial-content h4[id], .post-content h2[id], .post-content h3[id], .post-content h4[id]")
       );
       if (headings.length === 0) return;
 
@@ -529,7 +529,7 @@
       if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
 
       var refs = Array.prototype.slice.call(
-        document.querySelectorAll(".post-content sup a[href^='#fn'], .post-content .footnote-ref a[href^='#fn']")
+        document.querySelectorAll(".editorial-content sup a[href^='#fn'], .editorial-content .footnote-ref a[href^='#fn'], .post-content sup a[href^='#fn'], .post-content .footnote-ref a[href^='#fn']")
       );
       if (refs.length === 0) return;
 
@@ -593,7 +593,7 @@
     }
 
     function setupLightbox() {
-      var images = Array.prototype.slice.call(document.querySelectorAll(".post-content img"));
+      var images = Array.prototype.slice.call(document.querySelectorAll(".editorial-content img, .post-content img"));
       if (images.length === 0) return;
 
       var items = [];
@@ -675,7 +675,7 @@
       }
 
       document.addEventListener("click", function (event) {
-        var img = event.target.closest(".post-content img.is-lightbox-ready");
+        var img = event.target.closest(".editorial-content img.is-lightbox-ready, .post-content img.is-lightbox-ready");
         if (!img) return;
         var anchor = img.closest("a[data-lightbox-anchor='1']");
         if (anchor) event.preventDefault();

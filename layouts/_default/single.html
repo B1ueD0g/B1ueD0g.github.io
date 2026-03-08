@@ -2,10 +2,10 @@
 {{- $tagsTaxonomy := .Language.Params.Taxonomies.tag | default "tags" -}}
 {{- $tagTerms := $.GetTerms $tagsTaxonomy -}}
 
-<article class="post-single">
-  <header class="post-header">
+<article class="post-single post-single-editorial">
+  <header class="editorial-header">
     {{ partial "breadcrumbs.html" . }}
-    <h1 class="post-title entry-hint-parent">
+    <h1 class="editorial-title entry-hint-parent">
       {{ .Title }}
       {{- if .Draft }}
       <span class="entry-hint" title="Draft">
@@ -17,12 +17,12 @@
       {{- end }}
     </h1>
     {{- if .Description }}
-    <div class="post-description">
+    <div class="editorial-description">
       {{ .Description }}
     </div>
     {{- end }}
     {{- if not (.Param "hideMeta") }}
-    <div class="post-meta">
+    <div class="editorial-meta">
       {{- partial "post_meta.html" . -}}
       {{- partial "translation_list.html" . -}}
       {{- partial "edit_post.html" . -}}
@@ -33,11 +33,13 @@
   {{- $isHidden := (.Param "cover.hiddenInSingle") | default (.Param "cover.hidden") | default false }}
   {{- partial "cover.html" (dict "cxt" . "IsSingle" true "isHidden" $isHidden) }}
   {{- if .Content }}
-  <div class="post-reading-shell">
+  <div class="editorial-flow">
     {{- if (.Param "ShowToc") }}
+    <section class="editorial-toc" aria-label="Table of contents">
       {{- partial "toc.html" . }}
+    </section>
     {{- end }}
-    <div class="post-content">
+    <div class="editorial-content">
       {{- if not (.Param "disableAnchoredHeadings") }}
       {{- partial "anchored_headings.html" .Content -}}
       {{- else }}{{ .Content }}{{ end }}
@@ -47,7 +49,7 @@
 
   {{- partial "related_posts.html" . -}}
 
-  <footer class="post-footer">
+  <footer class="post-footer editorial-footer">
     <ul class="post-tags">
       {{- range $tagTerms }}
       <li><a href="{{ .Permalink }}" data-tag-click="{{ .LinkTitle }}">#{{ .LinkTitle }}</a></li>
