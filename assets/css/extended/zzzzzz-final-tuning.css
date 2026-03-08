@@ -1382,13 +1382,13 @@ body.home-page .home-search-wrap {
   }
 
   .about-pro .about-hero-copy {
-    gap: 30px !important;
+    gap: 34px !important;
   }
 
   .about-pro .about-hero .post-title {
     margin: 0 0 0.05em !important;
     font-size: clamp(3.7rem, 4.4vw, 4.8rem) !important;
-    line-height: 1.02 !important;
+    line-height: 1.04 !important;
   }
 
   .about-pro .about-hero .post-description {
@@ -1402,8 +1402,8 @@ body.home-page .home-search-wrap {
   }
 
   .post-single .post-header {
-    width: min(1340px, calc(100vw - 64px)) !important;
-    max-width: min(1340px, calc(100vw - 64px)) !important;
+    width: min(1120px, calc(100vw - 64px)) !important;
+    max-width: min(1120px, calc(100vw - 64px)) !important;
     margin: clamp(40px, 6vh, 72px) auto 0 !important;
     padding-bottom: 22px !important;
     display: grid !important;
@@ -1422,34 +1422,34 @@ body.home-page .home-search-wrap {
   }
 
   .post-single .post-title {
-    max-width: 14ch !important;
-    font-size: clamp(2.7rem, 3.8vw, 4.15rem) !important;
-    line-height: 1.01 !important;
+    max-width: 13ch !important;
+    font-size: clamp(2.35rem, 3.05vw, 3.35rem) !important;
+    line-height: 1.04 !important;
     letter-spacing: -0.045em !important;
   }
 
   .post-single .post-description {
-    max-width: 56ch !important;
+    max-width: 50ch !important;
     margin: 2px 0 0 !important;
-    font-size: clamp(0.98rem, 0.94rem + 0.12vw, 1.08rem) !important;
-    line-height: 1.72 !important;
+    font-size: clamp(0.96rem, 0.93rem + 0.1vw, 1.02rem) !important;
+    line-height: 1.76 !important;
   }
 
   .post-single .post-meta {
-    max-width: 56ch !important;
+    max-width: 50ch !important;
     padding-top: 12px !important;
   }
 
   .post-reading-shell {
-    width: min(1340px, calc(100vw - 64px)) !important;
-    max-width: min(1340px, calc(100vw - 64px)) !important;
+    width: min(1120px, calc(100vw - 64px)) !important;
+    max-width: min(1120px, calc(100vw - 64px)) !important;
     margin: 18px auto 40px !important;
   }
 
   .post-reading-shell.has-toc {
     display: grid !important;
-    grid-template-columns: minmax(0, 1fr) minmax(272px, 300px) !important;
-    gap: clamp(24px, 3vw, 38px) !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 20px !important;
     align-items: start !important;
   }
 
@@ -1461,11 +1461,14 @@ body.home-page .home-search-wrap {
   }
 
   .post-reading-aside {
-    grid-column: 2 !important;
+    grid-column: 1 !important;
     width: 100% !important;
     min-width: 0 !important;
-    position: sticky !important;
-    top: 104px !important;
+    position: static !important;
+    display: grid !important;
+    grid-template-columns: 280px minmax(0, 1fr) !important;
+    gap: 18px !important;
+    align-items: start !important;
   }
 
   .post-reading-note,
@@ -1475,7 +1478,11 @@ body.home-page .home-search-wrap {
   }
 
   .post-reading-note {
-    padding: 18px 18px 16px !important;
+    padding: 16px !important;
+  }
+
+  .post-single .toc {
+    margin: 0 !important;
   }
 
   .post-content > :is(
@@ -1493,12 +1500,12 @@ body.home-page .home-search-wrap {
     dl,
     .footnotes
   ) {
-    max-width: min(78ch, 100%) !important;
+    max-width: min(70ch, 100%) !important;
   }
 
   .post-content > p:first-of-type {
-    max-width: min(72ch, 100%) !important;
-    font-size: clamp(1.08rem, 1.02rem + 0.12vw, 1.18rem) !important;
+    max-width: min(66ch, 100%) !important;
+    font-size: clamp(1.02rem, 0.98rem + 0.1vw, 1.12rem) !important;
   }
 }
 
