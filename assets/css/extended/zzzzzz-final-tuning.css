@@ -1523,3 +1523,184 @@ body.home-page .home-search-wrap {
     line-height: 1.38 !important;
   }
 }
+
+/* 2026-03-08 article cleanup lock */
+
+@media (min-width: 901px) {
+  .post-single .post-header,
+  .post-reading-shell,
+  .post-single .post-footer,
+  .post-single .post-related {
+    width: min(980px, calc(100vw - 64px)) !important;
+    max-width: min(980px, calc(100vw - 64px)) !important;
+  }
+
+  .post-single .post-header {
+    margin: clamp(36px, 5.5vh, 64px) auto 0 !important;
+    padding-bottom: 24px !important;
+    display: block !important;
+  }
+
+  .post-single .breadcrumbs {
+    margin-bottom: 12px !important;
+  }
+
+  .post-single .post-title {
+    max-width: 12ch !important;
+    margin: 0 0 18px !important;
+    font-size: clamp(2.5rem, 3.5vw, 4rem) !important;
+    line-height: 1.04 !important;
+    letter-spacing: -0.04em !important;
+  }
+
+  .post-single .post-description {
+    max-width: 46ch !important;
+    margin: 0 0 14px !important;
+    font-size: clamp(0.98rem, 0.95rem + 0.08vw, 1.04rem) !important;
+    line-height: 1.74 !important;
+  }
+
+  .post-single .post-meta {
+    max-width: 46ch !important;
+    margin-top: 0 !important;
+    padding-top: 14px !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 8px 14px !important;
+    border-top: 1px solid var(--bd-border-soft) !important;
+  }
+
+  .post-reading-shell {
+    margin: 8px auto 40px !important;
+    display: block !important;
+  }
+
+  .post-reading-aside,
+  .post-reading-note {
+    display: none !important;
+  }
+
+  .post-single .toc {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 0 26px !important;
+    border-radius: 22px !important;
+  }
+
+  .post-single .toc details summary {
+    padding: 16px 18px !important;
+  }
+
+  .post-single .toc .inner {
+    padding: 0 18px 16px !important;
+  }
+
+  .post-content {
+    font-size: clamp(1.02rem, 0.99rem + 0.08vw, 1.08rem) !important;
+    line-height: 1.88 !important;
+  }
+
+  .post-content > :is(
+    p,
+    ul,
+    ol,
+    blockquote,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    hr,
+    details,
+    dl,
+    .footnotes
+  ) {
+    max-width: min(70ch, 100%) !important;
+  }
+
+  .post-content > p:first-of-type {
+    max-width: min(70ch, 100%) !important;
+    font-size: inherit !important;
+    line-height: inherit !important;
+    color: var(--primary) !important;
+  }
+
+  .post-content > p:first-of-type::first-letter {
+    float: none !important;
+    margin: 0 !important;
+    font-size: inherit !important;
+    line-height: inherit !important;
+    letter-spacing: inherit !important;
+    color: inherit !important;
+  }
+
+  .post-content h2 {
+    margin-top: 46px !important;
+    padding-top: 10px !important;
+    font-size: clamp(1.68rem, 1.46rem + 0.56vw, 2.12rem) !important;
+    line-height: 1.18 !important;
+  }
+
+  .post-content h3 {
+    margin-top: 34px !important;
+    font-size: clamp(1.32rem, 1.22rem + 0.32vw, 1.58rem) !important;
+    line-height: 1.22 !important;
+  }
+
+  .post-content blockquote {
+    margin: 28px 0 !important;
+    padding: 18px 20px 18px 22px !important;
+    border-radius: 22px !important;
+  }
+
+  .post-content blockquote::before {
+    left: 12px !important;
+    top: -2px !important;
+    font-size: 2.2rem !important;
+    opacity: 0.18 !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .post-single .post-header,
+  .post-reading-shell,
+  .post-single .post-footer,
+  .post-single .post-related {
+    width: calc(100vw - 24px) !important;
+    max-width: calc(100vw - 24px) !important;
+  }
+
+  .post-single .post-title {
+    max-width: none !important;
+    font-size: clamp(2.1rem, 9vw, 3.1rem) !important;
+    line-height: 1.06 !important;
+  }
+
+  .post-single .post-description {
+    max-width: 100% !important;
+    margin-bottom: 12px !important;
+    font-size: 0.98rem !important;
+    line-height: 1.72 !important;
+  }
+
+  .post-single .post-meta {
+    max-width: 100% !important;
+  }
+
+  .post-single .toc {
+    margin: 0 0 22px !important;
+  }
+
+  .post-content {
+    font-size: 0.98rem !important;
+    line-height: 1.82 !important;
+  }
+
+  .post-content h2 {
+    font-size: clamp(1.48rem, 5.8vw, 1.92rem) !important;
+  }
+
+  .post-content h3 {
+    font-size: clamp(1.2rem, 4.6vw, 1.42rem) !important;
+  }
+}
