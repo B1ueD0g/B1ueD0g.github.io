@@ -1453,16 +1453,16 @@ body.home-page .home-search-wrap {
 }
 
 .post-single.post-single-editorial .editorial-title {
-  display: inline-block !important;
-  margin: 0 !important;
-  text-align: left !important;
+  display: block !important;
+  margin: 0 auto !important;
+  text-align: center !important;
   color: var(--primary) !important;
-  max-width: 15.2ch !important;
-  font-size: clamp(1.72rem, 2.34vw, 2.52rem) !important;
+  max-width: 22ch !important;
+  font-size: clamp(1.56rem, 2.02vw, 2.18rem) !important;
   font-weight: 700 !important;
-  line-height: 1.06 !important;
+  line-height: 1.08 !important;
   letter-spacing: -0.028em !important;
-  text-wrap: pretty !important;
+  text-wrap: balance !important;
   overflow-wrap: anywhere !important;
 }
 
@@ -1876,7 +1876,8 @@ body.home-page .home-search-wrap {
   }
 
   .post-single.post-single-editorial .editorial-title {
-    font-size: clamp(1.68rem, 2.18vw, 2.28rem) !important;
+    max-width: 21ch !important;
+    font-size: clamp(1.5rem, 1.88vw, 1.98rem) !important;
   }
 
   .post-single.post-single-editorial .editorial-toc-rail {
@@ -1979,8 +1980,7 @@ body.home-page .home-search-wrap {
 
   .post-single.post-single-editorial .editorial-title {
     max-width: 100% !important;
-    display: block !important;
-    font-size: clamp(1.72rem, 6.4vw, 2.26rem) !important;
+    font-size: clamp(1.68rem, 6.1vw, 2.14rem) !important;
     line-height: 1.04 !important;
   }
 
