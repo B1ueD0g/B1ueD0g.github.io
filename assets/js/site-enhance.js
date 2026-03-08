@@ -525,6 +525,30 @@
       window.addEventListener("scroll", onScroll, { passive: true });
     }
 
+    function setupEditorialTocRail() {
+      var detailsList = Array.prototype.slice.call(document.querySelectorAll(".editorial-toc-rail .toc details"));
+      if (detailsList.length === 0) return;
+
+      var desktop = window.matchMedia("(min-width: 1121px)");
+
+      function syncState() {
+        detailsList.forEach(function (details) {
+          details.open = desktop.matches;
+        });
+      }
+
+      syncState();
+
+      if (typeof desktop.addEventListener === "function") {
+        desktop.addEventListener("change", syncState);
+      } else if (typeof desktop.addListener === "function") {
+        desktop.addListener(syncState);
+      }
+
+      window.addEventListener("resize", syncState);
+      window.addEventListener("load", syncState);
+    }
+
     function setupFootnotePreview() {
       if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
 
@@ -824,6 +848,7 @@
     setupSearchShortcut();
     setupReadingProgress();
     runWhenIdle(setupHeadingHighlight, 800);
+    runWhenIdle(setupEditorialTocRail, 900);
     runWhenIdle(setupFootnotePreview, 950);
     runWhenIdle(setupEditorialTables, 1100);
     runWhenIdle(setupLightbox, 1200);

@@ -7,9 +7,6 @@
     {{ partial "breadcrumbs.html" . }}
     <div class="editorial-hero">
       <div class="editorial-headline">
-        {{- if gt (len $tagTerms) 0 }}
-        <p class="editorial-kicker">#{{ (index $tagTerms 0).LinkTitle }}</p>
-        {{- end }}
         <h1 class="editorial-title entry-hint-parent">
           {{ .Title }}
           {{- if .Draft }}
@@ -21,55 +18,46 @@
           </span>
           {{- end }}
         </h1>
-      </div>
-      <aside class="editorial-aside" aria-label="Article information">
         {{- if .Description }}
-        <section class="editorial-panel editorial-summary-panel">
-          <p class="editorial-panel-label">Abstract</p>
-          <div class="editorial-description">
-            {{ .Description }}
-          </div>
-        </section>
+        <div class="editorial-dek">
+          {{ .Description }}
+        </div>
         {{- end }}
-        <section class="editorial-panel editorial-meta-panel" aria-label="Article details">
-          <p class="editorial-panel-label">Entry</p>
-          <dl class="editorial-meta-list">
-            <div class="editorial-meta-item">
-              <dt>Published</dt>
-              <dd>{{ .Date.Format "2006-01-02" }}</dd>
-            </div>
-            <div class="editorial-meta-item">
-              <dt>Reading</dt>
-              <dd>{{ printf "%02d min" .ReadingTime }}</dd>
-            </div>
-            {{- if gt (len $tagTerms) 0 }}
-            <div class="editorial-meta-item">
-              <dt>Filed</dt>
-              <dd>#{{ (index $tagTerms 0).LinkTitle }}</dd>
-            </div>
-            {{- end }}
-          </dl>
-          <div class="editorial-meta-utility">
-            {{- partial "translation_list.html" . -}}
-            {{- partial "edit_post.html" . -}}
-            {{- partial "post_canonical.html" . -}}
+        <dl class="editorial-entry-strip" aria-label="Article details">
+          <div class="editorial-entry-item">
+            <dt>Published</dt>
+            <dd>{{ .Date.Format "2006-01-02" }}</dd>
           </div>
-        </section>
-      </aside>
+          <div class="editorial-entry-item">
+            <dt>Reading</dt>
+            <dd>{{ printf "%02d min" .ReadingTime }}</dd>
+          </div>
+          {{- if gt (len $tagTerms) 0 }}
+          <div class="editorial-entry-item">
+            <dt>Filed</dt>
+            <dd>#{{ (index $tagTerms 0).LinkTitle }}</dd>
+          </div>
+          {{- end }}
+        </dl>
+      </div>
     </div>
   </header>
   {{- $isHidden := (.Param "cover.hiddenInSingle") | default (.Param "cover.hidden") | default false }}
   <div class="editorial-body">
-    <div class="editorial-main">
-      {{- partial "cover.html" (dict "cxt" . "IsSingle" true "isHidden" $isHidden) }}
-      {{- if and .Content (.Param "ShowToc") }}
-      <section class="editorial-outline-block" aria-label="Table of contents">
-        <p class="editorial-outline-label">Outline</p>
+    {{- if and .Content (.Param "ShowToc") }}
+    <aside class="editorial-toc-rail" aria-label="Table of contents">
+      <div class="editorial-toc-rail-head">
+        <span class="editorial-toc-rail-label">Outline</span>
+      </div>
+      <div class="editorial-toc-rail-body">
         <div class="editorial-toc">
           {{- partial "toc.html" . }}
         </div>
-      </section>
-      {{- end }}
+      </div>
+    </aside>
+    {{- end }}
+    <div class="editorial-main">
+      {{- partial "cover.html" (dict "cxt" . "IsSingle" true "isHidden" $isHidden) }}
       {{- if .Content }}
       <div class="editorial-flow">
         <div class="editorial-content">
