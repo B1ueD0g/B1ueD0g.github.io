@@ -1453,12 +1453,14 @@ body.home-page .home-search-wrap {
 }
 
 .post-single.post-single-editorial .editorial-title {
-  margin: 0 auto !important;
+  display: inline-block !important;
+  margin: 0 !important;
+  text-align: left !important;
   color: var(--primary) !important;
-  max-width: 16ch !important;
-  font-size: clamp(1.78rem, 2.5vw, 2.72rem) !important;
+  max-width: 15.2ch !important;
+  font-size: clamp(1.72rem, 2.34vw, 2.52rem) !important;
   font-weight: 700 !important;
-  line-height: 1.08 !important;
+  line-height: 1.06 !important;
   letter-spacing: -0.028em !important;
   text-wrap: pretty !important;
   overflow-wrap: anywhere !important;
@@ -1874,7 +1876,7 @@ body.home-page .home-search-wrap {
   }
 
   .post-single.post-single-editorial .editorial-title {
-    font-size: clamp(1.74rem, 2.32vw, 2.46rem) !important;
+    font-size: clamp(1.68rem, 2.18vw, 2.28rem) !important;
   }
 
   .post-single.post-single-editorial .editorial-toc-rail {
@@ -1977,8 +1979,9 @@ body.home-page .home-search-wrap {
 
   .post-single.post-single-editorial .editorial-title {
     max-width: 100% !important;
-    font-size: clamp(1.78rem, 7vw, 2.42rem) !important;
-    line-height: 1.02 !important;
+    display: block !important;
+    font-size: clamp(1.72rem, 6.4vw, 2.26rem) !important;
+    line-height: 1.04 !important;
   }
 
   .post-single.post-single-editorial .editorial-content {
