@@ -699,6 +699,21 @@
       });
     }
 
+    function setupEditorialTables() {
+      var tables = Array.prototype.slice.call(document.querySelectorAll(".editorial-content table, .post-content table"));
+      if (tables.length === 0) return;
+
+      tables.forEach(function (table) {
+        if (table.closest(".highlight, .highlighttable, .gist")) return;
+        if (table.parentElement && table.parentElement.classList.contains("editorial-table-wrap")) return;
+
+        var wrap = document.createElement("div");
+        wrap.className = "editorial-table-wrap";
+        table.parentNode.insertBefore(wrap, table);
+        wrap.appendChild(table);
+      });
+    }
+
     function setupPageTransition() {
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
       var leaving = false;
@@ -810,6 +825,7 @@
     setupReadingProgress();
     runWhenIdle(setupHeadingHighlight, 800);
     runWhenIdle(setupFootnotePreview, 950);
+    runWhenIdle(setupEditorialTables, 1100);
     runWhenIdle(setupLightbox, 1200);
     setupPageTransition();
   })();
