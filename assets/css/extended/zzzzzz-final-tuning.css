@@ -1599,16 +1599,23 @@ body.home-page .home-search-wrap {
   position: absolute !important;
   top: 50% !important;
   right: 0 !important;
-  width: 26px !important;
+  width: 18px !important;
   height: 2px !important;
   border-radius: 999px !important;
   transform: translateY(-50%) !important;
   background: color-mix(in srgb, var(--secondary) 86%, transparent 14%) !important;
-  transition: width 0.2s ease, background-color 0.2s ease !important;
+  opacity: 0 !important;
+  transition: width 0.2s ease, background-color 0.2s ease, opacity 0.2s ease !important;
 }
 
 .post-single.post-single-editorial .editorial-toc .toc ul ul a {
   padding-right: 34px !important;
+}
+
+.post-single.post-single-editorial .editorial-toc .toc a.is-active::after {
+  width: 30px !important;
+  opacity: 1 !important;
+  background: color-mix(in srgb, #bf6679 76%, var(--primary) 24%) !important;
 }
 
 .post-single.post-single-editorial .editorial-toc-rail:hover .editorial-toc .toc a,
@@ -1616,6 +1623,12 @@ body.home-page .home-search-wrap {
   color: color-mix(in srgb, var(--secondary) 80%, var(--primary) 20%) !important;
   font-size: 0.84rem !important;
   text-indent: 0 !important;
+}
+
+.post-single.post-single-editorial .editorial-toc-rail:hover .editorial-toc .toc a::after,
+.post-single.post-single-editorial .editorial-toc-rail:focus-within .editorial-toc .toc a::after {
+  width: 26px !important;
+  opacity: 0.82 !important;
 }
 
 .post-single.post-single-editorial .editorial-toc-rail:hover .editorial-toc .toc ul ul a,
@@ -1633,6 +1646,7 @@ body.home-page .home-search-wrap {
 .post-single.post-single-editorial .editorial-toc .toc a:hover::after,
 .post-single.post-single-editorial .editorial-toc .toc a:focus-visible::after {
   width: 34px !important;
+  opacity: 1 !important;
   background: color-mix(in srgb, #bf6679 76%, var(--primary) 24%) !important;
 }
 
