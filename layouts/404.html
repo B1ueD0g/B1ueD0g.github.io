@@ -1,10 +1,4 @@
 {{- define "main" }}
-{{- $homePath := site.Home.RelPermalink -}}
-{{- $searchPath := "search/" | relLangURL -}}
-{{- $postsPath := "posts/" | relLangURL -}}
-{{- with site.GetPage "section" "posts" -}}
-  {{- $postsPath = .RelPermalink -}}
-{{- end -}}
 <section class="not-found-wrap">
   <article class="not-found-card">
     <p class="not-found-code">404 / Lost Signal</p>
@@ -13,12 +7,12 @@
     <p class="not-found-hint">Try home, archive, or search by topic.</p>
 
     <div class="not-found-actions">
-      <a href="{{ $homePath }}">Home</a>
-      <a href="{{ $postsPath }}">Article</a>
-      <a href="{{ $searchPath }}">Search</a>
+      <a href="/">Home</a>
+      <a href="/posts/">Article</a>
+      <a href="/search/">Search</a>
     </div>
 
-    <form id="not-found-search-form" class="not-found-search" action="{{ $searchPath }}" method="get">
+    <form id="not-found-search-form" class="not-found-search" action="/search/" method="get">
       <input id="not-found-keyword" type="search" name="q" placeholder="输入关键词继续搜索" aria-label="Search posts">
       <button type="submit">Search</button>
     </form>
@@ -29,13 +23,12 @@
   window.addEventListener("DOMContentLoaded", function () {
     var form = document.getElementById("not-found-search-form");
     var input = document.getElementById("not-found-keyword");
-    var searchPath = {{ $searchPath | jsonify }};
     if (form && input) {
       form.addEventListener("submit", function (event) {
         var keyword = input.value.trim();
         if (!keyword) {
           event.preventDefault();
-          window.location.href = searchPath;
+          window.location.href = "/search/";
           return;
         }
         if (typeof window.BlueDogTrack === "function") {

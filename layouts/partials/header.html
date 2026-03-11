@@ -1,10 +1,10 @@
 <header class="header">
     <nav class="nav">
-        <div class="site-brand">
+        <div class="logo">
             {{- $label_text := (site.Params.label.text | default site.Title) -}}
             {{- $mobile_label_text := (site.Params.label.mobileText | default "BlueDog") -}}
             {{- if site.Title }}
-            <a class="site-brand-link" href="{{ "" | absLangURL }}" accesskey="h" title="{{ $label_text }} (Alt + H)" aria-label="{{ $label_text }}">
+            <a href="{{ "" | absLangURL }}" accesskey="h" title="{{ $label_text }} (Alt + H)" aria-label="{{ $label_text }}">
                 {{- $iconHeight := site.Params.label.iconHeight | default 30 -}}
                 {{- $iconWidth := site.Params.label.iconWidth | default $iconHeight -}}
                 {{- if site.Params.label.icon }}
@@ -39,11 +39,11 @@
                 {{- else if hasPrefix site.Params.label.iconSVG "<svg" -}}
                     {{ site.Params.label.iconSVG | safeHTML }}
                 {{- end -}}
-                <span class="site-brand-text site-brand-text-full">{{- $label_text -}}</span>
-                <span class="site-brand-text site-brand-text-mobile">{{- $mobile_label_text -}}</span>
+                <span class="logo-text logo-text-full">{{- $label_text -}}</span>
+                <span class="logo-text logo-text-mobile">{{- $mobile_label_text -}}</span>
             </a>
             {{- end }}
-            <div class="site-header-controls">
+            <div class="logo-switches">
                 {{- if (not site.Params.disableThemeToggle) }}
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle color theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -93,7 +93,7 @@
             </div>
         </div>
         {{- $currentPage := . -}}
-        <ul id="site-menu" class="site-menu">
+        <ul id="menu">
         {{- range site.Menus.main }}
         {{- $menu_item_url := (cond (strings.HasSuffix .URL "/") .URL (printf "%s/" .URL) ) | absLangURL -}}
         {{- $page_url:= $currentPage.Permalink | absLangURL -}}
@@ -102,7 +102,7 @@
         <li>
             <a href="{{ .URL | absLangURL }}"{{ if $is_current }} class="is-current" aria-current="page"{{ end }} title="{{ .Title | default .Name }} {{- cond $is_search (" (Alt + /)" | safeHTMLAttr) ("" | safeHTMLAttr ) }}"
                 {{- cond $is_search (" accesskey=/" | safeHTMLAttr) ("" | safeHTMLAttr ) }}>
-                    <span class="site-menu-label">
+                    <span>
                         {{- .Pre -}}
                         {{- .Name -}}
                         {{- .Post -}}
