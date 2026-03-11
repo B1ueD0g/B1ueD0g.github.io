@@ -2,7 +2,7 @@
 {{- $tagsTaxonomy := .Language.Params.Taxonomies.tag | default "tags" -}}
 {{- $tagTerms := $.GetTerms $tagsTaxonomy -}}
 
-<article class="post-single post-single-editorial">
+<article class="post-single-editorial">
   <header class="editorial-header">
     {{ partial "breadcrumbs.html" . }}
     <div class="editorial-hero">
@@ -51,7 +51,7 @@
 
   {{- partial "related_posts.html" . -}}
 
-  <footer class="post-footer editorial-footer">
+  <footer class="editorial-footer">
     <ul class="post-tags">
       {{- range $tagTerms }}
       <li><a href="{{ .Permalink }}" data-tag-click="{{ .LinkTitle }}">#{{ .LinkTitle }}</a></li>

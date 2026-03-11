@@ -1,13 +1,13 @@
 {{- define "main" }}
 {{- $aboutData := site.Data.about -}}
 {{- $useProfileData := .Param "useProfileData" | default false -}}
-<article class="post-single about-single about-pro">
-  <header class="post-header">
+<article class="about-single about-pro">
+  <header class="about-header">
     <div class="about-hero">
       <div class="about-hero-copy">
-        <h1 class="post-title entry-hint-parent">{{ .Title }}</h1>
+        <h1 class="about-title entry-hint-parent">{{ .Title }}</h1>
         {{- with .Description }}
-        <div class="post-description">{{ . }}</div>
+        <div class="about-description">{{ . }}</div>
         {{- end }}
       </div>
       <div class="about-hero-connect">
@@ -272,7 +272,7 @@
     {{- end }}
   </div>
   {{- else if .Content }}
-  <div class="post-content">
+  <div class="about-content">
     {{- if not (.Param "disableAnchoredHeadings") }}
     {{- partial "anchored_headings.html" .Content -}}
     {{- else -}}

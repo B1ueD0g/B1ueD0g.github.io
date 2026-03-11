@@ -1133,29 +1133,6 @@ html[data-theme="dark"] .post-entry:hover {
 .breadcrumbs {
   display: none;
 }
-
-.about-single .post-header {
-  border-bottom: 1px solid var(--min-line-color);
-  padding-bottom: var(--space-2);
-  margin-bottom: var(--space-3);
-}
-
-.about-single .post-title {
-  font-family: var(--font-display);
-  font-size: clamp(2rem, 4.8vw, 3.6rem);
-  line-height: 1.28;
-  font-weight: 400;
-  letter-spacing: 0.01em;
-  padding-bottom: 0.14em;
-}
-
-.about-single .post-description {
-  margin-top: 0.4rem;
-  font-family: var(--font-heading);
-  font-size: clamp(1.08rem, 2.1vw, 1.45rem);
-  color: var(--secondary);
-}
-
 .about-social {
   margin-top: var(--space-2);
 }
@@ -1194,15 +1171,6 @@ html[data-theme="dark"] .post-entry:hover {
   background: var(--min-text-color);
   color: var(--min-bg);
 }
-
-.about-single .post-content h2 {
-  font-size: 1.5rem;
-}
-
-.about-single .post-content li {
-  margin-top: 0.38rem;
-}
-
 .not-found-wrap {
   min-height: calc(100svh - 260px);
   display: flex;
@@ -3066,16 +3034,6 @@ body.home-page .home-stage {
   font-size: 0.9rem;
 }
 
-.about-pro .post-header {
-  width: min(74ch, 100%);
-  max-width: min(74ch, 100%);
-  text-align: center;
-}
-
-.about-single .post-header {
-  padding-bottom: 20px;
-}
-
 .about-social .social-icons {
   justify-content: center;
 }
@@ -3305,7 +3263,6 @@ body.home-page .home-stage {
   .post-single .post-footer,
   .post-single .post-related,
   .post-single .toc,
-  .about-pro .post-header,
   .about-pro .about-profile {
     width: 100% !important;
     max-width: 100% !important;
@@ -3451,13 +3408,6 @@ body.home-page .home-stage {
     width: min(340px, calc(100vw - 20px));
     border-radius: 16px;
   }
-
-  .about-single .post-header {
-    text-align: left;
-    padding-bottom: 18px;
-    margin-bottom: 24px;
-  }
-
   .about-social .social-icons {
     justify-content: flex-start;
     flex-wrap: wrap;
@@ -3678,16 +3628,6 @@ html.bd-ready .home-search-wrap {
   opacity: 0.6;
   transform: scaleX(1);
 }
-
-.about-pro .post-header {
-  width: min(var(--about-shell-max), 100%);
-  max-width: min(var(--about-shell-max), 100%);
-  margin-inline: auto;
-  padding: 12px 0 24px;
-  text-align: center;
-  border-bottom: 0;
-}
-
 .about-pro .about-hero {
   width: min(840px, 100%);
   max-width: min(840px, 100%);
@@ -3697,26 +3637,6 @@ html.bd-ready .home-search-wrap {
   gap: 16px;
   text-align: center;
 }
-
-.about-pro .about-hero .post-title {
-  display: block;
-  width: auto;
-  max-width: 100%;
-  margin: 0;
-  text-align: center;
-  text-wrap: balance;
-}
-
-.about-pro .about-hero .post-description {
-  width: auto;
-  max-width: none;
-  margin: 0;
-  font-size: clamp(1rem, 0.94rem + 0.34vw, 1.12rem);
-  line-height: 1.42;
-  text-align: center;
-  white-space: nowrap;
-}
-
 .about-pro .about-social {
   width: auto;
 }
@@ -4102,31 +4022,12 @@ html[data-theme="light"] #theme-toggle #sun {
 }
 
 @media (max-width: 900px) {
-  .about-pro .post-header {
-    padding: 12px 0 22px;
-    margin-bottom: 22px;
-    text-align: left;
-  }
-
   .about-pro .about-hero {
     width: 100%;
     justify-items: start;
     gap: 14px;
     text-align: left;
   }
-
-  .about-pro .about-hero .post-title {
-    display: block;
-    width: 100%;
-    text-align: left;
-  }
-
-  .about-pro .about-hero .post-description {
-    max-width: 18ch;
-    text-align: left;
-    white-space: normal;
-  }
-
   .about-pro .about-social .social-icons {
     justify-content: flex-start;
   }
@@ -4199,18 +4100,11 @@ html[data-theme="light"] #theme-toggle #sun {
   right: 0.14em;
   bottom: 4px;
 }
-
-.about-pro .post-header,
 .about-pro .about-profile {
   width: min(1080px, 100%);
   max-width: min(1080px, 100%);
   margin-inline: auto;
 }
-
-.about-pro .post-header {
-  padding: 20px 0 28px;
-}
-
 .about-pro .about-hero {
   width: 100%;
   max-width: 100%;
@@ -4220,25 +4114,6 @@ html[data-theme="light"] #theme-toggle #sun {
   gap: 18px;
   text-align: center;
 }
-
-.about-pro .about-hero .post-title {
-  width: 100%;
-  margin: 0;
-  text-align: center;
-  text-wrap: balance;
-}
-
-.about-pro .about-hero .post-description {
-  width: auto;
-  max-width: none;
-  margin: 0;
-  font-size: clamp(0.96rem, 0.88rem + 0.22vw, 1.06rem);
-  line-height: 1.28;
-  letter-spacing: 0.005em;
-  text-align: center;
-  white-space: nowrap;
-}
-
 .about-pro .about-social {
   width: auto;
 }
@@ -4287,11 +4162,6 @@ html[data-theme="light"] #theme-toggle #sun {
     display: none !important;
   }
 
-  .about-pro .about-hero .post-description {
-    font-size: clamp(0.94rem, 0.88rem + 0.18vw, 1.02rem);
-  }
-}
-
 @media (max-width: 900px) {
   .logo a {
     max-width: calc(100% - 52px);
@@ -4336,38 +4206,15 @@ html[data-theme="light"] #theme-toggle #sun {
     right: 18%;
     bottom: 8px;
   }
-
-  .about-pro .post-header,
   .about-pro .about-profile {
     width: 100% !important;
     max-width: 100% !important;
   }
-
-  .about-pro .post-header {
-    padding: 10px 0 20px;
-    margin-bottom: 20px;
-    text-align: left;
-  }
-
   .about-pro .about-hero {
     justify-items: start;
     gap: 12px;
     text-align: left;
   }
-
-  .about-pro .about-hero .post-title {
-    text-align: left;
-  }
-
-  .about-pro .about-hero .post-description {
-    max-width: 100%;
-    font-size: clamp(0.96rem, 0.9rem + 0.62vw, 1.02rem);
-    line-height: 1.38;
-    text-align: left;
-    white-space: normal;
-    text-wrap: pretty;
-  }
-
   .about-pro .about-social .social-icons {
     justify-content: flex-start;
     gap: 12px;
@@ -4610,12 +4457,6 @@ body {
     grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
   }
 
-  .about-pro .about-hero .post-description {
-    white-space: normal !important;
-    text-wrap: balance !important;
-  }
-}
-
 @media (max-width: 900px) {
   .header {
     border-bottom-width: 2px !important;
@@ -4693,40 +4534,17 @@ body {
     font-size: clamp(0.98rem, 0.92rem + 0.34vw, 1.06rem) !important;
     padding: 0 0.04em 0.18em !important;
   }
-
-  .about-pro .post-header,
   .about-pro .about-profile {
     width: auto !important;
     max-width: 100% !important;
     margin-inline: 0 !important;
   }
-
-  .about-pro .post-header {
-    padding: 14px 0 18px !important;
-    margin-bottom: 20px !important;
-    text-align: left !important;
-  }
-
   .about-pro .about-hero {
     width: 100% !important;
     justify-items: start !important;
     gap: 14px !important;
     text-align: left !important;
   }
-
-  .about-pro .about-hero .post-title,
-  .about-pro .about-hero .post-description {
-    text-align: left !important;
-  }
-
-  .about-pro .about-hero .post-description {
-    max-width: none !important;
-    font-size: clamp(0.98rem, 0.94rem + 0.2vw, 1.04rem) !important;
-    line-height: 1.32 !important;
-    white-space: normal !important;
-    text-wrap: balance !important;
-  }
-
   .about-pro .about-social {
     justify-content: flex-start !important;
   }
@@ -4933,15 +4751,6 @@ html.bd-ready .home-search-wrap {
   bottom: -0.04em !important;
   height: 4px !important;
 }
-
-.about-pro .post-header {
-  width: min(1180px, 100%) !important;
-  max-width: min(1180px, 100%) !important;
-  margin: 0 auto 36px !important;
-  padding: 34px 0 24px !important;
-  text-align: center !important;
-}
-
 .about-pro .about-hero {
   width: min(1080px, 100%) !important;
   max-width: min(1080px, 100%) !important;
@@ -4950,25 +4759,6 @@ html.bd-ready .home-search-wrap {
   gap: 18px !important;
   text-align: center !important;
 }
-
-.about-pro .about-hero .post-title {
-  width: auto !important;
-  margin: 0 !important;
-  text-align: center !important;
-}
-
-.about-pro .about-hero .post-description {
-  width: auto !important;
-  max-width: none !important;
-  margin: 0 !important;
-  font-size: clamp(1.04rem, 0.98rem + 0.28vw, 1.16rem) !important;
-  line-height: 1.16 !important;
-  letter-spacing: 0.002em !important;
-  white-space: nowrap !important;
-  text-wrap: nowrap !important;
-  text-align: center !important;
-}
-
 .about-pro .about-social,
 .about-pro .about-social .social-icons {
   justify-content: center !important;
@@ -5021,13 +4811,6 @@ html.bd-ready .home-search-wrap {
   width: min(40ch, 100%) !important;
   margin: 18px auto 0 !important;
   text-align: center !important;
-}
-
-@media (max-width: 1179px) {
-  .about-pro .about-hero .post-description {
-    white-space: normal !important;
-    text-wrap: balance !important;
-  }
 }
 
 @media (max-width: 900px) {
@@ -5106,40 +4889,17 @@ html.bd-ready .home-search-wrap {
     right: 8px !important;
     bottom: 0 !important;
   }
-
-  .about-pro .post-header,
   .about-pro .about-profile {
     width: auto !important;
     max-width: 100% !important;
     margin-inline: 0 !important;
   }
-
-  .about-pro .post-header {
-    padding: 18px 0 18px !important;
-    margin-bottom: 24px !important;
-    text-align: left !important;
-  }
-
   .about-pro .about-hero {
     width: 100% !important;
     justify-items: start !important;
     gap: 14px !important;
     text-align: left !important;
   }
-
-  .about-pro .about-hero .post-title,
-  .about-pro .about-hero .post-description {
-    text-align: left !important;
-  }
-
-  .about-pro .about-hero .post-description {
-    max-width: 100% !important;
-    font-size: clamp(0.98rem, 0.94rem + 0.24vw, 1.06rem) !important;
-    line-height: 1.32 !important;
-    white-space: normal !important;
-    text-wrap: balance !important;
-  }
-
   .about-pro .about-social,
   .about-pro .about-social .social-icons {
     justify-content: flex-start !important;
@@ -5273,26 +5033,11 @@ body.home-page .home-search-tags {
 .header .logo .logo-text-full {
   font-size: clamp(2.82rem, 2.52rem + 1.34vw, 4.48rem) !important;
 }
-
-.about-pro .post-header {
-  width: min(1120px, 100%) !important;
-  max-width: min(1120px, 100%) !important;
-  padding: 44px 0 24px !important;
-  margin: 0 auto 34px !important;
-}
-
 .about-pro .about-hero {
   width: min(980px, 100%) !important;
   max-width: min(980px, 100%) !important;
   gap: 20px !important;
 }
-
-.about-pro .about-hero .post-description {
-  font-size: clamp(1.12rem, 1.04rem + 0.32vw, 1.28rem) !important;
-  line-height: 1.12 !important;
-  white-space: nowrap !important;
-}
-
 .about-pro .about-social .social-icons a {
   display: inline-grid !important;
   place-items: center !important;
@@ -5310,12 +5055,6 @@ body.home-page .home-search-tags {
   .about-pro .about-hero {
     width: min(860px, 100%) !important;
   }
-
-  .about-pro .about-hero .post-description {
-    white-space: normal !important;
-    text-wrap: balance !important;
-  }
-}
 
 @media (max-width: 900px) {
   .header .nav {
@@ -5386,12 +5125,6 @@ body.home-page .home-search-tags {
     right: 10px !important;
     bottom: 0 !important;
   }
-
-  .about-pro .post-header {
-    padding: 20px 0 18px !important;
-    margin-bottom: 24px !important;
-  }
-
   .about-pro .about-hero {
     width: 100% !important;
     max-width: 100% !important;
@@ -5399,17 +5132,6 @@ body.home-page .home-search-tags {
     text-align: left !important;
     gap: 14px !important;
   }
-
-  .about-pro .about-hero .post-title,
-  .about-pro .about-hero .post-description {
-    text-align: left !important;
-  }
-
-  .about-pro .about-hero .post-description {
-    font-size: clamp(1rem, 0.96rem + 0.32vw, 1.08rem) !important;
-    line-height: 1.3 !important;
-  }
-
   .about-pro .about-social .social-icons a {
     width: 56px !important;
     height: 56px !important;
@@ -5430,14 +5152,6 @@ body.home-page .home-search-tags {
   .about-pro .about-translation-note {
     white-space: nowrap !important;
   }
-
-  .about-pro .about-hero .post-description {
-    width: auto !important;
-    max-width: none !important;
-    white-space: nowrap !important;
-    font-size: clamp(1.22rem, 1.12rem + 0.2vw, 1.36rem) !important;
-  }
-
   .about-pro .about-social .social-icons {
     gap: 16px !important;
   }
@@ -5518,40 +5232,17 @@ body.home-page .home-search-tags {
 /* 2026-03-03 final stabilization layer v4
    Reconcile about hero, social icon bounds, nav clipping, and mobile overflow. */
 @media (min-width: 901px) {
-  .about-pro .post-header,
   .about-pro .about-profile {
     width: min(1220px, calc(100% - 56px)) !important;
     max-width: min(1220px, calc(100% - 56px)) !important;
     margin-left: auto !important;
     margin-right: auto !important;
   }
-
-  .about-pro .post-header {
-    padding: 28px 0 18px !important;
-    margin-bottom: 28px !important;
-  }
-
   .about-pro .about-hero {
     width: min(1120px, 100%) !important;
     max-width: min(1120px, 100%) !important;
     gap: 18px !important;
   }
-
-  .about-pro .about-hero .post-title {
-    max-width: none !important;
-  }
-
-  .about-pro .about-hero .post-description {
-    width: max-content !important;
-    max-width: 100% !important;
-    margin: 0 auto !important;
-    white-space: nowrap !important;
-    text-wrap: nowrap !important;
-    font-size: clamp(1rem, 0.96rem + 0.14vw, 1.12rem) !important;
-    line-height: 1.1 !important;
-    letter-spacing: 0 !important;
-  }
-
   .about-pro .about-social,
   .about-pro .about-social .social-icons {
     display: flex !important;
@@ -5761,20 +5452,12 @@ body.home-page .home-search-tags {
     bottom: -0.02em !important;
     height: 3px !important;
   }
-
-  .about-pro .post-header,
   .about-pro .about-profile {
     width: calc(100vw - 32px) !important;
     max-width: calc(100vw - 32px) !important;
     margin-left: auto !important;
     margin-right: auto !important;
   }
-
-  .about-pro .post-header {
-    padding: 18px 0 16px !important;
-    margin-bottom: 22px !important;
-  }
-
   .about-pro .about-hero {
     width: 100% !important;
     max-width: 100% !important;
@@ -5782,21 +5465,6 @@ body.home-page .home-search-tags {
     text-align: left !important;
     gap: 14px !important;
   }
-
-  .about-pro .about-hero .post-title,
-  .about-pro .about-hero .post-description {
-    text-align: left !important;
-  }
-
-  .about-pro .about-hero .post-description {
-    width: 100% !important;
-    max-width: 100% !important;
-    font-size: clamp(0.96rem, 0.93rem + 0.22vw, 1.02rem) !important;
-    line-height: 1.28 !important;
-    white-space: normal !important;
-    text-wrap: pretty !important;
-  }
-
   .about-pro .about-social,
   .about-pro .about-social .social-icons {
     justify-content: flex-start !important;
@@ -5956,8 +5624,6 @@ body.home-page .home-search-tags {
   .home-search-tag-list a {
     max-width: 100% !important;
   }
-
-  .about-pro .post-header,
   .about-pro .about-profile,
   .post-single .post-header,
   .post-single .post-content,
@@ -5967,21 +5633,9 @@ body.home-page .home-search-tags {
     width: calc(100% - 26px) !important;
     max-width: calc(100% - 26px) !important;
   }
-
-  .about-pro .post-header {
-    padding: 18px 0 18px !important;
-    margin-bottom: 22px !important;
-  }
-
   .about-pro .about-hero {
     gap: 12px !important;
   }
-
-  .about-pro .about-hero .post-description {
-    font-size: 0.98rem !important;
-    line-height: 1.22 !important;
-  }
-
   .about-pro .about-social .social-icons a {
     width: 52px !important;
     height: 52px !important;
@@ -6021,18 +5675,10 @@ body.home-page .home-search-tags {
   display: inline-block !important;
   line-height: 1.02 !important;
 }
-
-.about-pro .post-header,
 .about-pro .about-profile {
   width: min(1240px, calc(100% - 64px)) !important;
   max-width: min(1240px, calc(100% - 64px)) !important;
 }
-
-.about-pro .post-header {
-  padding: 32px 0 26px !important;
-  margin-bottom: 38px !important;
-}
-
 .about-pro .about-hero {
   width: 100% !important;
   max-width: 1080px !important;
@@ -6041,25 +5687,6 @@ body.home-page .home-search-tags {
   justify-items: center !important;
   text-align: center !important;
 }
-
-.about-pro .about-hero .post-title {
-  width: auto !important;
-  max-width: 100% !important;
-  margin: 0 auto !important;
-  text-align: center !important;
-}
-
-.about-pro .about-hero .post-description {
-  width: auto !important;
-  max-width: none !important;
-  margin: 0 auto !important;
-  white-space: nowrap !important;
-  text-wrap: nowrap !important;
-  line-height: 1.08 !important;
-  letter-spacing: 0.002em !important;
-  font-size: clamp(0.98rem, 0.95rem + 0.14vw, 1.08rem) !important;
-}
-
 .about-pro .about-social {
   width: 100% !important;
   justify-content: center !important;
@@ -6213,8 +5840,6 @@ body.home-page .home-search-tags {
     right: 18% !important;
     bottom: 7px !important;
   }
-
-  .about-pro .post-header,
   .about-pro .about-profile,
   .post-single .post-header,
   .post-single .post-content,
@@ -6226,34 +5851,12 @@ body.home-page .home-search-tags {
     margin-left: auto !important;
     margin-right: auto !important;
   }
-
-  .about-pro .post-header {
-    padding: 18px 0 18px !important;
-    margin-bottom: 24px !important;
-  }
-
   .about-pro .about-hero {
     max-width: 100% !important;
     justify-items: start !important;
     text-align: left !important;
     gap: 14px !important;
   }
-
-  .about-pro .about-hero .post-title,
-  .about-pro .about-hero .post-description {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 !important;
-    text-align: left !important;
-  }
-
-  .about-pro .about-hero .post-description {
-    white-space: normal !important;
-    text-wrap: pretty !important;
-    font-size: clamp(0.94rem, 0.9rem + 0.26vw, 1.01rem) !important;
-    line-height: 1.24 !important;
-  }
-
   .about-pro .about-social,
   .about-pro .about-social .social-icons {
     justify-content: flex-start !important;

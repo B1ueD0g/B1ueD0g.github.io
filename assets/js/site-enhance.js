@@ -98,8 +98,8 @@
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
       if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
 
-      var logo = document.querySelector(".header .logo");
-      var anchor = logo ? logo.querySelector("a") : null;
+      var logo = document.querySelector(".header .site-brand");
+      var anchor = logo ? logo.querySelector(".site-brand-link") : null;
       if (!logo || !anchor) return;
 
       var frame = 0;
@@ -352,29 +352,40 @@
     }
 
     function setupSearchShortcut() {
+      var homePath = (document.body && document.body.dataset.homePath) || "/";
+      var searchPath = (document.body && document.body.dataset.searchPath) || "/search/";
+
+      function normalizePath(value) {
+        if (!value) return "/";
+        if (value.length > 1 && value.charAt(value.length - 1) === "/") {
+          return value.slice(0, -1);
+        }
+        return value;
+      }
+
       document.addEventListener("keydown", function (event) {
         if (event.key !== "/") return;
         if (event.metaKey || event.ctrlKey || event.altKey) return;
         if (isEditableTarget(event.target)) return;
         event.preventDefault();
 
-        var path = window.location.pathname || "/";
+        var path = normalizePath(window.location.pathname || "/");
         var searchInput = document.querySelector("#search-query-input, #search input");
         var homeInput = document.getElementById("home-search-input");
 
-        if (path.indexOf("/search/") === 0 && searchInput) {
+        if (searchPath && path === normalizePath(searchPath) && searchInput) {
           searchInput.focus();
           searchInput.select();
           return;
         }
-        if (path === "/" && homeInput) {
+        if (path === normalizePath(homePath) && homeInput) {
           homeInput.focus();
           homeInput.select();
           trackEvent("search_shortcut_focus_home", { page: path });
           return;
         }
         trackEvent("search_shortcut_jump", { page: path });
-        window.location.href = "/search/";
+        window.location.href = searchPath;
       });
     }
 
@@ -421,7 +432,7 @@
     }
 
     function setupReadingProgress() {
-      var articleContent = document.querySelector(".post-single .editorial-content, .post-single .post-content");
+      var articleContent = document.querySelector(".post-single-editorial .editorial-content, .post-single .post-content");
       if (!articleContent) return;
 
       var bar = document.createElement("div");
@@ -526,8 +537,9 @@
     }
 
     function setupEditorialTocRail() {
+      var rail = document.querySelector(".editorial-toc-rail");
       var detailsList = Array.prototype.slice.call(document.querySelectorAll(".editorial-toc-rail .toc details"));
-      if (detailsList.length === 0) return;
+      if (!rail || detailsList.length === 0) return;
 
       var desktop = window.matchMedia("(min-width: 1121px)");
 
@@ -537,23 +549,50 @@
         });
       }
 
+      function setExpanded(expanded) {
+        rail.classList.toggle("is-expanded", !!expanded && desktop.matches);
+        rail.setAttribute("aria-expanded", !!expanded && desktop.matches ? "true" : "false");
+      }
+
       syncState();
+      setExpanded(false);
 
       if (typeof desktop.addEventListener === "function") {
-        desktop.addEventListener("change", syncState);
+        desktop.addEventListener("change", function () {
+          syncState();
+          setExpanded(false);
+        });
       } else if (typeof desktop.addListener === "function") {
-        desktop.addListener(syncState);
+        desktop.addListener(function () {
+          syncState();
+          setExpanded(false);
+        });
       }
 
       window.addEventListener("resize", syncState);
       window.addEventListener("load", syncState);
+
+      rail.addEventListener("mouseenter", function () {
+        setExpanded(true);
+      });
+      rail.addEventListener("mouseleave", function () {
+        setExpanded(false);
+      });
+      rail.addEventListener("focusin", function () {
+        setExpanded(true);
+      });
+      rail.addEventListener("focusout", function () {
+        window.setTimeout(function () {
+          setExpanded(rail.contains(document.activeElement));
+        }, 0);
+      });
     }
 
     function setupFootnotePreview() {
       if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
 
       var refs = Array.prototype.slice.call(
-        document.querySelectorAll(".editorial-content sup a[href^='#fn'], .editorial-content .footnote-ref a[href^='#fn'], .post-content sup a[href^='#fn'], .post-content .footnote-ref a[href^='#fn']")
+        document.querySelectorAll(".editorial-content sup a[href^='#fn'], .editorial-content .footnote-ref a[href^='#fn'], .about-content sup a[href^='#fn'], .about-content .footnote-ref a[href^='#fn'], .post-content sup a[href^='#fn'], .post-content .footnote-ref a[href^='#fn']")
       );
       if (refs.length === 0) return;
 
@@ -617,7 +656,7 @@
     }
 
     function setupLightbox() {
-      var images = Array.prototype.slice.call(document.querySelectorAll(".editorial-content img, .post-content img"));
+      var images = Array.prototype.slice.call(document.querySelectorAll(".editorial-content img, .about-content img, .post-content img"));
       if (images.length === 0) return;
 
       var items = [];
@@ -699,7 +738,7 @@
       }
 
       document.addEventListener("click", function (event) {
-        var img = event.target.closest(".editorial-content img.is-lightbox-ready, .post-content img.is-lightbox-ready");
+        var img = event.target.closest(".editorial-content img.is-lightbox-ready, .about-content img.is-lightbox-ready, .post-content img.is-lightbox-ready");
         if (!img) return;
         var anchor = img.closest("a[data-lightbox-anchor='1']");
         if (anchor) event.preventDefault();
@@ -724,7 +763,7 @@
     }
 
     function setupEditorialTables() {
-      var tables = Array.prototype.slice.call(document.querySelectorAll(".editorial-content table, .post-content table"));
+      var tables = Array.prototype.slice.call(document.querySelectorAll(".editorial-content table, .about-content table, .post-content table"));
       if (tables.length === 0) return;
 
       tables.forEach(function (table) {

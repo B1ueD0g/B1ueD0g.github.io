@@ -15,9 +15,9 @@
     {{- end -}}
     {{- if gt (len $scored) 0 -}}
       {{- $related := first 4 (sort $scored "score" "desc") -}}
-      <section class="post-related" aria-label="related-posts">
+      <section class="editorial-related" aria-label="related-posts">
         <h2>Related</h2>
-        <ul class="post-related-list">
+        <ul class="editorial-related-list">
           {{- range $related -}}
             {{- $item := .page -}}
             <li>

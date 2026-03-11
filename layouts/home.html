@@ -4,6 +4,11 @@
 {{- $posts = where $posts "Params.hiddenInHomeList" "!=" "true" -}}
 {{- $posts = $posts.ByDate.Reverse -}}
 {{- $latestPosts := first 4 $posts -}}
+{{- $searchPath := "search/" | relLangURL -}}
+{{- $postsPath := "posts/" | relLangURL -}}
+{{- with site.GetPage "section" "posts" -}}
+  {{- $postsPath = .RelPermalink -}}
+{{- end -}}
 {{- $latestStamp := "" -}}
 {{- if gt (len $latestPosts) 0 -}}
   {{- $latestStamp = (index $latestPosts 0).Date.Format "2006.01.02" -}}
@@ -47,7 +52,7 @@
           <span>Try Tags:</span>
           <div class="home-search-tag-list">
           {{- range $quickTags }}
-          <a href="/search/?q={{ . | urlquery }}" data-home-search-tag="{{ . }}">#{{ . }}</a>
+          <a href="{{ printf "%s?q=%s" $searchPath (. | urlquery) }}" data-home-search-tag="{{ . }}">#{{ . }}</a>
           {{- end }}
           </div>
         </div>
@@ -62,7 +67,7 @@
               <p class="home-surface-kicker">Fresh Dispatches</p>
               <p class="home-surface-caption">{{ $latestStamp }} · {{ printf "%02d" (len $posts) }} archive entries</p>
             </div>
-            <a class="home-surface-link" href="/posts/">Archive</a>
+            <a class="home-surface-link" href="{{ $postsPath }}">Archive</a>
           </div>
           <ol class="home-stream-list">
             {{- range $index, $post := $latestPosts }}
@@ -93,7 +98,7 @@
           </div>
           <div class="home-atlas-list">
             {{- range first 6 $quickTags }}
-            <a href="/search/?q={{ . | urlquery }}" data-home-search-tag="{{ . }}">
+            <a href="{{ printf "%s?q=%s" $searchPath (. | urlquery) }}" data-home-search-tag="{{ . }}">
               <span class="home-atlas-name">#{{ . }}</span>
               <span class="home-atlas-action">Search</span>
             </a>
@@ -113,6 +118,7 @@
     var button = document.getElementById("home-search-btn");
     var searchBox = document.querySelector(".home-search-box");
     var searchGlyph = document.querySelector(".home-search-glyph");
+    var searchPath = {{ $searchPath | jsonify }};
     var prompts = [
       "搜索标题、标签、书籍、标准、研究记录",
       "Try 零信任 / AI安全 / 数据安全 / 漏洞研究",
@@ -138,13 +144,13 @@
         searchBox.classList.add("is-submitting");
       }
       if (!keyword) {
-        window.location.href = "/search/";
+        window.location.href = searchPath;
         return;
       }
       params.set("q", keyword);
       if (autoJump) params.set("autojump", "1");
       track("search_submit_home", { query: keyword, autoJump: autoJump ? "1" : "0" });
-      window.location.href = "/search/?" + params.toString();
+      window.location.href = searchPath + "?" + params.toString();
     }
 
     function startPromptCycle() {

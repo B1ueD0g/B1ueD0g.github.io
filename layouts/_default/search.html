@@ -30,9 +30,6 @@
   ) -}}
 {{- end -}}
 {{- $years = uniq $years -}}
-{{- if gt (len $filterTags) 16 -}}
-  {{- $filterTags = first 16 $filterTags -}}
-{{- end -}}
 <header class="page-header search-page-header">
   <p class="search-page-kicker">Archive Search</p>
   <h1>{{ .Title }}</h1>
