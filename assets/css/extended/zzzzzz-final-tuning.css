@@ -2053,6 +2053,11 @@ body.home-page .home-search-wrap {
 /* 2026-03-24 mobile about/header lock */
 
 @media (max-width: 820px) {
+  .about-single.about-pro {
+    width: calc(100vw - 16px) !important;
+    max-width: calc(100vw - 16px) !important;
+  }
+
   .header .nav {
     width: calc(100% - 20px) !important;
     max-width: calc(100% - 20px) !important;
@@ -2118,25 +2123,33 @@ body.home-page .home-search-wrap {
     box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05) !important;
   }
 
-  .about-pro .about-hero-copy {
+  .about-pro .about-hero-copy,
+  .about-single.about-pro .about-hero-copy {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
     max-width: 100% !important;
-    gap: 12px !important;
+    gap: 10px !important;
   }
 
-  .about-pro .about-hero .post-title {
+  .about-pro .about-hero .post-title,
+  .about-single.about-pro .about-hero .post-title {
     width: auto !important;
-    max-width: 100% !important;
+    max-width: 8.5ch !important;
     margin: 0 !important;
-    font-size: clamp(2.16rem, 9.8vw, 2.8rem) !important;
-    line-height: 1.02 !important;
+    font-size: clamp(2rem, 10.2vw, 2.52rem) !important;
+    line-height: 0.98 !important;
     letter-spacing: -0.04em !important;
+    text-wrap: balance !important;
   }
 
-  .about-pro .about-hero .post-description {
-    max-width: 19ch !important;
+  .about-pro .about-hero .post-description,
+  .about-single.about-pro .about-hero .post-description {
+    max-width: 17ch !important;
     margin: 0 auto !important;
-    font-size: clamp(0.96rem, 4vw, 1.02rem) !important;
-    line-height: 1.38 !important;
+    font-size: clamp(0.92rem, 3.9vw, 0.98rem) !important;
+    line-height: 1.28 !important;
     white-space: normal !important;
     text-wrap: balance !important;
   }
@@ -2165,6 +2178,11 @@ body.home-page .home-search-wrap {
     grid-template-columns: 1fr !important;
     gap: 18px !important;
     padding-top: 10px !important;
+  }
+
+  .about-single.about-pro .about-profile {
+    grid-template-columns: 1fr !important;
+    gap: 18px !important;
   }
 
   .about-pro .about-block,
@@ -2228,12 +2246,26 @@ body.home-page .home-search-wrap {
     padding: 18px 12px 16px !important;
   }
 
-  .about-pro .about-hero .post-title {
-    font-size: clamp(2rem, 10.2vw, 2.48rem) !important;
+  .about-pro .about-hero .post-title,
+  .about-single.about-pro .about-hero .post-title {
+    max-width: 7.8ch !important;
+    font-size: clamp(1.9rem, 10vw, 2.28rem) !important;
   }
 
-  .about-pro .about-hero .post-description {
-    max-width: 17ch !important;
-    font-size: 0.94rem !important;
+  .about-pro .about-hero .post-description,
+  .about-single.about-pro .about-hero .post-description {
+    max-width: 15ch !important;
+    font-size: 0.9rem !important;
+  }
+
+  .about-pro .about-social .social-icons {
+    gap: 8px !important;
+  }
+
+  .about-pro .about-social .social-icons a {
+    width: 50px !important;
+    height: 50px !important;
+    min-width: 50px !important;
+    min-height: 50px !important;
   }
 }
