@@ -5,6 +5,7 @@
 {{- $posts = $posts.ByDate.Reverse -}}
 {{- $latestPosts := first 4 $posts -}}
 {{- $latestStamp := "" -}}
+{{- $searchPath := "search/" | absLangURL -}}
 {{- if gt (len $latestPosts) 0 -}}
   {{- $latestStamp = (index $latestPosts 0).Date.Format "2006.01.02" -}}
 {{- end -}}
@@ -47,7 +48,7 @@
           <span>Try Tags:</span>
           <div class="home-search-tag-list">
           {{- range $quickTags }}
-          <a href="/search/?q={{ . | urlquery }}" data-home-search-tag="{{ . }}">#{{ . }}</a>
+          <a href="{{ $searchPath }}?q={{ . | urlquery }}" data-home-search-tag="{{ . }}">#{{ . }}</a>
           {{- end }}
           </div>
         </div>
@@ -93,7 +94,7 @@
           </div>
           <div class="home-atlas-list">
             {{- range first 6 $quickTags }}
-            <a href="/search/?q={{ . | urlquery }}" data-home-search-tag="{{ . }}">
+            <a href="{{ $searchPath }}?q={{ . | urlquery }}" data-home-search-tag="{{ . }}">
               <span class="home-atlas-name">#{{ . }}</span>
               <span class="home-atlas-action">Search</span>
             </a>
@@ -109,6 +110,7 @@
   window.addEventListener("DOMContentLoaded", function () {
     document.body.classList.add("home-page");
 
+    var searchPath = {{ $searchPath | jsonify | safeJS }};
     var input = document.getElementById("home-search-input");
     var button = document.getElementById("home-search-btn");
     var searchBox = document.querySelector(".home-search-box");
@@ -138,13 +140,13 @@
         searchBox.classList.add("is-submitting");
       }
       if (!keyword) {
-        window.location.href = "/search/";
+        window.location.href = searchPath;
         return;
       }
       params.set("q", keyword);
       if (autoJump) params.set("autojump", "1");
       track("search_submit_home", { query: keyword, autoJump: autoJump ? "1" : "0" });
-      window.location.href = "/search/?" + params.toString();
+      window.location.href = searchPath + "?" + params.toString();
     }
 
     function startPromptCycle() {

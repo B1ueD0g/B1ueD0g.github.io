@@ -358,23 +358,27 @@
         if (isEditableTarget(event.target)) return;
         event.preventDefault();
 
-        var path = window.location.pathname || "/";
+        var searchPath = (window.BlueDogEnv && window.BlueDogEnv.searchPath) || "/search/";
+        var homePath = (window.BlueDogEnv && window.BlueDogEnv.homePath) || "/";
+        var resolvedSearchPath = new URL(searchPath, window.location.origin).pathname.replace(/\/?$/, "/");
+        var resolvedHomePath = new URL(homePath, window.location.origin).pathname.replace(/\/?$/, "/");
+        var path = (window.location.pathname || "/").replace(/\/?$/, "/");
         var searchInput = document.querySelector("#search-query-input, #search input");
         var homeInput = document.getElementById("home-search-input");
 
-        if (path.indexOf("/search/") === 0 && searchInput) {
+        if (path.indexOf(resolvedSearchPath) === 0 && searchInput) {
           searchInput.focus();
           searchInput.select();
           return;
         }
-        if (path === "/" && homeInput) {
+        if (path === resolvedHomePath && homeInput) {
           homeInput.focus();
           homeInput.select();
           trackEvent("search_shortcut_focus_home", { page: path });
           return;
         }
         trackEvent("search_shortcut_jump", { page: path });
-        window.location.href = "/search/";
+        window.location.href = searchPath;
       });
     }
 

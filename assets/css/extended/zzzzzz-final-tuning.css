@@ -1779,15 +1779,43 @@ body.home-page .home-search-wrap {
 }
 
 .post-single.post-single-editorial .editorial-content :is(pre, .highlight:not(table), .highlighttable) {
-  overflow: hidden !important;
+  overflow: clip !important;
   border: 0 !important;
   border-radius: 18px !important;
   background: #121925 !important;
   box-shadow: 0 18px 48px rgba(15, 23, 42, 0.14) !important;
 }
 
+@supports not (overflow: clip) {
+  .post-single.post-single-editorial .editorial-content :is(pre, .highlight:not(table), .highlighttable) {
+    overflow: visible !important;
+  }
+}
+
+.post-single.post-single-editorial .editorial-content pre,
+.post-single.post-single-editorial .editorial-content .highlight pre,
+.post-single.post-single-editorial .editorial-content .highlighttable td .highlight,
+.post-single.post-single-editorial .editorial-content .highlighttable td .linenodiv pre,
+.post-single.post-single-editorial .editorial-table-wrap,
+.post-single.post-single-editorial .editorial-content > table {
+  -webkit-overflow-scrolling: touch !important;
+  overscroll-behavior-x: contain !important;
+  overscroll-behavior-y: auto !important;
+  touch-action: pan-x pan-y !important;
+}
+
+.post-single.post-single-editorial .editorial-content pre,
+.post-single.post-single-editorial .editorial-content .highlight pre,
+.post-single.post-single-editorial .editorial-content .highlighttable td .highlight,
+.post-single.post-single-editorial .editorial-content .highlighttable td .linenodiv pre {
+  overflow-x: auto !important;
+  overflow-y: visible !important;
+}
+
 .post-single.post-single-editorial .editorial-content pre code,
 .post-single.post-single-editorial .editorial-content .highlight pre code {
+  display: block !important;
+  min-width: max-content !important;
   padding: 20px 22px !important;
   color: #eff4fb !important;
   font-size: 0.93rem !important;
@@ -1800,8 +1828,7 @@ body.home-page .home-search-wrap {
   margin: 2rem 0 !important;
   padding: 0 0 6px !important;
   overflow-x: auto !important;
-  overflow-y: hidden !important;
-  -webkit-overflow-scrolling: touch !important;
+  overflow-y: visible !important;
   scrollbar-width: thin !important;
   scrollbar-color: color-mix(in srgb, var(--secondary) 34%, transparent) transparent !important;
 }
@@ -1851,7 +1878,7 @@ body.home-page .home-search-wrap {
   max-width: 100% !important;
   display: block !important;
   overflow-x: auto !important;
-  overflow-y: hidden !important;
+  overflow-y: visible !important;
 }
 
 .post-single.post-single-editorial .editorial-content figure {
@@ -2021,4 +2048,192 @@ body.home-page .home-search-wrap {
 .about-single.about-pro .about-hero .post-description {
   margin-top: 16px !important;
   line-height: 1.38 !important;
+}
+
+/* 2026-03-24 mobile about/header lock */
+
+@media (max-width: 820px) {
+  .header .nav {
+    width: calc(100% - 20px) !important;
+    max-width: calc(100% - 20px) !important;
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+    padding: 10px 0 12px !important;
+  }
+
+  .header .logo {
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    align-items: center !important;
+    gap: 10px !important;
+  }
+
+  .header .logo a {
+    max-width: calc(100% - 68px) !important;
+  }
+
+  .header .logo .logo-text-mobile {
+    font-size: clamp(1.52rem, 8.2vw, 1.92rem) !important;
+    line-height: 0.92 !important;
+    padding-block: 4px 6px !important;
+  }
+
+  .header #theme-toggle {
+    width: 50px !important;
+    height: 50px !important;
+    border-radius: 18px !important;
+  }
+
+  .header #theme-toggle svg {
+    width: 22px !important;
+    height: 22px !important;
+  }
+
+  .header #menu {
+    gap: 6px !important;
+  }
+
+  .header #menu a {
+    min-height: 44px !important;
+    padding: 8px 4px 10px !important;
+    border-radius: 16px !important;
+  }
+
+  .header #menu a span {
+    padding: 0 !important;
+    font-size: clamp(0.94rem, 4vw, 1rem) !important;
+    line-height: 1.02 !important;
+  }
+
+  .about-pro > .post-header {
+    width: calc(100% - 20px) !important;
+    max-width: calc(100% - 20px) !important;
+    padding-top: 18px !important;
+    padding-bottom: 12px !important;
+  }
+
+  .about-pro .about-hero {
+    gap: 14px !important;
+    padding: 20px 14px 18px !important;
+    border-radius: 24px !important;
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05) !important;
+  }
+
+  .about-pro .about-hero-copy {
+    max-width: 100% !important;
+    gap: 12px !important;
+  }
+
+  .about-pro .about-hero .post-title {
+    width: auto !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    font-size: clamp(2.16rem, 9.8vw, 2.8rem) !important;
+    line-height: 1.02 !important;
+    letter-spacing: -0.04em !important;
+  }
+
+  .about-pro .about-hero .post-description {
+    max-width: 19ch !important;
+    margin: 0 auto !important;
+    font-size: clamp(0.96rem, 4vw, 1.02rem) !important;
+    line-height: 1.38 !important;
+    white-space: normal !important;
+    text-wrap: balance !important;
+  }
+
+  .about-pro .about-social .social-icons {
+    gap: 10px !important;
+  }
+
+  .about-pro .about-social .social-icons a {
+    width: 54px !important;
+    height: 54px !important;
+    min-width: 54px !important;
+    min-height: 54px !important;
+    border-radius: 18px !important;
+  }
+
+  .about-pro .about-social .social-icons a svg,
+  .about-pro .about-social .social-icons a img {
+    width: 22px !important;
+    height: 22px !important;
+  }
+
+  .about-pro .about-profile {
+    width: 100% !important;
+    max-width: 100% !important;
+    grid-template-columns: 1fr !important;
+    gap: 18px !important;
+    padding-top: 10px !important;
+  }
+
+  .about-pro .about-block,
+  .about-pro .about-block-highlights,
+  .about-pro .about-block-certifications,
+  .about-pro .about-block-honors,
+  .about-pro .about-block-roadmap,
+  .about-pro .about-block-works {
+    grid-column: 1 / -1 !important;
+    padding: 18px 14px 16px !important;
+    border-radius: 22px !important;
+  }
+
+  .about-pro .about-block::before {
+    top: 16px !important;
+    right: 14px !important;
+    font-size: 0.64rem !important;
+  }
+
+  .about-pro .about-cert-list li,
+  .about-pro .about-honor-list li,
+  .about-pro .about-record-list li,
+  .about-pro .about-list li {
+    grid-template-columns: 34px minmax(0, 1fr) !important;
+    gap: 8px !important;
+    padding: 14px 0 !important;
+  }
+
+  .about-pro .about-record-copy,
+  .about-pro .about-highlight-copy {
+    word-break: break-word !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  .about-pro .about-record-copy {
+    font-size: 0.94rem !important;
+    line-height: 1.56 !important;
+  }
+
+  .about-pro .about-highlight-lead {
+    padding: 16px 16px 16px 18px !important;
+    font-size: 0.98rem !important;
+    line-height: 1.64 !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .header .logo .logo-text-mobile {
+    font-size: clamp(1.4rem, 8.6vw, 1.72rem) !important;
+  }
+
+  .header #menu a {
+    min-height: 42px !important;
+  }
+
+  .header #menu a span {
+    font-size: 0.92rem !important;
+  }
+
+  .about-pro .about-hero {
+    padding: 18px 12px 16px !important;
+  }
+
+  .about-pro .about-hero .post-title {
+    font-size: clamp(2rem, 10.2vw, 2.48rem) !important;
+  }
+
+  .about-pro .about-hero .post-description {
+    max-width: 17ch !important;
+    font-size: 0.94rem !important;
+  }
 }

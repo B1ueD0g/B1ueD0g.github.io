@@ -12,6 +12,9 @@
 
     window.BlueDogEnv = window.BlueDogEnv || {};
     window.BlueDogEnv.isWeChatWebView = isWeChatWebView;
+    window.BlueDogEnv.homePath = {{ "" | absLangURL | jsonify | safeJS }};
+    window.BlueDogEnv.searchPath = {{ "search/" | absLangURL | jsonify | safeJS }};
+    window.BlueDogEnv.postsPath = {{ "posts/" | absLangURL | jsonify | safeJS }};
 
     if (isWeChatWebView) {
       document.documentElement.classList.add("wechat-safe");
