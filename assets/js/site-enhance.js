@@ -144,13 +144,13 @@
         var offsetY = ratioY - 0.5;
 
         schedule({
-          tiltX: offsetX * 8,
-          tiltY: offsetY * -8,
-          shiftX: offsetX * 6,
-          shiftY: offsetY * 4,
+          tiltX: offsetX * 11,
+          tiltY: offsetY * -10,
+          shiftX: offsetX * 10,
+          shiftY: offsetY * 6,
           focusX: Math.max(0, Math.min(100, ratioX * 100)),
           focusY: Math.max(0, Math.min(100, ratioY * 100)),
-          glow: 0.9,
+          glow: 1,
         });
       });
 
@@ -162,7 +162,7 @@
           shiftY: 0,
           focusX: 50,
           focusY: 50,
-          glow: 0.45,
+          glow: 0.58,
         });
       });
 
@@ -475,11 +475,11 @@
         var offsetY = ratioY - 0.5;
 
         schedule({
-          tiltX: offsetX * 4.4,
-          tiltY: offsetY * -3.4,
-          shiftX: offsetX * 12,
-          shiftY: offsetY * 7,
-          glow: 0.9,
+          tiltX: offsetX * 6.4,
+          tiltY: offsetY * -4.8,
+          shiftX: offsetX * 18,
+          shiftY: offsetY * 10,
+          glow: 1,
         });
       });
 
@@ -489,7 +489,7 @@
           tiltY: 0,
           shiftX: 0,
           shiftY: 0,
-          glow: 0.28,
+          glow: 0.44,
         });
       });
 
@@ -541,10 +541,10 @@
         var offsetY = ratioY - 0.5;
 
         schedule({
-          tiltX: offsetX * 10,
-          tiltY: offsetY * -9,
-          shiftX: offsetX * 4,
-          shiftY: offsetY * 3,
+          tiltX: offsetX * 14,
+          tiltY: offsetY * -12,
+          shiftX: offsetX * 6,
+          shiftY: offsetY * 5,
         });
       });
 
