@@ -351,6 +351,208 @@
       });
     }
 
+    function setupHeroTilt() {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+
+      var heroes = Array.prototype.slice.call(document.querySelectorAll(".about-pro .about-hero"));
+      if (heroes.length === 0) return;
+
+      heroes.forEach(function (hero) {
+        var frame = 0;
+        var nextState = null;
+
+        function commit() {
+          frame = 0;
+          if (!nextState) return;
+          hero.style.setProperty("--bd-hero-tilt-x", nextState.tiltX + "deg");
+          hero.style.setProperty("--bd-hero-tilt-y", nextState.tiltY + "deg");
+          hero.style.setProperty("--bd-hero-shift-x", nextState.shiftX + "px");
+          hero.style.setProperty("--bd-hero-shift-y", nextState.shiftY + "px");
+          hero.style.setProperty("--bd-focus-x", nextState.focusX + "%");
+          hero.style.setProperty("--bd-focus-y", nextState.focusY + "%");
+          hero.style.setProperty("--bd-hero-glow", String(nextState.glow));
+        }
+
+        function schedule(state) {
+          nextState = state;
+          if (frame) return;
+          frame = window.requestAnimationFrame(commit);
+        }
+
+        function reset() {
+          schedule({
+            tiltX: 0,
+            tiltY: 0,
+            shiftX: 0,
+            shiftY: 0,
+            focusX: 50,
+            focusY: 18,
+            glow: 0,
+          });
+        }
+
+        hero.addEventListener("pointermove", function (event) {
+          var rect = hero.getBoundingClientRect();
+          if (!rect.width || !rect.height) return;
+          var ratioX = (event.clientX - rect.left) / rect.width;
+          var ratioY = (event.clientY - rect.top) / rect.height;
+          var offsetX = ratioX - 0.5;
+          var offsetY = ratioY - 0.5;
+
+          schedule({
+            tiltX: offsetX * 6,
+            tiltY: offsetY * -5,
+            shiftX: offsetX * 8,
+            shiftY: offsetY * 4,
+            focusX: Math.max(0, Math.min(100, ratioX * 100)),
+            focusY: Math.max(0, Math.min(100, ratioY * 100)),
+            glow: 0.85,
+          });
+        });
+
+        hero.addEventListener("pointerenter", function () {
+          schedule({
+            tiltX: 0,
+            tiltY: 0,
+            shiftX: 0,
+            shiftY: 0,
+            focusX: 50,
+            focusY: 18,
+            glow: 0.35,
+          });
+        });
+
+        hero.addEventListener("pointerleave", reset);
+        hero.addEventListener("blur", reset, true);
+        reset();
+      });
+    }
+
+    function setupHomeHeroScene() {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+
+      var hero = document.querySelector(".home-info");
+      if (!hero) return;
+
+      var frame = 0;
+      var nextState = null;
+
+      function commit() {
+        frame = 0;
+        if (!nextState) return;
+        hero.style.setProperty("--bd-home-tilt-x", nextState.tiltX + "deg");
+        hero.style.setProperty("--bd-home-tilt-y", nextState.tiltY + "deg");
+        hero.style.setProperty("--bd-home-shift-x", nextState.shiftX + "px");
+        hero.style.setProperty("--bd-home-shift-y", nextState.shiftY + "px");
+        hero.style.setProperty("--bd-home-glow", String(nextState.glow));
+      }
+
+      function schedule(state) {
+        nextState = state;
+        if (frame) return;
+        frame = window.requestAnimationFrame(commit);
+      }
+
+      function reset() {
+        schedule({
+          tiltX: 0,
+          tiltY: 0,
+          shiftX: 0,
+          shiftY: 0,
+          glow: 0,
+        });
+      }
+
+      hero.addEventListener("pointermove", function (event) {
+        var rect = hero.getBoundingClientRect();
+        if (!rect.width || !rect.height) return;
+
+        var ratioX = (event.clientX - rect.left) / rect.width;
+        var ratioY = (event.clientY - rect.top) / rect.height;
+        var offsetX = ratioX - 0.5;
+        var offsetY = ratioY - 0.5;
+
+        schedule({
+          tiltX: offsetX * 4.4,
+          tiltY: offsetY * -3.4,
+          shiftX: offsetX * 12,
+          shiftY: offsetY * 7,
+          glow: 0.9,
+        });
+      });
+
+      hero.addEventListener("pointerenter", function () {
+        schedule({
+          tiltX: 0,
+          tiltY: 0,
+          shiftX: 0,
+          shiftY: 0,
+          glow: 0.28,
+        });
+      });
+
+      hero.addEventListener("pointerleave", reset);
+      hero.addEventListener("blur", reset, true);
+      reset();
+    }
+
+    function setupThemeToggleResponse() {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+
+      var toggle = document.getElementById("theme-toggle");
+      if (!toggle) return;
+
+      var frame = 0;
+      var nextState = null;
+
+      function commit() {
+        frame = 0;
+        if (!nextState) return;
+        toggle.style.setProperty("--bd-toggle-tilt-x", nextState.tiltX + "deg");
+        toggle.style.setProperty("--bd-toggle-tilt-y", nextState.tiltY + "deg");
+        toggle.style.setProperty("--bd-toggle-shift-x", nextState.shiftX + "px");
+        toggle.style.setProperty("--bd-toggle-shift-y", nextState.shiftY + "px");
+      }
+
+      function schedule(state) {
+        nextState = state;
+        if (frame) return;
+        frame = window.requestAnimationFrame(commit);
+      }
+
+      function reset() {
+        schedule({
+          tiltX: 0,
+          tiltY: 0,
+          shiftX: 0,
+          shiftY: 0,
+        });
+      }
+
+      toggle.addEventListener("pointermove", function (event) {
+        var rect = toggle.getBoundingClientRect();
+        if (!rect.width || !rect.height) return;
+        var ratioX = (event.clientX - rect.left) / rect.width;
+        var ratioY = (event.clientY - rect.top) / rect.height;
+        var offsetX = ratioX - 0.5;
+        var offsetY = ratioY - 0.5;
+
+        schedule({
+          tiltX: offsetX * 10,
+          tiltY: offsetY * -9,
+          shiftX: offsetX * 4,
+          shiftY: offsetY * 3,
+        });
+      });
+
+      toggle.addEventListener("pointerleave", reset);
+      toggle.addEventListener("blur", reset, true);
+      reset();
+    }
+
     function setupSearchShortcut() {
       document.addEventListener("keydown", function (event) {
         if (event.key !== "/") return;
@@ -848,6 +1050,9 @@
     setupRevealOnScroll();
     setupInteractivePanels();
     setupSocialDock();
+    setupHeroTilt();
+    setupHomeHeroScene();
+    setupThemeToggleResponse();
     setupMagneticClusters();
     setupSearchShortcut();
     setupReadingProgress();
