@@ -215,7 +215,7 @@
       if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
 
       var panels = Array.prototype.slice.call(
-        document.querySelectorAll(".home-info, .home-surface-card, .about-block-works, .search-command")
+        document.querySelectorAll(".home-info, .about-block-works")
       );
       if (panels.length === 0) return;
 
@@ -252,6 +252,115 @@
         panel.addEventListener("blur", reset, true);
         reset();
       });
+    }
+
+    function setupDepthSurfaces() {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+
+      var selectors = [
+        ".home-surface-card",
+        ".about-pro .about-work-item",
+        ".search-command",
+        ".search-result-card"
+      ];
+
+      function bindSurface(surface) {
+        if (!surface || surface.dataset.bdDepthBound === "1") return;
+        surface.dataset.bdDepthBound = "1";
+
+        var frame = 0;
+        var nextState = null;
+        var focusYDefault = surface.matches(".search-command") ? 16 : 18;
+
+        function commit() {
+          frame = 0;
+          if (!nextState) return;
+          surface.style.setProperty("--bd-depth-tilt-x", nextState.tiltX + "deg");
+          surface.style.setProperty("--bd-depth-tilt-y", nextState.tiltY + "deg");
+          surface.style.setProperty("--bd-depth-shift-x", nextState.shiftX + "px");
+          surface.style.setProperty("--bd-depth-shift-y", nextState.shiftY + "px");
+          surface.style.setProperty("--bd-depth-glow", String(nextState.glow));
+          surface.style.setProperty("--bd-focus-x", nextState.focusX + "%");
+          surface.style.setProperty("--bd-focus-y", nextState.focusY + "%");
+        }
+
+        function schedule(state) {
+          nextState = state;
+          if (frame) return;
+          frame = window.requestAnimationFrame(commit);
+        }
+
+        function reset() {
+          schedule({
+            tiltX: 0,
+            tiltY: 0,
+            shiftX: 0,
+            shiftY: 0,
+            glow: 0,
+            focusX: 50,
+            focusY: focusYDefault,
+          });
+        }
+
+        surface.addEventListener("pointermove", function (event) {
+          var rect = surface.getBoundingClientRect();
+          if (!rect.width || !rect.height) return;
+
+          var ratioX = (event.clientX - rect.left) / rect.width;
+          var ratioY = (event.clientY - rect.top) / rect.height;
+          var offsetX = ratioX - 0.5;
+          var offsetY = ratioY - 0.5;
+
+          schedule({
+            tiltX: offsetX * 7.6,
+            tiltY: offsetY * -5.6,
+            shiftX: offsetX * 10,
+            shiftY: offsetY * 8,
+            glow: 1,
+            focusX: Math.max(0, Math.min(100, ratioX * 100)),
+            focusY: Math.max(0, Math.min(100, ratioY * 100)),
+          });
+        });
+
+        surface.addEventListener("pointerenter", function () {
+          schedule({
+            tiltX: 0,
+            tiltY: 0,
+            shiftX: 0,
+            shiftY: 0,
+            glow: 0.34,
+            focusX: 50,
+            focusY: focusYDefault,
+          });
+        });
+
+        surface.addEventListener("pointerleave", reset);
+        surface.addEventListener("blur", reset, true);
+        reset();
+      }
+
+      function bindAll(root) {
+        selectors.forEach(function (selector) {
+          root.querySelectorAll(selector).forEach(bindSurface);
+        });
+      }
+
+      bindAll(document);
+
+      var observer = new MutationObserver(function (mutations) {
+        mutations.forEach(function (mutation) {
+          mutation.addedNodes.forEach(function (node) {
+            if (!(node instanceof Element)) return;
+            if (selectors.some(function (selector) { return node.matches(selector); })) {
+              bindSurface(node);
+            }
+            bindAll(node);
+          });
+        });
+      });
+
+      observer.observe(document.body, { childList: true, subtree: true });
     }
 
     function setupMagneticClusters() {
@@ -1049,6 +1158,7 @@
     setupLogoResponse();
     setupRevealOnScroll();
     setupInteractivePanels();
+    setupDepthSurfaces();
     setupSocialDock();
     setupHeroTilt();
     setupHomeHeroScene();
