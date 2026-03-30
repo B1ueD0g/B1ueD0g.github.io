@@ -1,17 +1,17 @@
 {{- define "main" }}
 {{- $aboutData := site.Data.about -}}
 {{- $useProfileData := .Param "useProfileData" | default false -}}
-<article class="post-single about-single about-pro">
-  <header class="post-header">
-    <div class="about-hero">
-      <div class="about-hero-copy">
-        <h1 class="post-title entry-hint-parent">{{ .Title }}</h1>
+<article class="post-single about-single about-pro bd-about-shell">
+  <header class="post-header bd-about-header">
+    <div class="about-hero bd-about-hero">
+      <div class="about-hero-copy bd-about-hero-copy">
+        <h1 class="post-title entry-hint-parent bd-about-title">{{ .Title }}</h1>
         {{- with .Description }}
-        <div class="post-description">{{ . }}</div>
+        <div class="post-description bd-about-subtitle">{{ . }}</div>
         {{- end }}
       </div>
-      <div class="about-hero-connect">
-        <div class="about-social">
+      <div class="about-hero-connect bd-about-hero-connect">
+        <div class="about-social bd-about-social">
           {{- partial "social_icons.html" (dict "align" "center") -}}
         </div>
       </div>
@@ -19,7 +19,7 @@
   </header>
 
   {{- if and $useProfileData $aboutData }}
-  <div class="about-profile">
+  <div class="about-profile bd-about-profile">
     {{- with $aboutData.profile.roles }}
     <section class="about-block about-block-title">
       <h2>{{ $aboutData.profile.title | default "Roles · 定位" }}</h2>

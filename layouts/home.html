@@ -9,10 +9,10 @@
 {{- if gt (len $latestPosts) 0 -}}
   {{- $latestStamp = (index $latestPosts 0).Date.Format "2006.01.02" -}}
 {{- end -}}
-<div class="home-shell">
-  <section class="home-stage">
-    <article class="first-entry home-info">
-      <div class="home-depth-scene" aria-hidden="true">
+<div class="home-shell bd-home-shell">
+  <section class="home-stage bd-home-stage">
+    <article class="first-entry home-info bd-home-hero">
+      <div class="home-depth-scene bd-home-depth-scene" aria-hidden="true">
         <span class="home-depth-grid"></span>
         <span class="home-depth-orb home-depth-orb-warm"></span>
         <span class="home-depth-orb home-depth-orb-cool"></span>
@@ -21,15 +21,15 @@
         <span class="home-depth-ring home-depth-ring-a"></span>
         <span class="home-depth-ring home-depth-ring-b"></span>
       </div>
-      <div class="home-hero-anchor" aria-hidden="true">
+      <div class="home-hero-anchor bd-home-anchor" aria-hidden="true">
         <span></span>
       </div>
-      <header class="entry-header">
-        <h1>{{ site.Params.homeInfoParams.Title | default "He is Exploring Everything." }}</h1>
+      <header class="entry-header bd-home-header">
+        <h1 class="bd-home-title">{{ site.Params.homeInfoParams.Title | default "He is Exploring Everything." }}</h1>
       </header>
 
-      <div class="home-search-wrap">
-        <div class="home-search-box">
+      <div class="home-search-wrap bd-home-search">
+        <div class="home-search-box bd-home-search-box">
           <span class="home-search-glyph" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none">
               <circle cx="11" cy="11" r="6.5"></circle>
@@ -64,9 +64,9 @@
       </div>
     </article>
 
-    <section class="home-curation" aria-label="Home curation">
-      <div class="home-curation-grid">
-        <article class="home-surface-card home-surface-card-stream">
+    <section class="home-curation bd-home-curation" aria-label="Home curation">
+      <div class="home-curation-grid bd-home-curation-grid">
+        <article class="home-surface-card home-surface-card-stream bd-home-card bd-home-card-stream">
           <div class="home-surface-head">
             <div class="home-surface-copy">
               <p class="home-surface-kicker">Fresh Dispatches</p>
@@ -94,7 +94,7 @@
           </ol>
         </article>
 
-        <article class="home-surface-card home-surface-card-atlas">
+        <article class="home-surface-card home-surface-card-atlas bd-home-card bd-home-card-atlas">
           <div class="home-surface-head">
             <div class="home-surface-copy">
               <p class="home-surface-kicker">Theme Atlas</p>

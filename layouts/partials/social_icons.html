@@ -1,4 +1,4 @@
-<div class="social-icons{{ with .align }} social-icons-{{ . }}{{ end }}">
+<div class="social-icons bd-social-icons{{ with .align }} social-icons-{{ . }}{{ end }}">
   {{- range site.Params.socialIcons -}}
     {{- $rawURL := trim .url " " -}}
     {{- $iconLabel := (.title | default .name) | title -}}
@@ -6,6 +6,7 @@
     {{- if hasPrefix $rawURL "mailto:" -}}
       {{- $email := strings.TrimPrefix "mailto:" $rawURL -}}
       <a
+        class="bd-social-link"
         href="{{ $rawURL | safeURL }}"
         data-social-icon="{{ $iconName }}"
         data-social-label="Email"
@@ -48,6 +49,7 @@
       </a>
     {{- else -}}
       <a
+        class="bd-social-link"
         href="{{ $rawURL | safeURL }}"
         data-social-icon="{{ $iconName }}"
         data-social-label="{{ $iconLabel }}"
