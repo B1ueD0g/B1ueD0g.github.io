@@ -7,13 +7,13 @@
 {{- $posts = $posts.ByDate.Reverse -}}
 {{- $latestPosts := first 3 $posts -}}
 {{- $years := slice -}}
-{{- $filterTags := $quickTags -}}
+{{- $allTags := slice -}}
 {{- $searchRecords := slice -}}
 {{- range $posts -}}
   {{- $years = $years | append (.Date.Format "2006") -}}
   {{- range (.Params.tags | default (slice)) -}}
-    {{- if not (in $filterTags .) -}}
-      {{- $filterTags = $filterTags | append . -}}
+    {{- if not (in $allTags .) -}}
+      {{- $allTags = $allTags | append . -}}
     {{- end -}}
   {{- end -}}
   {{- $searchRecords = $searchRecords | append (dict
@@ -30,6 +30,13 @@
   ) -}}
 {{- end -}}
 {{- $years = uniq $years -}}
+{{- $allTags = uniq $allTags -}}
+{{- $filterTags := slice -}}
+{{- range $allTags -}}
+  {{- if not (in $quickTags .) -}}
+    {{- $filterTags = $filterTags | append . -}}
+  {{- end -}}
+{{- end -}}
 <header class="page-header search-page-header">
   <p class="search-page-kicker">Archive Search</p>
   <h1>{{ .Title }}</h1>
@@ -55,7 +62,7 @@
       <button type="button" id="search-query-clear" class="search-command-clear" hidden>清除</button>
     </div>
     <div class="search-command-meta">
-      <p id="search-status" class="search-status">正在准备可检索档案…</p>
+      <p id="search-status" class="search-status">输入主题词、文章名、标签或正文关键词即可检索。</p>
       <div class="search-shortcuts">
         <span><kbd>/</kbd> Focus</span>
         <span><kbd>Enter</kbd> Open First</span>
@@ -64,35 +71,44 @@
   </div>
 
   <section class="search-guide" aria-label="search-guide">
-    <p class="search-guide-text">可直接输入主题词，也可先用年份和标签缩小范围。</p>
+    <div class="search-guide-intro">
+      <p class="search-guide-text">先用推荐主题快速切入，再用年份和标签缩小范围。</p>
+      <details class="search-guide-notes">
+        <summary>搜索提示</summary>
+        <div class="search-guide-synonyms">
+          <span>Synonyms:</span>
+          {{- range $synonymHints }}
+          <button type="button" data-search-hint="{{ . }}">{{ . }}</button>
+          {{- end }}
+        </div>
+      </details>
+    </div>
     <div class="search-guide-tags">
       <span>Suggested Tags:</span>
       {{- range $quickTags }}
       <button type="button" data-search-tag="{{ . }}">#{{ . }}</button>
       {{- end }}
     </div>
-    <div class="search-guide-synonyms">
-      <span>Synonyms:</span>
-      {{- range $synonymHints }}
-      <button type="button" data-search-hint="{{ . }}">{{ . }}</button>
-      {{- end }}
-    </div>
   </section>
 
   <section class="search-filters" aria-label="search-filters">
-    <div class="search-filter-row">
-      <span>Year:</span>
-      <button type="button" data-filter-year="" class="is-active">All</button>
-      {{- range $years }}
-      <button type="button" data-filter-year="{{ . }}">{{ . }}</button>
-      {{- end }}
+    <div class="search-filter-group">
+      <span class="search-filter-heading">Year</span>
+      <div class="search-filter-row search-filter-row-years">
+        <button type="button" data-filter-year="" class="is-active">All</button>
+        {{- range $years }}
+        <button type="button" data-filter-year="{{ . }}">{{ . }}</button>
+        {{- end }}
+      </div>
     </div>
-    <div class="search-filter-row">
-      <span>Tag:</span>
-      <button type="button" data-filter-tag="" class="is-active">All</button>
-      {{- range $filterTags }}
-      <button type="button" data-filter-tag="{{ . }}">#{{ . }}</button>
-      {{- end }}
+    <div class="search-filter-group">
+      <span class="search-filter-heading">All Tags</span>
+      <div class="search-filter-row search-filter-row-tags">
+        <button type="button" data-filter-tag="" class="is-active">All</button>
+        {{- range $filterTags }}
+        <button type="button" data-filter-tag="{{ . }}">#{{ . }}</button>
+        {{- end }}
+      </div>
     </div>
   </section>
 </section>
