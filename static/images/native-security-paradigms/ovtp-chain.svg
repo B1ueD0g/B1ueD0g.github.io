@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+  <title id="title">OVTP evidence chain</title>
+  <desc id="desc">A conceptual evidence chain carrying operator, voucher and trace information across services and AI agent tools.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#226b5a"/>
+    </marker>
+  </defs>
+  <rect width="1280" height="720" fill="#f7fbfa"/>
+  <text x="70" y="78" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="34" font-weight="700" fill="#142235">OVTP：把“访问”还原为可判责的任务链</text>
+  <text x="70" y="116" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="18" fill="#536171">凭据不是操作者，权限不是任务授权，日志也不等于追溯链。</text>
+
+  <g font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif">
+    <rect x="76" y="220" width="180" height="110" rx="16" fill="#ffffff" stroke="#2b8a72" stroke-width="2"/>
+    <text x="116" y="264" font-size="24" font-weight="700" fill="#176854">Operator</text>
+    <text x="112" y="296" font-size="17" fill="#3d6259">真实操作者</text>
+
+    <rect x="314" y="220" width="180" height="110" rx="16" fill="#ffffff" stroke="#2b8a72" stroke-width="2"/>
+    <text x="354" y="264" font-size="24" font-weight="700" fill="#176854">Voucher</text>
+    <text x="348" y="296" font-size="17" fill="#3d6259">任务工单凭证</text>
+
+    <rect x="552" y="220" width="180" height="110" rx="16" fill="#ffffff" stroke="#2b8a72" stroke-width="2"/>
+    <text x="594" y="264" font-size="24" font-weight="700" fill="#176854">Gateway</text>
+    <text x="584" y="296" font-size="17" fill="#3d6259">策略校验入口</text>
+
+    <rect x="790" y="220" width="180" height="110" rx="16" fill="#ffffff" stroke="#2b8a72" stroke-width="2"/>
+    <text x="844" y="264" font-size="24" font-weight="700" fill="#176854">Service</text>
+    <text x="830" y="296" font-size="17" fill="#3d6259">业务服务节点</text>
+
+    <rect x="1028" y="220" width="180" height="110" rx="16" fill="#ffffff" stroke="#2b8a72" stroke-width="2"/>
+    <text x="1084" y="264" font-size="24" font-weight="700" fill="#176854">Data</text>
+    <text x="1066" y="296" font-size="17" fill="#3d6259">目标资源域</text>
+
+    <path d="M256 275 L314 275" stroke="#226b5a" stroke-width="4" fill="none" marker-end="url(#arrow)"/>
+    <path d="M494 275 L552 275" stroke="#226b5a" stroke-width="4" fill="none" marker-end="url(#arrow)"/>
+    <path d="M732 275 L790 275" stroke="#226b5a" stroke-width="4" fill="none" marker-end="url(#arrow)"/>
+    <path d="M970 275 L1028 275" stroke="#226b5a" stroke-width="4" fill="none" marker-end="url(#arrow)"/>
+
+    <rect x="178" y="410" width="924" height="150" rx="18" fill="#172434"/>
+    <text x="222" y="454" font-size="24" font-weight="700" fill="#ffffff">Traceable Evidence Plane</text>
+    <text x="222" y="492" font-size="18" fill="#dce8e5">trace_id、operator_id、voucher_id、policy_decision、service_path、tool_call、data_scope</text>
+    <text x="222" y="528" font-size="18" fill="#dce8e5">跨域传递时必须完整、可校验、可串联；任何断点都会让后继节点“看不清”。</text>
+
+    <path d="M642 330 C642 365 642 382 642 410" stroke="#226b5a" stroke-width="4" fill="none" marker-end="url(#arrow)"/>
+    <path d="M880 330 C880 370 820 382 760 410" stroke="#226b5a" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+    <path d="M1118 330 C1118 390 994 398 930 410" stroke="#226b5a" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+
+    <rect x="70" y="610" width="1140" height="54" rx="14" fill="#eaf8f5" stroke="#2b8a72" stroke-width="2"/>
+    <text x="102" y="644" font-size="18" fill="#176854">AI Agent 场景下，工具调用也应带 OVT：谁委托、什么任务、调用了哪个工具、访问了哪类数据。</text>
+  </g>
+</svg>

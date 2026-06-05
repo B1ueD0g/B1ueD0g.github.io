@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+  <title id="title">ARCP economic loop</title>
+  <desc id="desc">A conceptual loop describing attacker utility, defender cost and re-entry cost improvement.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#a45f1a"/>
+    </marker>
+  </defs>
+  <rect width="1280" height="720" fill="#fffaf4"/>
+  <text x="70" y="78" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="34" font-weight="700" fill="#142235">ARCP：把安全预算放进攻防经济账</text>
+  <text x="70" y="116" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="18" fill="#6b5d50">可持续防御的目标不是“投入越多越好”，而是持续让攻击者净收益为负。</text>
+
+  <g font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif">
+    <rect x="86" y="170" width="470" height="180" rx="18" fill="#ffffff" stroke="#d58a37" stroke-width="2.5"/>
+    <text x="128" y="222" font-size="28" font-weight="700" fill="#8b4f12">攻击者收益函数</text>
+    <text x="128" y="274" font-size="30" font-weight="700" fill="#172434">U(s)=p(s) x R - C</text>
+    <text x="128" y="318" font-size="18" fill="#6b5d50">当 U(s) ≤ 0，理性攻击在经济上不可行。</text>
+
+    <rect x="724" y="170" width="470" height="180" rx="18" fill="#ffffff" stroke="#d58a37" stroke-width="2.5"/>
+    <text x="766" y="222" font-size="28" font-weight="700" fill="#8b4f12">防御效率比</text>
+    <text x="766" y="274" font-size="30" font-weight="700" fill="#172434">eta = C_atk / C_def</text>
+    <text x="766" y="318" font-size="18" fill="#6b5d50">先让攻击无利可图，再优化每一元投入的杠杆。</text>
+
+    <rect x="110" y="448" width="230" height="92" rx="16" fill="#fff4e8" stroke="#d58a37" stroke-width="2"/>
+    <text x="148" y="484" font-size="20" font-weight="700" fill="#8b4f12">威胁建模</text>
+    <text x="148" y="514" font-size="16" fill="#6b5d50">估算攻击回报 R</text>
+
+    <rect x="400" y="448" width="230" height="92" rx="16" fill="#fff4e8" stroke="#d58a37" stroke-width="2"/>
+    <text x="438" y="484" font-size="20" font-weight="700" fill="#8b4f12">成本审计</text>
+    <text x="438" y="514" font-size="16" fill="#6b5d50">找最低成本分量</text>
+
+    <rect x="690" y="448" width="230" height="92" rx="16" fill="#fff4e8" stroke="#d58a37" stroke-width="2"/>
+    <text x="728" y="484" font-size="20" font-weight="700" fill="#8b4f12">反制优化</text>
+    <text x="728" y="514" font-size="16" fill="#6b5d50">降 p、降 R、升 C</text>
+
+    <rect x="980" y="448" width="230" height="92" rx="16" fill="#fff4e8" stroke="#d58a37" stroke-width="2"/>
+    <text x="1018" y="484" font-size="20" font-weight="700" fill="#8b4f12">重入校验</text>
+    <text x="1018" y="514" font-size="16" fill="#6b5d50">让 C_re-entry 递增</text>
+
+    <path d="M340 494 L400 494" stroke="#a45f1a" stroke-width="4" fill="none" marker-end="url(#arrow)"/>
+    <path d="M630 494 L690 494" stroke="#a45f1a" stroke-width="4" fill="none" marker-end="url(#arrow)"/>
+    <path d="M920 494 L980 494" stroke="#a45f1a" stroke-width="4" fill="none" marker-end="url(#arrow)"/>
+    <path d="M1095 448 C1120 386 1080 360 1012 350" stroke="#a45f1a" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+    <path d="M225 448 C210 385 235 358 314 350" stroke="#a45f1a" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+
+    <rect x="70" y="610" width="1140" height="54" rx="14" fill="#172434"/>
+    <text x="102" y="644" font-size="18" fill="#ffffff">事件关闭标准：不只清 IOC，还要轮换凭据、改变路径、补检测、封高价值资源，使攻击者下次更贵。</text>
+  </g>
+</svg>

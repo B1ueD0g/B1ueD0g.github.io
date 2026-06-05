@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+  <title id="title">NbSP OVTP ARCP paradigm stack</title>
+  <desc id="desc">A conceptual stack diagram for three native cybersecurity paradigms: mechanism, policy and value layers.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f8fafc"/>
+      <stop offset="1" stop-color="#eef3f8"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#152234" flood-opacity="0.14"/>
+    </filter>
+  </defs>
+  <rect width="1280" height="720" fill="url(#bg)"/>
+  <text x="72" y="82" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="34" font-weight="700" fill="#142235">三大原生安全范式的层次栈</text>
+  <text x="72" y="120" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="18" fill="#536171">原创重绘：机制层先成立，策略层才可执行，价值层才有可持续博弈。</text>
+
+  <rect x="230" y="170" width="820" height="104" rx="18" fill="#fff4e8" stroke="#d58a37" stroke-width="2.5" filter="url(#shadow)"/>
+  <text x="278" y="214" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="28" font-weight="700" fill="#8b4f12">ARCP 攻击回报范式</text>
+  <text x="278" y="248" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="18" fill="#6c5338">价值层：攻击是否无利可图，防守是否打得起、打得赢。</text>
+
+  <rect x="230" y="306" width="820" height="104" rx="18" fill="#eaf8f5" stroke="#2b8a72" stroke-width="2.5" filter="url(#shadow)"/>
+  <text x="278" y="350" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="28" font-weight="700" fill="#176854">OVTP 可溯范式</text>
+  <text x="278" y="384" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="18" fill="#3d6259">策略层：操作者、工单凭证、全链路追溯是否完整且可验证。</text>
+
+  <rect x="230" y="442" width="820" height="104" rx="18" fill="#edf4ff" stroke="#3d72ad" stroke-width="2.5" filter="url(#shadow)"/>
+  <text x="278" y="486" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="28" font-weight="700" fill="#245b91">NbSP 零越范式</text>
+  <text x="278" y="520" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="18" fill="#385c7c">机制层：跨层跨区访问控制点是否不可绕过，审计是否不失明。</text>
+
+  <rect x="230" y="580" width="820" height="58" rx="14" fill="#172434"/>
+  <text x="278" y="617" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="20" font-weight="700" fill="#ffffff">业务资产、数据资产、身份凭据、AI Agent 工具链与运行环境</text>
+
+  <text x="72" y="214" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="18" font-weight="700" fill="#8b4f12">打不打得赢</text>
+  <text x="72" y="350" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="18" font-weight="700" fill="#176854">查不查得清</text>
+  <text x="72" y="486" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="18" font-weight="700" fill="#245b91">关不关得住</text>
+
+  <text x="1090" y="214" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="17" fill="#6c5338">成本收益模型</text>
+  <text x="1090" y="244" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="17" fill="#6c5338">资源投放优先级</text>
+  <text x="1090" y="350" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="17" fill="#3d6259">OVT 证据链</text>
+  <text x="1090" y="380" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="17" fill="#3d6259">责任与任务绑定</text>
+  <text x="1090" y="486" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="17" fill="#385c7c">关键控制点清单</text>
+  <text x="1090" y="516" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="17" fill="#385c7c">弱/强完备评估</text>
+</svg>
