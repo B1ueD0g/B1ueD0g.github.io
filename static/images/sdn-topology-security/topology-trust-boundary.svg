@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+  <title id="title">SDN topology discovery trust boundary</title>
+  <desc id="desc">A conceptual diagram showing how topology discovery can be moved from ordinary controller-controlled forwarding to switch-side isolation and a trusted collector.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f7f8fb"/>
+      <stop offset="1" stop-color="#eef3f7"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#152234" flood-opacity="0.13"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#1f4b73"/>
+    </marker>
+  </defs>
+  <rect width="1280" height="720" fill="url(#bg)"/>
+  <text x="64" y="78" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="34" font-weight="700" fill="#132236">把拓扑发现的信任边界前移</text>
+  <text x="64" y="116" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="18" fill="#526170">普通控制路径、交换机侧隔离与可信发布路径的关系示意</text>
+
+  <rect x="74" y="174" width="274" height="388" rx="18" fill="#ffffff" filter="url(#shadow)"/>
+  <text x="112" y="222" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="24" font-weight="700" fill="#26384c">传统控制路径</text>
+  <text x="112" y="262" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="18" fill="#526170">控制器发起 LLDP 探测</text>
+  <text x="112" y="294" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="18" fill="#526170">普通规则可改变路径</text>
+  <text x="112" y="326" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="18" fill="#526170">控制器收到看似正常的回报</text>
+  <rect x="108" y="356" width="210" height="120" rx="12" fill="#fff0ef" stroke="#d45a4c" stroke-width="2"/>
+  <text x="128" y="390" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="18" font-weight="700" fill="#a3342c">风险</text>
+  <text x="128" y="420" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="15" fill="#6f3934">合法 LLDP</text>
+  <text x="128" y="444" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="15" fill="#6f3934">可能被普通规则</text>
+  <text x="128" y="468" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="15" fill="#6f3934">悄悄改道</text>
+
+  <rect x="494" y="174" width="294" height="388" rx="18" fill="#ffffff" filter="url(#shadow)"/>
+  <text x="532" y="222" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="24" font-weight="700" fill="#26384c">交换机侧隔离</text>
+  <rect x="534" y="262" width="214" height="64" rx="12" fill="#e8f3f0" stroke="#2b8a72" stroke-width="2"/>
+  <text x="560" y="302" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="18" font-weight="700" fill="#1f6f5d">提前识别发现流量</text>
+  <rect x="534" y="354" width="214" height="64" rx="12" fill="#eef4fb" stroke="#3b74a8" stroke-width="2"/>
+  <text x="558" y="394" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="18" font-weight="700" fill="#285d8a">隔离执行命名空间</text>
+  <rect x="534" y="446" width="214" height="64" rx="12" fill="#f7f0e6" stroke="#be7b31" stroke-width="2"/>
+  <text x="558" y="486" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="18" font-weight="700" fill="#8a5720">阻断普通规则改道</text>
+
+  <rect x="930" y="174" width="274" height="388" rx="18" fill="#ffffff" filter="url(#shadow)"/>
+  <text x="968" y="222" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="24" font-weight="700" fill="#26384c">可信发布路径</text>
+  <text x="968" y="262" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="18" fill="#526170">绑定已审查的部署工件</text>
+  <text x="968" y="294" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="18" fill="#526170">运行时证明当前管线可信</text>
+  <text x="968" y="326" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="18" fill="#526170">独立 collector 决定是否接收</text>
+  <rect x="962" y="356" width="214" height="120" rx="12" fill="#edf6ff" stroke="#3675b4" stroke-width="2"/>
+  <text x="982" y="390" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="18" font-weight="700" fill="#295f91">目标</text>
+  <text x="982" y="420" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="15" fill="#30536f">只发布</text>
+  <text x="982" y="444" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="15" fill="#30536f">经过验证的</text>
+  <text x="982" y="468" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="15" fill="#30536f">拓扑观察结果</text>
+
+  <path d="M 350 368 C 406 368 436 368 489 368" fill="none" stroke="#1f4b73" stroke-width="4" marker-end="url(#arrow)"/>
+  <path d="M 790 368 C 846 368 876 368 925 368" fill="none" stroke="#1f4b73" stroke-width="4" marker-end="url(#arrow)"/>
+  <text x="385" y="336" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="16" fill="#1f4b73">防御前移</text>
+  <text x="820" y="336" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="16" fill="#1f4b73">证据准入</text>
+
+  <rect x="72" y="608" width="1136" height="56" rx="14" fill="#132236"/>
+  <text x="100" y="643" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="18" fill="#ffffff">核心判断：拓扑安全不能只看“是否识别攻击”，还要看可信拓扑能否在时限内发布给路由、故障切换与安全应用。</text>
+</svg>
