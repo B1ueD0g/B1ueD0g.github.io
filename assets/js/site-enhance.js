@@ -33,13 +33,42 @@
     document.documentElement.classList.add("bd-ready");
 
     function fallbackCopy(text) {
+      var eventCopied = false;
+      function onCopy(event) {
+        if (!event.clipboardData) return;
+        event.clipboardData.setData("text/plain", text);
+        event.preventDefault();
+        eventCopied = true;
+      }
+
+      document.addEventListener("copy", onCopy);
+      try {
+        document.execCommand("copy");
+      } catch (error) {
+        eventCopied = false;
+      }
+      document.removeEventListener("copy", onCopy);
+      if (eventCopied) return true;
+
       var input = document.createElement("textarea");
+      var selection = document.getSelection ? document.getSelection() : null;
+      var selectedRange = selection && selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
       input.value = text;
       input.setAttribute("readonly", "");
       input.style.position = "fixed";
-      input.style.opacity = "0";
+      input.style.top = "0";
+      input.style.left = "-9999px";
+      input.style.width = "1px";
+      input.style.height = "1px";
+      input.style.fontSize = "16px";
       document.body.appendChild(input);
+      try {
+        input.focus({ preventScroll: true });
+      } catch (error) {
+        input.focus();
+      }
       input.select();
+      input.setSelectionRange(0, input.value.length);
       var copied = false;
       try {
         copied = document.execCommand("copy");
@@ -47,6 +76,10 @@
         copied = false;
       }
       document.body.removeChild(input);
+      if (selection) {
+        selection.removeAllRanges();
+        if (selectedRange) selection.addRange(selectedRange);
+      }
       return copied;
     }
 
@@ -1042,14 +1075,364 @@
       var tables = Array.prototype.slice.call(document.querySelectorAll(".editorial-content table, .post-content table"));
       if (tables.length === 0) return;
 
+      function decorateTableWrap(wrap, table) {
+        if (!wrap || !table) return;
+        wrap.setAttribute("data-scroll-hint", "Scroll");
+        wrap.dataset.bdTableReady = "1";
+        window.setTimeout(function () {
+          if (table.scrollWidth > wrap.clientWidth + 4) {
+            wrap.classList.add("is-scrollable");
+          } else {
+            wrap.classList.remove("is-scrollable");
+          }
+        }, 60);
+      }
+
       tables.forEach(function (table) {
         if (table.closest(".highlight, .highlighttable, .gist")) return;
-        if (table.parentElement && table.parentElement.classList.contains("editorial-table-wrap")) return;
+        if (table.parentElement && table.parentElement.classList.contains("editorial-table-wrap")) {
+          decorateTableWrap(table.parentElement, table);
+          return;
+        }
 
         var wrap = document.createElement("div");
         wrap.className = "editorial-table-wrap";
         table.parentNode.insertBefore(wrap, table);
         wrap.appendChild(table);
+        decorateTableWrap(wrap, table);
+      });
+    }
+
+    function setupCodeTools() {
+      var blocks = Array.prototype.slice.call(document.querySelectorAll(".editorial-content pre, .post-content pre"));
+      if (blocks.length === 0) return;
+
+      function getCodeLanguage(pre) {
+        var code = pre.querySelector("code");
+        var className = code ? String(code.className || "") : String(pre.className || "");
+        var match = className.match(/(?:language|lang)-([a-z0-9_#+.-]+)/i);
+        if (!match) return "Code";
+        return match[1].replace(/[-_]/g, " ").toUpperCase();
+      }
+
+      blocks.forEach(function (pre) {
+        if (pre.dataset.bdCodeTools === "1") return;
+        if (pre.closest(".highlighttable, .gist")) return;
+        pre.dataset.bdCodeTools = "1";
+
+        var host = pre.parentElement && pre.parentElement.classList.contains("highlight") ? pre.parentElement : pre;
+        host.classList.add("bd-code-shell");
+        host.setAttribute("data-code-lang", getCodeLanguage(pre));
+        Array.prototype.forEach.call(host.querySelectorAll(":scope > .copy-code, pre > .copy-code"), function (legacyButton) {
+          legacyButton.remove();
+        });
+        if (host.querySelector(":scope > .bd-code-copy")) return;
+
+        var button = document.createElement("button");
+        button.type = "button";
+        button.className = "bd-code-copy";
+        button.textContent = "Copy";
+        button.setAttribute("aria-label", "Copy code block");
+
+        button.addEventListener("click", function () {
+          var clone = pre.cloneNode(true);
+          Array.prototype.forEach.call(clone.querySelectorAll(".bd-code-copy, .copy-code"), function (node) {
+            node.remove();
+          });
+          var text = clone.innerText || clone.textContent || "";
+          function finish(copied) {
+            button.textContent = copied ? "Copied" : "Failed";
+            button.classList.toggle("is-copied", copied);
+            if (copied) showToast("代码已复制", "success");
+            window.setTimeout(function () {
+              button.textContent = "Copy";
+              button.classList.remove("is-copied");
+            }, 1400);
+          }
+
+          var clipboardApi = window.navigator && window.navigator.clipboard;
+          try {
+            window.focus();
+          } catch (error) {
+            // Ignore focus failures; the synchronous fallback below handles restrictive browsers.
+          }
+          if (clipboardApi && window.isSecureContext && clipboardApi.writeText) {
+            clipboardApi.writeText(text).then(function () {
+              finish(true);
+            }).catch(function () {
+              finish(fallbackCopy(text));
+            });
+            return;
+          }
+
+          finish(fallbackCopy(text));
+        });
+
+        host.appendChild(button);
+      });
+    }
+
+    function setupColdLabSystem() {
+      var root = document.documentElement;
+      var body = document.body;
+      if (!body) return;
+
+      root.classList.add("bd-cold-lab");
+
+      var path = (window.location.pathname || "/").replace(/\/?$/, "/");
+      var mode = "archive";
+      if (body.classList.contains("home-page") || path === "/") mode = "home";
+      else if (path.indexOf("/search/") === 0) mode = "search";
+      else if (path.indexOf("/about/") === 0) mode = "about";
+      else if (document.querySelector(".post-single-editorial, article.post-single")) mode = "article";
+      body.setAttribute("data-lab-mode", mode);
+
+      function ensureAccent(container, className, html, prepend) {
+        if (!container || container.querySelector(":scope > ." + className)) return null;
+        var node = document.createElement("span");
+        node.className = className;
+        node.setAttribute("aria-hidden", "true");
+        if (html) node.innerHTML = html;
+        if (prepend) container.prepend(node);
+        else container.appendChild(node);
+        return node;
+      }
+
+      function prepareGlitchTitle(titleNode) {
+        if (!titleNode || titleNode.dataset.bdGlitchTitle === "1") return;
+        var source = (titleNode.textContent || "").replace(/\s+/g, " ").trim();
+        if (!source) return;
+        titleNode.dataset.bdGlitchTitle = "1";
+        titleNode.setAttribute("data-lab-title", source);
+        titleNode.classList.add("bd-glitch-title");
+      }
+
+      if (!document.querySelector(".bd-lab-frame")) {
+        var frame = document.createElement("div");
+        frame.className = "bd-lab-frame";
+        frame.setAttribute("aria-hidden", "true");
+        frame.innerHTML =
+          '<span class="bd-lab-corner bd-lab-corner-tl"></span>' +
+          '<span class="bd-lab-corner bd-lab-corner-tr"></span>' +
+          '<span class="bd-lab-corner bd-lab-corner-bl"></span>' +
+          '<span class="bd-lab-corner bd-lab-corner-br"></span>' +
+          '<span class="bd-lab-scanline"></span>';
+        body.prepend(frame);
+      }
+
+      var progress = document.querySelector(".bd-lab-scroll");
+      if (!progress) {
+        progress = document.createElement("div");
+        progress.className = "bd-lab-scroll";
+        progress.setAttribute("aria-hidden", "true");
+        progress.innerHTML = '<span></span>';
+        body.appendChild(progress);
+      }
+
+      var homeHero = document.querySelector("body.home-page .home-info");
+      if (homeHero) {
+        ensureAccent(homeHero, "bd-lab-matrix", "", true);
+        ensureAccent(homeHero, "bd-lab-status", "SYSTEM ONLINE", false);
+      }
+
+      var articleHeader = document.querySelector("article.post-single.post-single-editorial .editorial-header");
+      if (articleHeader) {
+        ensureAccent(articleHeader, "bd-lab-matrix", "", true);
+        if (!articleHeader.querySelector(":scope > .bd-reading-readout")) {
+          var readout = document.createElement("span");
+          readout.className = "bd-reading-readout";
+          readout.setAttribute("aria-hidden", "true");
+          readout.setAttribute("data-lab-readout", "1");
+          readout.textContent = "READ 00%";
+          articleHeader.appendChild(readout);
+        }
+      }
+
+      Array.prototype.slice.call(
+        document.querySelectorAll(
+          "body.home-page .home-info .entry-header h1, .search-page-header h1, .about-pro .about-hero .post-title, article.post-single.post-single-editorial .editorial-title"
+        )
+      ).forEach(prepareGlitchTitle);
+
+      var surfaces = Array.prototype.slice.call(
+        document.querySelectorAll(
+          ".home-surface-card, .search-result-card, .about-pro .about-block, .about-pro .about-work-item, .post-entry, .post-entry-with-date"
+        )
+      );
+      surfaces.forEach(function (surface, index) {
+        surface.style.setProperty("--bd-lab-index", String(index));
+        surface.setAttribute("data-lab-node", String(index + 1).padStart(2, "0"));
+      });
+
+      var headings = Array.prototype.slice.call(
+        document.querySelectorAll(".editorial-content h2[id], .post-content h2[id], .search-page-header h1, .about-pro .about-block h2")
+      );
+      headings.forEach(function (heading, index) {
+        heading.style.setProperty("--bd-lab-index", String(index));
+        if (!heading.getAttribute("data-lab-heading")) {
+          heading.setAttribute("data-lab-heading", String(index + 1).padStart(2, "0"));
+        }
+      });
+
+      var commandNodes = Array.prototype.slice.call(document.querySelectorAll(".search-command, .home-search-box"));
+      commandNodes.forEach(function (node) {
+        node.addEventListener("focusin", function () {
+          node.classList.add("is-lab-armed");
+          root.classList.add("bd-lab-input-active");
+        });
+        node.addEventListener("focusout", function () {
+          node.classList.remove("is-lab-armed");
+          root.classList.remove("bd-lab-input-active");
+        });
+      });
+
+      var frameRequest = 0;
+      var lastScrollTop = window.scrollY || document.documentElement.scrollTop || 0;
+      var lastScrollTime = window.performance && window.performance.now ? window.performance.now() : Date.now();
+      var readoutNode = document.querySelector("[data-lab-readout]");
+      function updateScrollState() {
+        frameRequest = 0;
+        var viewport = window.innerHeight || 1;
+        var scrollTop = window.scrollY || document.documentElement.scrollTop || 0;
+        var scrollable = Math.max(1, document.documentElement.scrollHeight - viewport);
+        var ratio = Math.min(Math.max(scrollTop / scrollable, 0), 1);
+        var now = window.performance && window.performance.now ? window.performance.now() : Date.now();
+        var elapsed = Math.max(16, now - lastScrollTime);
+        var velocity = Math.min(Math.abs(scrollTop - lastScrollTop) / elapsed / 3.8, 1);
+        root.style.setProperty("--bd-lab-scroll", ratio.toFixed(4));
+        root.style.setProperty("--bd-lab-scroll-pct", (ratio * 100).toFixed(2) + "%");
+        root.style.setProperty("--bd-lab-velocity", velocity.toFixed(3));
+        body.classList.toggle("bd-lab-deep-read", ratio > 0.08);
+        if (readoutNode) {
+          readoutNode.textContent = "READ " + String(Math.round(ratio * 100)).padStart(2, "0") + "%";
+        }
+        lastScrollTop = scrollTop;
+        lastScrollTime = now;
+      }
+
+      function requestScrollState() {
+        if (frameRequest) return;
+        frameRequest = window.requestAnimationFrame(updateScrollState);
+      }
+
+      updateScrollState();
+      window.addEventListener("scroll", requestScrollState, { passive: true });
+      window.addEventListener("resize", requestScrollState);
+      window.addEventListener("load", requestScrollState);
+
+      window.setTimeout(function () {
+        root.classList.add("bd-lab-online");
+      }, 80);
+    }
+
+    function setupReactBitsInspiredMotion() {
+      var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+      var title = document.querySelector("body.home-page .home-info .entry-header h1");
+
+      if (title && title.dataset.bdSplitText !== "1") {
+        var source = (title.textContent || "").replace(/\s+/g, " ").trim();
+        if (source) {
+          title.dataset.bdSplitText = "1";
+          title.textContent = "";
+          source.split(" ").forEach(function (word, index, words) {
+            var span = document.createElement("span");
+            span.className = "bd-split-word";
+            span.style.setProperty("--bd-word-index", String(index));
+            span.textContent = word;
+            title.appendChild(span);
+            if (index < words.length - 1) title.appendChild(document.createTextNode(" "));
+          });
+        }
+      }
+
+      var nodes = Array.prototype.slice.call(
+        document.querySelectorAll(
+          ".home-search-box, .home-surface-card, .search-command, .search-result-card, .about-pro .about-hero, .about-pro .about-block, .about-pro .about-work-item, .bd-code-shell, .editorial-table-wrap"
+        )
+      );
+
+      nodes.forEach(function (node) {
+        if (node.tagName === "PRE") return;
+        if (node.dataset.bdReactBitsFx !== "1") {
+          node.dataset.bdReactBitsFx = "1";
+          node.classList.add("bd-motion-surface");
+
+          if (!node.querySelector(":scope > .bd-spotlight")) {
+            var spotlight = document.createElement("span");
+            spotlight.className = "bd-spotlight";
+            spotlight.setAttribute("aria-hidden", "true");
+            node.prepend(spotlight);
+          }
+
+          if (!node.querySelector(":scope > .bd-glare")) {
+            var glare = document.createElement("span");
+            glare.className = "bd-glare";
+            glare.setAttribute("aria-hidden", "true");
+            node.prepend(glare);
+          }
+
+          if (!node.querySelector(":scope > .bd-frame-border")) {
+            var frameBorder = document.createElement("span");
+            frameBorder.className = "bd-frame-border";
+            frameBorder.setAttribute("aria-hidden", "true");
+            node.prepend(frameBorder);
+          }
+        }
+
+        if (!finePointer || reduceMotion || node.dataset.bdReactBitsPointer === "1") return;
+        node.dataset.bdReactBitsPointer = "1";
+
+        var frame = 0;
+        var next = {
+          x: 0,
+          y: 0,
+          tiltX: 0,
+          tiltY: 0,
+          shiftX: 0,
+          shiftY: 0,
+        };
+
+        function commit() {
+          frame = 0;
+          node.style.setProperty("--bd-spot-x", next.x + "px");
+          node.style.setProperty("--bd-spot-y", next.y + "px");
+          node.style.setProperty("--bd-fx-tilt-x", next.tiltX + "deg");
+          node.style.setProperty("--bd-fx-tilt-y", next.tiltY + "deg");
+          node.style.setProperty("--bd-fx-shift-x", next.shiftX + "px");
+          node.style.setProperty("--bd-fx-shift-y", next.shiftY + "px");
+        }
+
+        node.addEventListener("pointermove", function (event) {
+          var rect = node.getBoundingClientRect();
+          if (!rect.width || !rect.height) return;
+          var x = event.clientX - rect.left;
+          var y = event.clientY - rect.top;
+          var relX = x / rect.width - 0.5;
+          var relY = y / rect.height - 0.5;
+          var tiltScale = node.classList.contains("home-surface-card") || node.classList.contains("search-result-card") || node.classList.contains("about-work-item") ? 5.2 : 2.2;
+
+          next.x = Math.round(x);
+          next.y = Math.round(y);
+          next.tiltX = Number((-relY * tiltScale).toFixed(2));
+          next.tiltY = Number((relX * tiltScale).toFixed(2));
+          next.shiftX = Number((relX * 4).toFixed(2));
+          next.shiftY = Number((relY * 4).toFixed(2));
+          node.classList.add("is-bd-motion-hot");
+
+          if (!frame) frame = window.requestAnimationFrame(commit);
+        }, { passive: true });
+
+        node.addEventListener("pointerleave", function () {
+          next.x = 0;
+          next.y = 0;
+          next.tiltX = 0;
+          next.tiltY = 0;
+          next.shiftX = 0;
+          next.shiftY = 0;
+          node.classList.remove("is-bd-motion-hot");
+          if (!frame) frame = window.requestAnimationFrame(commit);
+        });
       });
     }
 
@@ -1155,6 +1538,7 @@
     setupThemeToggleA11y();
     setupGeneratedA11yLabels();
     setupNavShrink();
+    setupColdLabSystem();
     setupLogoResponse();
     setupRevealOnScroll();
     setupInteractivePanels();
@@ -1167,9 +1551,14 @@
     setupSearchShortcut();
     setupReadingProgress();
     setupEditorialTocRail();
+    setupEditorialTables();
+    setupCodeTools();
+    setupReactBitsInspiredMotion();
     runWhenIdle(setupHeadingHighlight, 800);
     runWhenIdle(setupFootnotePreview, 950);
     runWhenIdle(setupEditorialTables, 1100);
-    runWhenIdle(setupLightbox, 1200);
+    runWhenIdle(setupCodeTools, 1160);
+    runWhenIdle(setupReactBitsInspiredMotion, 1210);
+    runWhenIdle(setupLightbox, 1240);
     setupPageTransition();
   })();

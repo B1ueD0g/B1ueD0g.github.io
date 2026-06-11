@@ -24,9 +24,11 @@
       <div class="home-hero-anchor" aria-hidden="true">
         <span></span>
       </div>
+      <p class="home-hero-kicker">Editorial Research Lab</p>
       <header class="entry-header">
         <h1>{{ site.Params.homeInfoParams.Title | default "He is Exploring Everything." }}</h1>
       </header>
+      <p class="home-hero-deck">长期记录网络安全、AI 安全、数据治理、标准实践与工程复盘。</p>
 
       <div class="home-search-wrap">
         <div class="home-search-box">
@@ -39,7 +41,7 @@
           <input
             id="home-search-input"
             type="search"
-            placeholder="搜索标题、标签、书籍、标准、研究记录"
+            placeholder="搜索标题、标签、关键词"
             aria-label="Search posts"
           />
           <button id="home-search-btn" type="button">Search</button>
@@ -125,9 +127,9 @@
     var searchBox = document.querySelector(".home-search-box");
     var searchGlyph = document.querySelector(".home-search-glyph");
     var prompts = [
-      "搜索标题、标签、书籍、标准、研究记录",
+      "搜索标题、标签、关键词",
       "Try 零信任 / AI安全 / 数据安全 / 漏洞研究",
-      "输入 CVE、标准名、主题词，直接找到相关文章",
+      "输入 CVE、标准名、主题词",
     ];
     var promptIndex = 0;
     var promptTimer = 0;
