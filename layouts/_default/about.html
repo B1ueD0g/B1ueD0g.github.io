@@ -21,11 +21,14 @@
   {{- if and $useProfileData $aboutData }}
   <div class="about-profile">
     {{- with $aboutData.profile.roles }}
-    <section class="about-block about-block-title">
+    <section class="about-block about-block-title about-block-identity">
       <h2>{{ $aboutData.profile.title | default "Roles · 定位" }}</h2>
-      <ul class="about-title-list">
-        {{- range . }}
-        <li>{{ . }}</li>
+      <ul class="about-title-list about-identity-list">
+        {{- range $index, $item := . }}
+        <li>
+          <span class="about-identity-index">{{ printf "%02d" (add $index 1) }}</span>
+          <span class="about-identity-name">{{ $item }}</span>
+        </li>
         {{- end }}
       </ul>
     </section>
