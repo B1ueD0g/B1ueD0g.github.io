@@ -3,7 +3,7 @@
 {{- $posts := where site.RegularPages "Section" "posts" -}}
 {{- $posts = where $posts "Params.hiddenInHomeList" "!=" "true" -}}
 {{- $posts = $posts.ByDate.Reverse -}}
-{{- $latestPosts := first 4 $posts -}}
+{{- $latestPosts := first 3 $posts -}}
 {{- $latestStamp := "" -}}
 {{- $searchPath := "search/" | absLangURL -}}
 {{- if gt (len $latestPosts) 0 -}}

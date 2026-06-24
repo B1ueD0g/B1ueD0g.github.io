@@ -5908,3 +5908,275 @@ html.bd-cold-lab #top-link.top-link svg {
     display: none !important;
   }
 }
+
+/* 2026-06-24 homepage viewport composition: align the curation stack with the lab card. */
+@media (min-width: 1101px) {
+  body.home-page .main {
+    padding-bottom: 0 !important;
+  }
+
+  body.home-page .custom-min-footer {
+    display: none !important;
+  }
+
+  body.home-page .home-shell {
+    display: grid !important;
+    align-items: center !important;
+    width: min(1320px, calc(100vw - 72px)) !important;
+    min-height: calc(100svh - 132px) !important;
+    margin-inline: auto !important;
+    overflow: visible !important;
+  }
+
+  body.home-page .home-stage {
+    --bd-home-composition-h: clamp(590px, calc(100svh - 176px), 690px);
+    display: grid !important;
+    grid-template-columns: minmax(0, 1.04fr) minmax(360px, 0.76fr) !important;
+    align-items: stretch !important;
+    gap: clamp(30px, 4vw, 58px) !important;
+    width: 100% !important;
+    min-height: 0 !important;
+    height: var(--bd-home-composition-h) !important;
+    padding-block: 0 !important;
+    overflow: hidden !important;
+  }
+
+  body.home-page .home-stage .bd-glare {
+    display: none !important;
+  }
+
+  body.home-page .first-entry.home-info,
+  body.home-page .home-curation,
+  body.home-page .home-curation-grid {
+    height: var(--bd-home-composition-h) !important;
+    min-height: 0 !important;
+  }
+
+  body.home-page .first-entry.home-info {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: clamp(38px, 4.2vw, 58px) clamp(30px, 4vw, 52px) clamp(28px, 3.4vw, 44px) !important;
+  }
+
+  body.home-page .home-info .entry-header h1,
+  html.bd-ready body.home-page .home-info .entry-header h1 {
+    font-size: clamp(4.05rem, 5.8vw, 6.45rem) !important;
+    line-height: 0.94 !important;
+  }
+
+  body.home-page .home-hero-deck {
+    margin-top: clamp(18px, 2.2vw, 26px) !important;
+    line-height: 1.62 !important;
+  }
+
+  body.home-page .home-search-wrap {
+    margin-top: clamp(24px, 3vw, 38px) !important;
+  }
+
+  body.home-page .home-search-meta {
+    margin-top: 12px !important;
+  }
+
+  body.home-page .home-search-shortcuts {
+    display: none !important;
+  }
+
+  body.home-page .home-search-tags {
+    display: none !important;
+  }
+
+  body.home-page .home-curation {
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  body.home-page .home-curation-grid {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    grid-template-rows: minmax(0, 1.28fr) minmax(0, 0.72fr) !important;
+    gap: 16px !important;
+    margin: 0 !important;
+  }
+
+  body.home-page .home-surface-card {
+    display: grid !important;
+    min-height: 0 !important;
+    padding: 22px 24px !important;
+    overflow: hidden !important;
+  }
+
+  body.home-page .home-surface-card-stream {
+    grid-template-rows: auto minmax(0, 1fr) !important;
+    max-height: none !important;
+  }
+
+  body.home-page .home-surface-card-atlas {
+    grid-template-rows: auto minmax(0, 1fr) !important;
+    max-height: none !important;
+  }
+
+  body.home-page .home-surface-card::before {
+    inset-inline: 24px !important;
+  }
+
+  body.home-page .home-surface-head {
+    align-items: start !important;
+    gap: 14px !important;
+    margin-bottom: 12px !important;
+    padding-bottom: 12px !important;
+  }
+
+  body.home-page .home-surface-link {
+    min-height: 42px !important;
+    padding: 0 18px !important;
+    font-size: 0.82rem !important;
+    letter-spacing: 0.04em !important;
+  }
+
+  body.home-page .home-stream-list {
+    min-height: 0 !important;
+    overflow: hidden !important;
+  }
+
+  body.home-page .home-stream-item {
+    grid-template-columns: 34px minmax(0, 1fr) !important;
+    gap: 12px !important;
+    padding-block: 13px !important;
+  }
+
+  body.home-page .home-stream-link {
+    gap: 6px !important;
+  }
+
+  body.home-page .home-stream-title {
+    display: -webkit-box !important;
+    overflow: hidden !important;
+    font-size: clamp(0.98rem, 0.9rem + 0.18vw, 1.08rem) !important;
+    line-height: 1.32 !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+  }
+
+  body.home-page .home-stream-date {
+    font-size: 0.78rem !important;
+    line-height: 1.1 !important;
+  }
+
+  body.home-page .home-stream-tags {
+    gap: 5px !important;
+  }
+
+  body.home-page .home-stream-tags span {
+    min-height: 22px !important;
+    padding: 1px 7px !important;
+    font-size: 0.68rem !important;
+  }
+
+  body.home-page .home-atlas-list {
+    align-content: stretch !important;
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+    min-height: 0 !important;
+  }
+
+  body.home-page .home-atlas-list a {
+    min-height: 0 !important;
+    height: 100% !important;
+    padding: 0 14px !important;
+    gap: 8px !important;
+  }
+
+  body.home-page .home-atlas-name {
+    min-width: 0 !important;
+    overflow: hidden !important;
+    font-size: clamp(0.98rem, 0.9rem + 0.18vw, 1.08rem) !important;
+    line-height: 1.1 !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+
+  body.home-page .home-atlas-action {
+    flex: 0 0 auto !important;
+    font-size: 0.68rem !important;
+    letter-spacing: 0.08em !important;
+  }
+}
+
+@media (min-width: 1101px) and (max-height: 820px) {
+  body.home-page .home-stage {
+    --bd-home-composition-h: clamp(540px, calc(100svh - 146px), 610px);
+  }
+
+  body.home-page .first-entry.home-info {
+    padding: 34px 34px 28px !important;
+  }
+
+  body.home-page .home-hero-kicker {
+    margin-bottom: 16px !important;
+  }
+
+  body.home-page .home-info .entry-header h1,
+  html.bd-ready body.home-page .home-info .entry-header h1 {
+    font-size: clamp(3.48rem, 5.2vw, 5.35rem) !important;
+  }
+
+  body.home-page .home-search-tags {
+    display: none !important;
+  }
+
+  body.home-page .home-stream-tags {
+    display: none !important;
+  }
+
+  body.home-page .home-stream-item {
+    padding-block: 11px !important;
+  }
+}
+
+@media (min-width: 1101px) and (max-width: 1240px) {
+  body.home-page .home-shell {
+    width: min(1180px, calc(100vw - 48px)) !important;
+  }
+
+  body.home-page .home-stage {
+    grid-template-columns: minmax(0, 1fr) minmax(340px, 0.72fr) !important;
+    gap: 30px !important;
+  }
+}
+
+@media (max-width: 1100px) {
+  body.home-page .home-atlas-list {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Keep the shared copy toast out of document flow; the cold-lab stacking rule made it relative. */
+html.bd-cold-lab .copy-toast,
+.copy-toast {
+  position: fixed !important;
+  top: auto !important;
+  right: auto !important;
+  left: 50% !important;
+  bottom: 1.2rem !important;
+  z-index: 120 !important;
+  transform: translate(-50%, 12px) !important;
+}
+
+html.bd-cold-lab .copy-toast.is-visible,
+.copy-toast.is-visible {
+  transform: translate(-50%, 0) !important;
+}
+
+@media (min-width: 1101px) {
+  body.home-page .copy-toast {
+    bottom: 4.2rem !important;
+  }
+}
+
+@media (max-width: 900px) {
+  body.home-page .copy-toast {
+    bottom: 1.2rem !important;
+  }
+}
