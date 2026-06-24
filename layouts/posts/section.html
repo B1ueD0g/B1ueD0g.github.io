@@ -54,22 +54,12 @@
       <span>/ {{ $paginator.TotalPages }}</span>
     </div>
     <div class="article-pagination-controls">
-    {{- if $paginator.HasPrev }}
-    <a class="first" href="{{ (index $paginator.Pagers 0).URL | absURL }}">首页</a>
-    <a class="prev" href="{{ $paginator.Prev.URL | absURL }}">«&nbsp;{{ i18n "prev_page" }}&nbsp;</a>
-    {{- end }}
     {{- range $paginator.Pagers }}
       {{- if eq .PageNumber $paginator.PageNumber }}
       <span class="page-number is-current" aria-current="page">{{ .PageNumber }}</span>
       {{- else }}
       <a class="page-number" href="{{ .URL | absURL }}">{{ .PageNumber }}</a>
       {{- end }}
-    {{- end }}
-    {{- if $paginator.HasNext }}
-    <a class="next" href="{{ $paginator.Next.URL | absURL }}">{{- i18n "next_page" }}&nbsp;»</a>
-    {{- end }}
-    {{- if $paginator.HasNext }}
-    <a class="last" href="{{ (index $paginator.Pagers (sub $paginator.TotalPages 1)).URL | absURL }}">末页</a>
     {{- end }}
     </div>
   </nav>
