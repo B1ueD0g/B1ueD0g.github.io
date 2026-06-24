@@ -5583,3 +5583,162 @@ html[data-theme="dark"] body.list .post-entry-with-date:hover,
 html[data-theme="dark"] body.list .post-entry-with-date:focus-within {
   background: linear-gradient(90deg, rgba(127, 183, 218, 0.1), transparent 62%) !important;
 }
+
+/* 2026-06-24 corrective polish: remove oversized transition geometry and tighten identity/pagination surfaces. */
+body::after,
+body.is-page-leaving::after {
+  content: none !important;
+  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  animation: none !important;
+  transform: none !important;
+}
+
+.home-shell .home-depth-plane,
+.home-shell .home-depth-ring,
+.home-shell .home-depth-orb,
+.home-stage .home-depth-plane,
+.home-stage .home-depth-ring,
+.home-stage .home-depth-orb,
+.first-entry.home-info .home-depth-plane,
+.first-entry.home-info .home-depth-ring,
+.first-entry.home-info .home-depth-orb {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+.home-shell .home-depth-scene,
+.first-entry.home-info .home-depth-scene {
+  inset: 0 !important;
+  overflow: hidden !important;
+  opacity: 0.88 !important;
+}
+
+.home-shell .home-depth-grid,
+.first-entry.home-info .home-depth-grid {
+  inset: 0 !important;
+  border-radius: inherit !important;
+  opacity: 0.28 !important;
+  transform: none !important;
+  background-image:
+    linear-gradient(rgba(20, 27, 38, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(20, 27, 38, 0.07) 1px, transparent 1px) !important;
+  background-size: 42px 42px !important;
+  mask-image: linear-gradient(90deg, black 0 52%, rgba(0, 0, 0, 0.42) 78%, transparent 100%) !important;
+}
+
+.about-pro .about-block-identity {
+  padding: 22px 24px 24px !important;
+}
+
+.about-pro .about-identity-list {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  gap: 10px !important;
+  margin-top: 18px !important;
+  overflow-x: auto !important;
+  overscroll-behavior-inline: contain;
+  scrollbar-width: thin;
+}
+
+.about-pro .about-identity-list li {
+  flex: 1 1 0 !important;
+  min-width: 184px !important;
+  min-height: 56px !important;
+  padding: 10px 12px !important;
+  display: grid !important;
+  grid-template-columns: 30px minmax(0, max-content) !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 10px !important;
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, 0.5) !important;
+}
+
+.about-pro .about-identity-index {
+  width: 30px !important;
+  height: 30px !important;
+  font-size: 0.64rem !important;
+  letter-spacing: 0.04em !important;
+}
+
+.about-pro .about-identity-name {
+  white-space: nowrap !important;
+  overflow-wrap: normal !important;
+  word-break: keep-all !important;
+  font-size: clamp(0.82rem, 0.76rem + 0.12vw, 0.92rem) !important;
+  line-height: 1.1 !important;
+}
+
+.article-pagination {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  gap: 12px 18px !important;
+  margin-top: 30px !important;
+  padding: 14px 0 !important;
+  border-width: 1px 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.article-pagination-controls {
+  justify-content: flex-end !important;
+  gap: 7px !important;
+}
+
+.article-pagination :is(a, .page-number) {
+  min-width: 38px !important;
+  min-height: 38px !important;
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, 0.5) !important;
+}
+
+.article-pagination .is-current {
+  border-color: var(--bd-redesign-ink) !important;
+  background: var(--bd-redesign-ink) !important;
+  color: #f7f9fb !important;
+}
+
+@media (max-width: 1100px) {
+  .about-pro .about-identity-list {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    overflow: visible !important;
+  }
+
+  .about-pro .about-identity-list li {
+    min-width: 0 !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .about-pro .about-block-identity {
+    padding: 18px 14px 16px !important;
+  }
+
+  .about-pro .about-identity-list {
+    grid-template-columns: 1fr !important;
+    gap: 9px !important;
+    margin-top: 14px !important;
+  }
+
+  .about-pro .about-identity-list li {
+    min-height: 52px !important;
+    justify-content: start !important;
+  }
+
+  .article-pagination {
+    align-items: stretch !important;
+  }
+
+  .article-pagination-controls {
+    justify-content: flex-start !important;
+    overflow-x: auto !important;
+    flex-wrap: nowrap !important;
+    padding-bottom: 2px !important;
+  }
+}
