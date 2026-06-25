@@ -6311,3 +6311,48 @@ html.bd-cold-lab.bd-lab-online body.home-page .home-info .bd-split-word {
   transform: none !important;
   animation: none !important;
 }
+
+/* 2026-06-25 dispatch fit correction: show all three homepage posts without clipping. */
+@media (min-width: 1101px) {
+  body.home-page .home-surface-card-stream {
+    grid-template-rows: auto minmax(0, 1fr) !important;
+  }
+
+  body.home-page .home-stream-list {
+    align-content: start !important;
+    overflow: hidden !important;
+  }
+
+  body.home-page .home-stream-item {
+    grid-template-columns: 30px minmax(0, 1fr) !important;
+    gap: 10px !important;
+    min-height: 0 !important;
+    padding-block: 11px !important;
+  }
+
+  body.home-page .home-stream-link {
+    gap: 4px !important;
+  }
+
+  body.home-page .home-stream-title {
+    font-size: clamp(0.96rem, 0.88rem + 0.16vw, 1.04rem) !important;
+    line-height: 1.26 !important;
+    -webkit-line-clamp: 2 !important;
+  }
+
+  body.home-page .home-stream-date {
+    font-size: 0.75rem !important;
+    line-height: 1 !important;
+  }
+
+  body.home-page .home-stream-tags {
+    gap: 4px !important;
+  }
+
+  body.home-page .home-stream-tags span {
+    min-height: 18px !important;
+    padding: 0 6px !important;
+    font-size: 0.62rem !important;
+    line-height: 18px !important;
+  }
+}
