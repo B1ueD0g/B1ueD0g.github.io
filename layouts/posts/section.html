@@ -7,17 +7,29 @@
 {{- $pages = where $pages "Params.hiddenInHomeList" "!=" "true" }}
 {{- $pages = $pages.ByDate.Reverse }}
 {{- $paginator := .Paginate $pages }}
-{{- $years := slice }}
-{{- range $paginator.Pages }}
-  {{- $years = $years | append (.Date.Format "2006") }}
+{{- $yearItems := slice }}
+{{- $seenYears := dict }}
+{{- range $pager := $paginator.Pagers }}
+  {{- range $page := $pager.Pages }}
+    {{- $year := $page.Date.Format "2006" }}
+    {{- if not (isset $seenYears $year) }}
+    {{- $url := "" }}
+    {{- if eq $pager.PageNumber $paginator.PageNumber }}
+      {{- $url = printf "#year-%s" $year }}
+    {{- else }}
+      {{- $url = printf "%s#year-%s" ($pager.URL | relURL) $year }}
+    {{- end }}
+    {{- $yearItems = $yearItems | append (dict "year" $year "url" $url "pageNumber" $pager.PageNumber) }}
+    {{- $seenYears = merge $seenYears (dict $year true) }}
+    {{- end }}
+  {{- end }}
 {{- end }}
-{{- $years = uniq $years }}
 
-{{- if gt (len $years) 0 }}
+{{- if gt (len $yearItems) 0 }}
 <nav class="article-year-nav" aria-label="按年份跳转">
   <span>Years:</span>
-  {{- range $years }}
-  <a href="#year-{{ . }}">{{ . }}</a>
+  {{- range $yearItems }}
+  <a href="{{ .url }}" data-year-page="{{ .pageNumber }}">{{ .year }}</a>
   {{- end }}
 </nav>
 {{- end }}
