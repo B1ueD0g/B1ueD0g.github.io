@@ -5,6 +5,7 @@
   <header class="post-header">
     <div class="about-hero">
       <div class="about-hero-copy">
+        <p class="about-hero-kicker">Research Profile / 01</p>
         <h1 class="post-title entry-hint-parent">{{ .Title }}</h1>
         {{- with .Description }}
         <div class="post-description">{{ . }}</div>
@@ -19,9 +20,17 @@
   </header>
 
   {{- if and $useProfileData $aboutData }}
+  <nav class="about-section-nav" aria-label="About sections">
+    {{- with $aboutData.profile.roles }}<a href="#about-identity">Identity</a>{{- end }}
+    {{- with $aboutData.highlights }}<a href="#about-highlights">Highlights</a>{{- end }}
+    {{- with $aboutData.certifications }}<a href="#about-certifications">Certifications</a>{{- end }}
+    {{- with $aboutData.honors }}<a href="#about-honors">Honors</a>{{- end }}
+    {{- with $aboutData.works }}<a href="#about-works">Works</a>{{- end }}
+    {{- with $aboutData.roadmap }}<a href="#about-roadmap">Next</a>{{- end }}
+  </nav>
   <div class="about-profile">
     {{- with $aboutData.profile.roles }}
-    <section class="about-block about-block-title about-block-identity">
+    <section class="about-block about-block-title about-block-identity" id="about-identity">
       <h2>{{ $aboutData.profile.title | default "Roles · 定位" }}</h2>
       <ul class="about-title-list about-identity-list">
         {{- range $index, $item := . }}
@@ -53,7 +62,7 @@
         {{- $highlightItems = slice -}}
       {{- end }}
     {{- end }}
-    <section class="about-block about-block-highlights">
+    <section class="about-block about-block-highlights" id="about-highlights">
       <h2>Highlights · 亮点</h2>
       {{- if $highlightLead }}
       <p class="about-highlight-lead">{{ $highlightLead }}</p>
@@ -76,7 +85,7 @@
     {{- end }}
 
     {{- with $aboutData.certifications }}
-    <section class="about-block about-block-certifications">
+    <section class="about-block about-block-certifications" id="about-certifications">
       <h2>Certifications · 证书</h2>
       <ul class="about-cert-list about-record-list">
         {{- range $index, $item := . }}
@@ -90,7 +99,7 @@
     {{- end }}
 
     {{- with $aboutData.honors }}
-    <section class="about-block about-block-honors">
+    <section class="about-block about-block-honors" id="about-honors">
       <h2>Honors · 荣誉</h2>
       <ul class="about-honor-list about-record-list">
         {{- range $index, $item := . }}
@@ -113,23 +122,23 @@
     {{- else if and (eq (len $published) 0) (eq (len $inProgress) 0) (gt (len $translatedReferences) 0) -}}
     {{- $defaultPanel = "translated" -}}
     {{- end -}}
-    <section class="about-block about-block-works">
+    <section class="about-block about-block-works" id="about-works">
       <h2>Works · 成果物</h2>
-      <div class="about-work-tabs" aria-label="Works tabs">
+      <div class="about-work-tabs" role="tablist" aria-label="Works tabs">
         {{- if gt (len $published) 0 }}
-        <button class="about-work-tab{{ if eq $defaultPanel "published" }} is-active{{ end }}" type="button" data-target="published" aria-label="已发布（书籍 / 标准）" title="已发布（书籍 / 标准）" aria-pressed="{{ if eq $defaultPanel "published" }}true{{ else }}false{{ end }}" aria-controls="about-work-panel-published">
+        <button class="about-work-tab{{ if eq $defaultPanel "published" }} is-active{{ end }}" type="button" role="tab" data-target="published" aria-label="已发布（书籍 / 标准）" title="已发布（书籍 / 标准）" aria-selected="{{ if eq $defaultPanel "published" }}true{{ else }}false{{ end }}" aria-controls="about-work-panel-published" tabindex="{{ if eq $defaultPanel "published" }}0{{ else }}-1{{ end }}">
           <span class="about-work-tab-label">已发布</span>
           <span class="about-work-tab-count">{{ printf "%02d" (len $published) }}</span>
         </button>
         {{- end }}
         {{- if gt (len $inProgress) 0 }}
-        <button class="about-work-tab{{ if eq $defaultPanel "inprogress" }} is-active{{ end }}" type="button" data-target="inprogress" aria-label="待出版 / 待发布（书籍 / 标准）" title="待出版 / 待发布（书籍 / 标准）" aria-pressed="{{ if eq $defaultPanel "inprogress" }}true{{ else }}false{{ end }}" aria-controls="about-work-panel-inprogress">
+        <button class="about-work-tab{{ if eq $defaultPanel "inprogress" }} is-active{{ end }}" type="button" role="tab" data-target="inprogress" aria-label="待出版 / 待发布（书籍 / 标准）" title="待出版 / 待发布（书籍 / 标准）" aria-selected="{{ if eq $defaultPanel "inprogress" }}true{{ else }}false{{ end }}" aria-controls="about-work-panel-inprogress" tabindex="{{ if eq $defaultPanel "inprogress" }}0{{ else }}-1{{ end }}">
           <span class="about-work-tab-label">待发布</span>
           <span class="about-work-tab-count">{{ printf "%02d" (len $inProgress) }}</span>
         </button>
         {{- end }}
         {{- if gt (len $translatedReferences) 0 }}
-        <button class="about-work-tab{{ if eq $defaultPanel "translated" }} is-active{{ end }}" type="button" data-target="translated" aria-label="翻译标准/白皮书/报告（节选）" title="翻译标准/白皮书/报告（节选）" aria-pressed="{{ if eq $defaultPanel "translated" }}true{{ else }}false{{ end }}" aria-controls="about-work-panel-translated">
+        <button class="about-work-tab{{ if eq $defaultPanel "translated" }} is-active{{ end }}" type="button" role="tab" data-target="translated" aria-label="翻译标准/白皮书/报告（节选）" title="翻译标准/白皮书/报告（节选）" aria-selected="{{ if eq $defaultPanel "translated" }}true{{ else }}false{{ end }}" aria-controls="about-work-panel-translated" tabindex="{{ if eq $defaultPanel "translated" }}0{{ else }}-1{{ end }}">
           <span class="about-work-tab-label">翻译节选</span>
           <span class="about-work-tab-count">{{ printf "%02d" (len $translatedReferences) }}</span>
         </button>
@@ -137,7 +146,7 @@
       </div>
       <div class="about-work-panels">
         {{- if gt (len $published) 0 }}
-        <section class="about-work-panel{{ if eq $defaultPanel "published" }} is-active{{ end }}" id="about-work-panel-published" data-panel="published" aria-label="已发布成果物"{{ if ne $defaultPanel "published" }} hidden{{ end }}>
+        <section class="about-work-panel{{ if eq $defaultPanel "published" }} is-active{{ end }}" id="about-work-panel-published" role="tabpanel" data-panel="published" aria-label="已发布成果物"{{ if ne $defaultPanel "published" }} hidden{{ end }}>
           <ul class="about-work-list">
             {{- range $published }}
             {{- $typeClass := "about-work-type-translation" -}}
@@ -167,7 +176,7 @@
         </section>
         {{- end }}
         {{- if gt (len $inProgress) 0 }}
-        <section class="about-work-panel{{ if eq $defaultPanel "inprogress" }} is-active{{ end }}" id="about-work-panel-inprogress" data-panel="inprogress" aria-label="待发布成果物"{{ if ne $defaultPanel "inprogress" }} hidden{{ end }}>
+        <section class="about-work-panel{{ if eq $defaultPanel "inprogress" }} is-active{{ end }}" id="about-work-panel-inprogress" role="tabpanel" data-panel="inprogress" aria-label="待发布成果物"{{ if ne $defaultPanel "inprogress" }} hidden{{ end }}>
           <ul class="about-work-list">
             {{- range $inProgress }}
             {{- $typeClass := "about-work-type-translation" -}}
@@ -197,7 +206,7 @@
         </section>
         {{- end }}
         {{- if gt (len $translatedReferences) 0 }}
-        <section class="about-work-panel{{ if eq $defaultPanel "translated" }} is-active{{ end }}" id="about-work-panel-translated" data-panel="translated" aria-label="翻译节选"{{ if ne $defaultPanel "translated" }} hidden{{ end }}>
+        <section class="about-work-panel{{ if eq $defaultPanel "translated" }} is-active{{ end }}" id="about-work-panel-translated" role="tabpanel" data-panel="translated" aria-label="翻译节选"{{ if ne $defaultPanel "translated" }} hidden{{ end }}>
           <ul class="about-work-list">
             {{- range $translatedReferences }}
             {{- $typeClass := "about-work-type-translation" -}}
@@ -238,30 +247,88 @@
         if (!works) return;
         var tabs = Array.prototype.slice.call(works.querySelectorAll(".about-work-tab"));
         var panels = Array.prototype.slice.call(works.querySelectorAll(".about-work-panel"));
+        var panelWrap = works.querySelector(".about-work-panels");
+        var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        var transitionTimer = 0;
         if (!tabs.length || !panels.length) return;
-        function activate(target) {
+        function activate(target, options) {
+          var config = options || {};
+          var nextPanel = panels.find(function (panel) {
+            return panel.dataset.panel === target;
+          });
+          if (!nextPanel) return;
+          var currentPanel = panels.find(function (panel) {
+            return !panel.hidden;
+          });
+          if (currentPanel === nextPanel && !config.force) return;
+
+          var previousHeight = panelWrap ? panelWrap.getBoundingClientRect().height : 0;
+          if (transitionTimer) window.clearTimeout(transitionTimer);
+          if (panelWrap && !reducedMotion && previousHeight) {
+            panelWrap.style.height = previousHeight + "px";
+            panelWrap.classList.add("is-transitioning");
+          }
+
           tabs.forEach(function (tab) {
             var isActive = tab.dataset.target === target;
             tab.classList.toggle("is-active", isActive);
-            tab.setAttribute("aria-pressed", isActive ? "true" : "false");
+            tab.setAttribute("aria-selected", isActive ? "true" : "false");
+            tab.tabIndex = isActive ? 0 : -1;
           });
           panels.forEach(function (panel) {
             var panelActive = panel.dataset.panel === target;
             panel.classList.toggle("is-active", panelActive);
             panel.hidden = !panelActive;
+            panel.setAttribute("aria-hidden", panelActive ? "false" : "true");
           });
+
+          if (!reducedMotion) {
+            nextPanel.classList.remove("is-entering");
+            void nextPanel.offsetWidth;
+            nextPanel.classList.add("is-entering");
+          }
+
+          if (panelWrap && !reducedMotion && previousHeight) {
+            var nextHeight = nextPanel.getBoundingClientRect().height;
+            window.requestAnimationFrame(function () {
+              panelWrap.style.height = nextHeight + "px";
+            });
+            transitionTimer = window.setTimeout(function () {
+              panelWrap.classList.remove("is-transitioning");
+              panelWrap.style.height = "";
+              nextPanel.classList.remove("is-entering");
+            }, 340);
+          }
+
+          if (config.focus) {
+            var activeTab = tabs.find(function (tab) {
+              return tab.dataset.target === target;
+            });
+            if (activeTab) activeTab.focus();
+          }
         }
-        tabs.forEach(function (tab) {
+        tabs.forEach(function (tab, index) {
           tab.addEventListener("click", function () {
             activate(tab.dataset.target);
           });
+          tab.addEventListener("keydown", function (event) {
+            var nextIndex = index;
+            if (event.key === "ArrowRight") nextIndex = (index + 1) % tabs.length;
+            else if (event.key === "ArrowLeft") nextIndex = (index - 1 + tabs.length) % tabs.length;
+            else if (event.key === "Home") nextIndex = 0;
+            else if (event.key === "End") nextIndex = tabs.length - 1;
+            else return;
+            event.preventDefault();
+            activate(tabs[nextIndex].dataset.target, { focus: true });
+          });
         });
+        activate((tabs.find(function (tab) { return tab.classList.contains("is-active"); }) || tabs[0]).dataset.target, { force: true });
       })();
     </script>
     {{- end }}
 
     {{- with $aboutData.roadmap }}
-    <section class="about-block about-block-roadmap">
+    <section class="about-block about-block-roadmap" id="about-roadmap">
       <h2>Next · 进行中</h2>
       <ul class="about-list">
         {{- range $index, $item := . }}

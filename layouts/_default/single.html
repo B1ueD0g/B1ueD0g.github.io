@@ -1,10 +1,20 @@
 {{- define "main" }}
 {{- $tagsTaxonomy := .Language.Params.Taxonomies.tag | default "tags" -}}
 {{- $tagTerms := $.GetTerms $tagsTaxonomy -}}
+{{- $characterCount := strings.RuneCount (replaceRE `\s+` "" (.Plain | plainify)) -}}
+{{- $readingMinutes := div (add $characterCount 549) 550 -}}
 
 <article class="post-single post-single-editorial">
   <header class="editorial-header">
     {{ partial "breadcrumbs.html" . }}
+    <div class="editorial-entry-meta">
+      <span class="editorial-entry-kicker">Archive Entry</span>
+      <div class="editorial-entry-facts" aria-label="Article details">
+        <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006.01.02" }}</time>
+        <span aria-hidden="true">/</span>
+        <span>{{ $readingMinutes }} min read</span>
+      </div>
+    </div>
     <div class="editorial-hero">
       <div class="editorial-headline">
         <h1 class="editorial-title entry-hint-parent">
@@ -20,6 +30,13 @@
         </h1>
       </div>
     </div>
+    {{- with first 3 $tagTerms }}
+    <nav class="editorial-topic-list" aria-label="Article topics">
+      {{- range . }}
+      <a href="{{ .Permalink }}">#{{ .LinkTitle }}</a>
+      {{- end }}
+    </nav>
+    {{- end }}
   </header>
   {{- $isHidden := (.Param "cover.hiddenInSingle") | default (.Param "cover.hidden") | default false }}
   <div class="editorial-body">

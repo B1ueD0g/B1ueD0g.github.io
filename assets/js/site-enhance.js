@@ -214,7 +214,7 @@
 
       nodes.forEach(function (node, index) {
         node.classList.add("bd-reveal");
-        node.style.setProperty("--bd-reveal-delay", String((index % 7) * 55) + "ms");
+        node.style.setProperty("--bd-reveal-delay", String((index % 6) * 35) + "ms");
       });
 
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || !("IntersectionObserver" in window)) {
@@ -834,7 +834,10 @@
           heading.classList.toggle("is-active-heading", heading.id === id);
         });
         Object.keys(tocMap).forEach(function (key) {
-          tocMap[key].classList.toggle("is-active", key === id);
+          var isActive = key === id;
+          tocMap[key].classList.toggle("is-active", isActive);
+          if (isActive) tocMap[key].setAttribute("aria-current", "location");
+          else tocMap[key].removeAttribute("aria-current");
         });
         activeId = id;
       }
@@ -877,7 +880,7 @@
       var detailsList = Array.prototype.slice.call(document.querySelectorAll(".editorial-toc-rail .toc details"));
       if (detailsList.length === 0) return;
 
-      var desktop = window.matchMedia("(min-width: 1121px)");
+      var desktop = window.matchMedia("(min-width: 1500px)");
 
       function syncState() {
         detailsList.forEach(function (details) {
@@ -895,6 +898,78 @@
 
       window.addEventListener("resize", syncState);
       window.addEventListener("load", syncState);
+    }
+
+    function setupAboutSectionNav() {
+      var nav = document.querySelector(".about-section-nav");
+      if (!nav) return;
+
+      var links = Array.prototype.slice.call(nav.querySelectorAll("a[href^='#']"));
+      var sections = links.map(function (link) {
+        var id = decodeURIComponent((link.getAttribute("href") || "").slice(1));
+        return id ? document.getElementById(id) : null;
+      }).filter(Boolean);
+      if (!links.length || !sections.length) return;
+
+      var offsets = [];
+      var activeId = "";
+      var ticking = false;
+
+      function computeOffsets() {
+        offsets = sections.map(function (section) {
+          return {
+            id: section.id,
+            top: section.getBoundingClientRect().top + window.scrollY,
+          };
+        });
+      }
+
+      function setActive(id) {
+        if (!id || id === activeId) return;
+        links.forEach(function (link) {
+          var isActive = link.getAttribute("href") === "#" + id;
+          link.classList.toggle("is-active", isActive);
+          if (isActive) link.setAttribute("aria-current", "location");
+          else link.removeAttribute("aria-current");
+        });
+        activeId = id;
+      }
+
+      function updateActive() {
+        ticking = false;
+        if (!offsets.length) return;
+        var pointer = (window.scrollY || 0) + Math.min(220, (window.innerHeight || 1) * 0.32);
+        var nextId = offsets[0].id;
+        offsets.forEach(function (item) {
+          if (pointer >= item.top) nextId = item.id;
+        });
+        setActive(nextId);
+      }
+
+      function requestUpdate() {
+        if (ticking) return;
+        ticking = true;
+        window.requestAnimationFrame(updateActive);
+      }
+
+      links.forEach(function (link) {
+        link.addEventListener("click", function () {
+          var id = decodeURIComponent((link.getAttribute("href") || "").slice(1));
+          if (id) setActive(id);
+        });
+      });
+
+      computeOffsets();
+      updateActive();
+      window.addEventListener("scroll", requestUpdate, { passive: true });
+      window.addEventListener("resize", function () {
+        computeOffsets();
+        requestUpdate();
+      });
+      window.addEventListener("load", function () {
+        computeOffsets();
+        requestUpdate();
+      });
     }
 
     function setupFootnotePreview() {
@@ -1154,18 +1229,27 @@
           try {
             window.focus();
           } catch (error) {
-            // Ignore focus failures; the synchronous fallback below handles restrictive browsers.
+            // Ignore focus failures; clipboard methods still report their own result.
           }
+
+          // Run the legacy path while the click still owns user activation. If it is
+          // deferred to the Clipboard API rejection handler, restrictive browsers
+          // may reject both methods after the activation window has closed.
+          if (fallbackCopy(text)) {
+            finish(true);
+            return;
+          }
+
           if (clipboardApi && window.isSecureContext && clipboardApi.writeText) {
             clipboardApi.writeText(text).then(function () {
               finish(true);
             }).catch(function () {
-              finish(fallbackCopy(text));
+              finish(false);
             });
             return;
           }
 
-          finish(fallbackCopy(text));
+          finish(false);
         });
 
         host.appendChild(button);
@@ -1220,15 +1304,6 @@
         body.prepend(frame);
       }
 
-      var progress = document.querySelector(".bd-lab-scroll");
-      if (!progress) {
-        progress = document.createElement("div");
-        progress.className = "bd-lab-scroll";
-        progress.setAttribute("aria-hidden", "true");
-        progress.innerHTML = '<span></span>';
-        body.appendChild(progress);
-      }
-
       var homeHero = document.querySelector("body.home-page .home-info");
       if (homeHero) {
         ensureAccent(homeHero, "bd-lab-matrix", "", true);
@@ -1238,14 +1313,6 @@
       var articleHeader = document.querySelector("article.post-single.post-single-editorial .editorial-header");
       if (articleHeader) {
         ensureAccent(articleHeader, "bd-lab-matrix", "", true);
-        if (!articleHeader.querySelector(":scope > .bd-reading-readout")) {
-          var readout = document.createElement("span");
-          readout.className = "bd-reading-readout";
-          readout.setAttribute("aria-hidden", "true");
-          readout.setAttribute("data-lab-readout", "1");
-          readout.textContent = "READ 00%";
-          articleHeader.appendChild(readout);
-        }
       }
 
       Array.prototype.slice.call(
@@ -1285,40 +1352,6 @@
           root.classList.remove("bd-lab-input-active");
         });
       });
-
-      var frameRequest = 0;
-      var lastScrollTop = window.scrollY || document.documentElement.scrollTop || 0;
-      var lastScrollTime = window.performance && window.performance.now ? window.performance.now() : Date.now();
-      var readoutNode = document.querySelector("[data-lab-readout]");
-      function updateScrollState() {
-        frameRequest = 0;
-        var viewport = window.innerHeight || 1;
-        var scrollTop = window.scrollY || document.documentElement.scrollTop || 0;
-        var scrollable = Math.max(1, document.documentElement.scrollHeight - viewport);
-        var ratio = Math.min(Math.max(scrollTop / scrollable, 0), 1);
-        var now = window.performance && window.performance.now ? window.performance.now() : Date.now();
-        var elapsed = Math.max(16, now - lastScrollTime);
-        var velocity = Math.min(Math.abs(scrollTop - lastScrollTop) / elapsed / 3.8, 1);
-        root.style.setProperty("--bd-lab-scroll", ratio.toFixed(4));
-        root.style.setProperty("--bd-lab-scroll-pct", (ratio * 100).toFixed(2) + "%");
-        root.style.setProperty("--bd-lab-velocity", velocity.toFixed(3));
-        body.classList.toggle("bd-lab-deep-read", ratio > 0.08);
-        if (readoutNode) {
-          readoutNode.textContent = "READ " + String(Math.round(ratio * 100)).padStart(2, "0") + "%";
-        }
-        lastScrollTop = scrollTop;
-        lastScrollTime = now;
-      }
-
-      function requestScrollState() {
-        if (frameRequest) return;
-        frameRequest = window.requestAnimationFrame(updateScrollState);
-      }
-
-      updateScrollState();
-      window.addEventListener("scroll", requestScrollState, { passive: true });
-      window.addEventListener("resize", requestScrollState);
-      window.addEventListener("load", requestScrollState);
 
       window.setTimeout(function () {
         root.classList.add("bd-lab-online");
@@ -1452,14 +1485,19 @@
         }
       }
 
-      if (navigator.clipboard && window.isSecureContext && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(email).then(function () {
+      if (fallbackCopy(email)) {
+        onResult(true);
+        return;
+      }
+
+      if (window.navigator && window.navigator.clipboard && window.isSecureContext && window.navigator.clipboard.writeText) {
+        window.navigator.clipboard.writeText(email).then(function () {
           onResult(true);
         }).catch(function () {
-          onResult(fallbackCopy(email));
+          onResult(false);
         });
       } else {
-        onResult(fallbackCopy(email));
+        onResult(false);
       }
     }
 
@@ -1508,26 +1546,17 @@
     setupGeneratedA11yLabels();
     setupNavShrink();
     setupColdLabSystem();
-    setupLogoResponse();
     setupRevealOnScroll();
-    setupInteractivePanels();
-    setupDepthSurfaces();
-    setupSocialDock();
-    setupHeroTilt();
-    setupHomeHeroScene();
-    setupThemeToggleResponse();
-    setupMagneticClusters();
     setupSearchShortcut();
     setupReadingProgress();
     setupEditorialTocRail();
+    setupAboutSectionNav();
     setupEditorialTables();
     setupCodeTools();
-    setupReactBitsInspiredMotion();
     runWhenIdle(setupHeadingHighlight, 800);
     runWhenIdle(setupFootnotePreview, 950);
     runWhenIdle(setupEditorialTables, 1100);
     runWhenIdle(setupCodeTools, 1160);
-    runWhenIdle(setupReactBitsInspiredMotion, 1210);
     runWhenIdle(setupLightbox, 1240);
     setupPageTransition();
   })();

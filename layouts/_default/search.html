@@ -137,8 +137,11 @@
 </div>
 <section class="search-results-shell" aria-label="search-results">
   <div class="search-results-main">
-    <div id="search-results-count" class="search-results-count"></div>
+    <div id="search-results-count" class="search-results-count" role="status" aria-live="polite"></div>
     <div id="search-results" class="search-results"></div>
+    <div id="search-load-more" class="search-load-more" hidden>
+      <button type="button" id="search-load-more-button">Show more results</button>
+    </div>
   </div>
   <aside id="search-preview" class="search-preview" hidden aria-label="search-preview">
     <div class="search-preview-shell">
@@ -167,6 +170,8 @@
     var commandPanel = document.querySelector(".search-command");
     var previewNode = document.getElementById("search-preview");
     var previewBody = document.getElementById("search-preview-body");
+    var loadMoreWrap = document.getElementById("search-load-more");
+    var loadMoreButton = document.getElementById("search-load-more-button");
     var synonymMap = {{ $synonyms | jsonify | safeJS }};
     var synonymLookup = {};
     var recentStorageKey = "bluedog_recent_searches_v2";
@@ -177,6 +182,9 @@
     var dataset = [];
     var activeResultIndex = -1;
     var renderedItems = [];
+    var initialResultLimit = 8;
+    var resultStep = 8;
+    var resultLimit = initialResultLimit;
 
     function track(name, props) {
       if (typeof window.BlueDogTrack === "function") {
@@ -581,7 +589,6 @@
       var emptyCopy = emptyNode.querySelector("p");
       if (!query && totalMatches > 0) {
         emptyNode.hidden = true;
-        updatePreview(null);
         return;
       }
       if (totalMatches > 0) {
@@ -679,30 +686,38 @@
 
     function renderResults(items, bundle) {
       if (!resultsRoot || !resultsCount) return;
+      resultsRoot.setAttribute("aria-busy", "true");
+      resultsRoot.classList.add("is-updating");
       resultsRoot.innerHTML = "";
       resultsCount.innerHTML = "";
       activeResultIndex = -1;
-      renderedItems = items.slice();
+      var visibleItems = items.slice(0, resultLimit);
+      renderedItems = visibleItems.slice();
 
       if (items.length === 0) {
         updatePreview(null);
+        if (loadMoreWrap) loadMoreWrap.hidden = true;
+        resultsRoot.classList.remove("is-updating");
+        resultsRoot.setAttribute("aria-busy", "false");
         return;
       }
 
       resultsCount.innerHTML =
         '<span class="search-results-label">Results</span>' +
         '<span class="search-results-total">' + String(items.length).padStart(2, "0") + "</span>" +
-        '<span class="search-results-help">↑ ↓ Navigate · Enter Open</span>';
+        '<span class="search-results-help">Showing ' + String(visibleItems.length).padStart(2, "0") + " · ↑ ↓ Navigate · Enter Open</span>";
 
       var fragment = document.createDocumentFragment();
-      items.forEach(function (item, index) {
+      visibleItems.forEach(function (item, index) {
         var record = item.record;
         var matchPills = buildMatchPills(item.matchedTerms, "search-result-match");
         var article = document.createElement("article");
-        article.className = "search-result-card bd-reveal is-revealed";
+        article.className = "search-result-card bd-reveal is-revealed is-result-entering";
         article.setAttribute("data-result-index", String(index));
         article.setAttribute("tabindex", "-1");
         article.style.setProperty("--bd-reveal-delay", String((index % 8) * 45) + "ms");
+        article.style.setProperty("--bd-result-order", String(index));
+        article.style.setProperty("--bd-result-delay", String(Math.min(index, 7) * 28) + "ms");
         article.innerHTML =
           '<div class="search-result-meta">' +
             '<span class="search-result-index">' + String(index + 1).padStart(2, "0") + "</span>" +
@@ -711,7 +726,7 @@
           '<div class="search-result-body">' +
             '<div class="search-result-top">' +
               '<div class="search-result-tags">' +
-                record.tags.slice(0, 4).map(function (tag) {
+                record.tags.slice(0, 2).map(function (tag) {
                   return '<button type="button" class="search-result-tag" data-result-tag="' + escapeHTML(tag) + '">#' + escapeHTML(tag) + "</button>";
                 }).join("") +
               "</div>" +
@@ -729,6 +744,18 @@
         fragment.appendChild(article);
       });
       resultsRoot.appendChild(fragment);
+      window.requestAnimationFrame(function () {
+        resultsRoot.classList.remove("is-updating");
+        resultsRoot.setAttribute("aria-busy", "false");
+      });
+
+      if (loadMoreWrap && loadMoreButton) {
+        var remaining = Math.max(0, items.length - visibleItems.length);
+        loadMoreWrap.hidden = remaining === 0;
+        loadMoreButton.textContent = remaining > 0
+          ? "Show " + String(Math.min(resultStep, remaining)) + " more"
+          : "All results shown";
+      }
       setActiveResult(0, { scroll: false });
     }
 
@@ -804,10 +831,11 @@
       }
     }
 
-    function requestRender(autoJumpNow) {
+    function requestRender(autoJumpNow, preserveLimit) {
       if (renderTimer) {
         window.clearTimeout(renderTimer);
       }
+      if (!preserveLimit) resultLimit = initialResultLimit;
       renderTimer = window.setTimeout(function () {
         renderSearch(autoJumpNow);
       }, 90);
@@ -867,6 +895,7 @@
           });
         }
         flashCommandPanel();
+        resultLimit = initialResultLimit;
         renderSearch(false);
         if (!openActiveResult()) {
           requestRender(true);
@@ -1009,6 +1038,14 @@
           var card = event.target.closest(".search-result-card");
           if (!card) return;
           setActiveResult(Number(card.getAttribute("data-result-index") || "0"), { scroll: false });
+        });
+      }
+
+      if (loadMoreButton) {
+        loadMoreButton.addEventListener("click", function () {
+          resultLimit += resultStep;
+          renderSearch(false);
+          track("search_results_expand", { visible: String(resultLimit) });
         });
       }
 

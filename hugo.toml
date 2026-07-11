@@ -127,6 +127,11 @@ title = "LinkedIn"
 url = "https://www.linkedin.com/in/b1ued0g/"
 
 [[params.socialIcons]]
+name = "github"
+title = "GitHub"
+url = "https://github.com/B1ueD0g"
+
+[[params.socialIcons]]
 name = "telegram"
 title = "Telegram"
 url = "https://t.me/B1ueD0g"

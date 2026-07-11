@@ -14,12 +14,6 @@
     <article class="first-entry home-info">
       <div class="home-depth-scene" aria-hidden="true">
         <span class="home-depth-grid"></span>
-        <span class="home-depth-orb home-depth-orb-warm"></span>
-        <span class="home-depth-orb home-depth-orb-cool"></span>
-        <span class="home-depth-plane home-depth-plane-primary"></span>
-        <span class="home-depth-plane home-depth-plane-secondary"></span>
-        <span class="home-depth-ring home-depth-ring-a"></span>
-        <span class="home-depth-ring home-depth-ring-b"></span>
       </div>
       <div class="home-hero-anchor" aria-hidden="true">
         <span></span>
@@ -126,13 +120,7 @@
     var button = document.getElementById("home-search-btn");
     var searchBox = document.querySelector(".home-search-box");
     var searchGlyph = document.querySelector(".home-search-glyph");
-    var prompts = [
-      "搜索标题、标签、关键词",
-      "Try 零信任 / AI安全 / 数据安全 / 漏洞研究",
-      "输入 CVE、标准名、主题词",
-    ];
-    var promptIndex = 0;
-    var promptTimer = 0;
+    var defaultPrompt = "搜索标题、标签、关键词";
 
     if (!input || !button) return;
 
@@ -160,24 +148,9 @@
       window.location.href = searchPath + "?" + params.toString();
     }
 
-    function startPromptCycle() {
-      if (promptTimer) return;
-      promptTimer = window.setInterval(function () {
-        if (document.activeElement === input || input.value.trim()) return;
-        promptIndex = (promptIndex + 1) % prompts.length;
-        input.setAttribute("placeholder", prompts[promptIndex]);
-      }, 3200);
-    }
-
-    function stopPromptCycle() {
-      if (!promptTimer) return;
-      window.clearInterval(promptTimer);
-      promptTimer = 0;
-    }
-
     function setPreviewPrompt(value) {
       if (!input || document.activeElement === input || input.value.trim()) return;
-      input.setAttribute("placeholder", value || prompts[promptIndex]);
+      input.setAttribute("placeholder", value || defaultPrompt);
     }
 
     button.addEventListener("click", function () {
@@ -199,14 +172,11 @@
     });
 
     input.addEventListener("focus", function () {
-      stopPromptCycle();
       if (searchBox) searchBox.classList.add("is-armed");
     });
     input.addEventListener("blur", function () {
-      startPromptCycle();
       if (searchBox) searchBox.classList.remove("is-armed");
     });
-    startPromptCycle();
 
     document.querySelectorAll("[data-home-search-tag]").forEach(function (anchor) {
       var tagValue = anchor.getAttribute("data-home-search-tag") || "";

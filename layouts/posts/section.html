@@ -1,11 +1,15 @@
 {{- define "main" }}
-<header class="page-header">
-  <h1>{{ .Title }}</h1>
-</header>
-
 {{- $pages := where site.RegularPages "Section" "posts" }}
 {{- $pages = where $pages "Params.hiddenInHomeList" "!=" "true" }}
 {{- $pages = $pages.ByDate.Reverse }}
+<header class="page-header">
+  <p class="article-archive-kicker">Research Archive</p>
+  <div class="article-archive-heading">
+    <h1>{{ .Title }}</h1>
+    <p class="article-archive-count"><strong>{{ printf "%02d" (len $pages) }}</strong><span>entries</span></p>
+  </div>
+</header>
+
 {{- $paginator := .Paginate $pages }}
 {{- $yearItems := slice }}
 {{- $seenYears := dict }}
