@@ -54,8 +54,13 @@
       <h2 class="entry-hint-parent">{{ .Title }}</h2>
     </header>
     <div class="entry-content">
-      <p>{{ .Summary | plainify | htmlUnescape }}{{ if .Truncated }}...{{ end }}</p>
+      <p>{{ .Summary | plainify | htmlUnescape | truncate 150 }}</p>
     </div>
+    {{- with first 3 (.Params.tags | default (slice)) }}
+    <div class="post-entry-topics" aria-label="Article topics">
+      {{- range . }}<span>#{{ . }}</span>{{- end }}
+    </div>
+    {{- end }}
   </div>
   <a class="entry-link" aria-label="post link to {{ .Title | plainify }}" href="{{ .Permalink }}"></a>
 </article>

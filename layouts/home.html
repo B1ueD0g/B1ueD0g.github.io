@@ -18,11 +18,18 @@
       <div class="home-hero-anchor" aria-hidden="true">
         <span></span>
       </div>
-      <p class="home-hero-kicker">Editorial Research Lab</p>
+      <p class="home-hero-kicker">Songbo Bu / Security Research</p>
       <header class="entry-header">
         <h1>{{ site.Params.homeInfoParams.Title | default "He is Exploring Everything." }}</h1>
       </header>
-      <p class="home-hero-deck">长期记录网络安全、AI 安全、数据治理、标准实践与工程复盘。</p>
+      <p class="home-hero-deck">安全研究者、标准贡献者与作者。这里记录网络安全、AI 安全、数据治理，以及把复杂问题做成可验证工程的过程。</p>
+
+      <div class="home-profile-line" aria-label="Research focus">
+        <span>Network Security</span>
+        <span>Agent Security</span>
+        <span>IETF / Standards</span>
+        <a href="/about/">Profile <span aria-hidden="true">↗</span></a>
+      </div>
 
       <div class="home-search-wrap">
         <div class="home-search-box">
@@ -42,20 +49,8 @@
         </div>
 
         <div class="home-search-meta" aria-label="Search hints">
-          <p class="home-search-note">支持标题、标签、全文关键词和中英混合词检索。</p>
-          <div class="home-search-shortcuts">
-            <span><kbd>/</kbd> Focus</span>
-            <span><kbd>Enter</kbd> Best Match</span>
-          </div>
-        </div>
-
-        <div class="home-search-tags">
-          <span>Try Tags:</span>
-          <div class="home-search-tag-list">
-          {{- range $quickTags }}
-          <a href="{{ $searchPath }}?q={{ . | urlquery }}" data-home-search-tag="{{ . }}">#{{ . }}</a>
-          {{- end }}
-          </div>
+          <p class="home-search-note">按标题、标签与全文关键词检索研究笔记。</p>
+          <span class="home-search-shortcut"><kbd>/</kbd> Focus</span>
         </div>
       </div>
     </article>
