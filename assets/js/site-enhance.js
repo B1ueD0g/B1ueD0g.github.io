@@ -880,7 +880,7 @@
       var detailsList = Array.prototype.slice.call(document.querySelectorAll(".editorial-toc-rail .toc details"));
       if (detailsList.length === 0) return;
 
-      var desktop = window.matchMedia("(min-width: 1500px)");
+      var desktop = window.matchMedia("(min-width: 1280px)");
 
       function syncState() {
         detailsList.forEach(function (details) {
@@ -896,8 +896,6 @@
         desktop.addListener(syncState);
       }
 
-      window.addEventListener("resize", syncState);
-      window.addEventListener("load", syncState);
     }
 
     function setupAboutSectionNav() {

@@ -9075,3 +9075,230 @@ article.about-single.about-pro .about-hero-topics {
     margin-inline: 0 !important;
   }
 }
+
+/* Stable article outline: readable side rail on desktop, compact disclosure below it. */
+@media (min-width: 1280px) {
+  article.post-single.post-single-editorial .editorial-toc-rail,
+  article.post-single.post-single-editorial .editorial-toc-rail:hover,
+  article.post-single.post-single-editorial .editorial-toc-rail:focus-within {
+    position: fixed !important;
+    inset: 176px auto auto calc(50vw + 480px) !important;
+    z-index: 24 !important;
+    display: block !important;
+    visibility: visible !important;
+    width: clamp(160px, calc(50vw - 500px), 220px) !important;
+    max-width: 220px !important;
+    max-height: calc(100svh - 218px) !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    border: 1px solid color-mix(in srgb, var(--primary) 14%, transparent) !important;
+    border-radius: 8px !important;
+    background: color-mix(in srgb, var(--entry) 96%, transparent) !important;
+    box-shadow: 0 12px 34px rgba(15, 23, 42, 0.08) !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  article.post-single.post-single-editorial .editorial-toc .toc summary {
+    display: none !important;
+  }
+
+  article.post-single.post-single-editorial .editorial-toc-rail-head {
+    display: flex !important;
+    min-height: 42px !important;
+    padding: 0 14px !important;
+    align-items: center !important;
+    border-bottom: 1px solid var(--bd-rule-soft) !important;
+  }
+
+  article.post-single.post-single-editorial .editorial-toc-rail-label {
+    display: inline-block !important;
+    color: var(--bd-ink-strong) !important;
+    font-family: var(--bd-font-ui) !important;
+    font-size: 0.72rem !important;
+    font-weight: 820 !important;
+    line-height: 1 !important;
+    letter-spacing: 0.12em !important;
+  }
+
+  article.post-single.post-single-editorial .editorial-toc-rail-body,
+  article.post-single.post-single-editorial .editorial-toc,
+  article.post-single.post-single-editorial .editorial-toc .toc,
+  article.post-single.post-single-editorial .editorial-toc .toc details {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: calc(100svh - 260px) !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  article.post-single.post-single-editorial .editorial-toc .toc .inner {
+    display: block !important;
+    width: 100% !important;
+    max-height: calc(100svh - 260px) !important;
+    margin: 0 !important;
+    padding: 10px 8px 12px !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: color-mix(in srgb, var(--primary) 20%, transparent) transparent !important;
+  }
+
+  article.post-single.post-single-editorial .editorial-toc .toc ul,
+  article.post-single.post-single-editorial .editorial-toc .toc ul ul {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    list-style: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
+  }
+
+  article.post-single.post-single-editorial .editorial-toc .toc ul ul {
+    padding-left: 10px !important;
+  }
+
+  article.post-single.post-single-editorial .editorial-toc .toc li,
+  article.post-single.post-single-editorial .editorial-toc-rail:hover .editorial-toc .toc li {
+    position: relative !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 0 5px !important;
+    padding: 0 0 0 12px !important;
+  }
+
+  article.post-single.post-single-editorial .editorial-toc .toc li::before {
+    top: 0.75em !important;
+    left: 0 !important;
+    width: 4px !important;
+    height: 1px !important;
+    margin: 0 !important;
+    transform: none !important;
+  }
+
+  article.post-single.post-single-editorial .editorial-toc .toc a,
+  article.post-single.post-single-editorial .editorial-toc-rail:hover .editorial-toc .toc a,
+  article.post-single.post-single-editorial .editorial-toc-rail:focus-within .toc a {
+    position: static !important;
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 3px 6px !important;
+    overflow: hidden !important;
+    border-radius: 5px !important;
+    color: color-mix(in srgb, var(--secondary) 88%, var(--primary) 12%) !important;
+    font-size: 0.75rem !important;
+    line-height: 1.4 !important;
+    text-align: left !important;
+    text-indent: 0 !important;
+    text-overflow: ellipsis !important;
+    white-space: normal !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    transform: none !important;
+    transition: color 140ms ease, background-color 140ms ease !important;
+  }
+
+  article.post-single.post-single-editorial .editorial-toc .toc a::after {
+    display: none !important;
+    content: none !important;
+  }
+
+  article.post-single.post-single-editorial .editorial-toc .toc a:hover,
+  article.post-single.post-single-editorial .editorial-toc .toc a:focus-visible,
+  article.post-single.post-single-editorial .editorial-toc .toc a.is-active,
+  article.post-single.post-single-editorial .editorial-toc .toc li.is-active > a {
+    color: var(--bd-ink-strong) !important;
+    background: color-mix(in srgb, var(--bd-accent-blue) 9%, transparent) !important;
+    transform: none !important;
+  }
+}
+
+@media (max-width: 1279px) {
+  article.post-single.post-single-editorial .editorial-toc-rail,
+  article.post-single.post-single-editorial .editorial-toc-rail:hover,
+  article.post-single.post-single-editorial .editorial-toc-rail:focus-within {
+    position: relative !important;
+    inset: auto !important;
+    z-index: 2 !important;
+    width: min(var(--bd-reading-text), 100%) !important;
+    max-width: var(--bd-reading-text) !important;
+    max-height: none !important;
+    margin: 0 auto 24px !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    border: 1px solid var(--bd-rule-soft) !important;
+    border-radius: 8px !important;
+    background: color-mix(in srgb, var(--entry) 94%, transparent) !important;
+    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06) !important;
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  article.post-single.post-single-editorial .editorial-toc .toc details:not([open]) > .inner {
+    display: none !important;
+  }
+
+  article.post-single.post-single-editorial .editorial-toc .toc details > summary,
+  article.post-single.post-single-editorial .editorial-toc .toc details[open] > summary {
+    display: flex !important;
+    pointer-events: auto !important;
+  }
+
+  article.post-single.post-single-editorial .editorial-toc .toc details[open] > .inner {
+    display: block !important;
+    max-height: min(56vh, 440px) !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+  }
+
+  article.post-single.post-single-editorial .editorial-toc .toc ul,
+  article.post-single.post-single-editorial .editorial-toc .toc ul ul {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
+  }
+
+  article.post-single.post-single-editorial .editorial-toc .toc li,
+  article.post-single.post-single-editorial .editorial-toc-rail:hover .editorial-toc .toc li {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  article.post-single.post-single-editorial .editorial-toc .toc a,
+  article.post-single.post-single-editorial .editorial-toc-rail:hover .editorial-toc .toc a,
+  article.post-single.post-single-editorial .editorial-toc-rail:focus-within .toc a {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    color: var(--bd-ink-muted) !important;
+    font-size: 0.84rem !important;
+    line-height: 1.46 !important;
+    text-indent: 0 !important;
+    white-space: normal !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+    transition: color 140ms ease, background-color 140ms ease !important;
+  }
+}
