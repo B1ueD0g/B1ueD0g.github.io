@@ -3,7 +3,7 @@
   window.BlueDogShareSheetReady = true;
 
   var ua = navigator.userAgent || "";
-  if (/MicroMessenger/i.test(ua)) return;
+  var isWechatBrowser = /MicroMessenger/i.test(ua);
 
   function showToast(message, tone) {
     if (typeof window.BlueDogShowToast === "function") {
@@ -41,14 +41,31 @@
   }
 
   function copyText(text) {
+    if (fallbackCopy(text)) {
+      return Promise.resolve(true);
+    }
+
     if (navigator.clipboard && navigator.clipboard.writeText) {
-      return navigator.clipboard.writeText(text).then(function () {
-        return true;
-      }).catch(function () {
-        return fallbackCopy(text);
+      return new Promise(function (resolve) {
+        var settled = false;
+        var finish = function (copied) {
+          if (settled) return;
+          settled = true;
+          window.clearTimeout(timeout);
+          resolve(copied);
+        };
+        var timeout = window.setTimeout(function () {
+          finish(false);
+        }, 600);
+
+        navigator.clipboard.writeText(text).then(function () {
+          finish(true);
+        }).catch(function () {
+          finish(false);
+        });
       });
     }
-    return Promise.resolve(fallbackCopy(text));
+    return Promise.resolve(false);
   }
 
   function openPopup(url) {
@@ -58,14 +75,71 @@
   function getSharePayload(root) {
     var rawTitle = root.getAttribute("data-share-title") || document.title || "";
     var rawUrl = root.getAttribute("data-share-url") || window.location.href || "";
+    var rawShortUrl = root.getAttribute("data-share-short-url") || rawUrl;
     var title = rawTitle.trim();
     var url = rawUrl;
+    var shortUrl = rawShortUrl;
     try {
       url = new URL(rawUrl, window.location.origin).href.split("#")[0];
     } catch (error) {
       url = window.location.href.split("#")[0];
     }
-    return { title: title, url: url };
+    try {
+      shortUrl = new URL(rawShortUrl, window.location.origin).href.split("#")[0];
+    } catch (error) {
+      shortUrl = url;
+    }
+    return { title: title, url: url, shortUrl: shortUrl };
+  }
+
+  function setShareStatus(root, message) {
+    var status = root.querySelector("[data-share-status]");
+    if (status) status.textContent = message || "";
+  }
+
+  function renderQrCode(root, url) {
+    var image = root.querySelector("[data-share-qr]");
+    if (!image || typeof window.qrcode !== "function") return false;
+    try {
+      var code = window.qrcode(0, "M");
+      code.addData(url, "Byte");
+      code.make();
+      image.src = code.createDataURL(6, 8);
+      return true;
+    } catch (error) {
+      image.removeAttribute("src");
+      return false;
+    }
+  }
+
+  function setWechatView(root, open) {
+    var options = root.querySelector("[data-share-options]");
+    var view = root.querySelector("[data-share-wechat]");
+    if (!options || !view) return;
+    var payload = getSharePayload(root);
+    options.hidden = open;
+    view.hidden = !open;
+    root.classList.toggle("is-wechat-view", open);
+    if (!open) return;
+
+    var title = view.querySelector("[data-share-wechat-title]");
+    var guide = view.querySelector("[data-share-wechat-guide]");
+    var qrFrame = view.querySelector("[data-share-qr-frame]");
+    if (title) title.textContent = payload.title;
+    if (isWechatBrowser) {
+      root.classList.add("is-wechat-browser");
+      if (guide) guide.textContent = "点击微信右上角 ···，选择“分享到朋友圈”。";
+      if (qrFrame) qrFrame.hidden = true;
+    } else {
+      root.classList.remove("is-wechat-browser");
+      if (guide) guide.textContent = "手机微信扫码打开，再点击右上角分享到朋友圈。";
+      if (qrFrame) qrFrame.hidden = false;
+      if (!renderQrCode(root, payload.shortUrl)) {
+        setShareStatus(root, "二维码生成失败，请复制短链接。");
+      }
+    }
+    var back = view.querySelector("[data-share-wechat-back]");
+    if (back) back.focus();
   }
 
   function hasOpenSheet() {
@@ -98,6 +172,13 @@
     sheet.hidden = false;
     sheet.setAttribute("aria-hidden", "false");
     root.dataset.shareOpened = "true";
+    var payload = getSharePayload(root);
+    var previewTitle = root.querySelector("[data-share-preview-title]");
+    var previewUrl = root.querySelector("[data-share-preview-url]");
+    if (previewTitle) previewTitle.textContent = payload.title;
+    if (previewUrl) previewUrl.textContent = payload.shortUrl;
+    setShareStatus(root, "");
+    setWechatView(root, false);
     var trigger = root.querySelector("[data-share-open]");
     if (trigger) trigger.setAttribute("aria-expanded", "true");
     syncBodyLock();
@@ -145,21 +226,39 @@
       closeSheet(root);
       return;
     }
-    if (action === "facebook") {
-      openPopup("https://www.facebook.com/sharer/sharer.php?u=" + encodedUrl);
-      closeSheet(root);
-      return;
-    }
     if (action === "linkedin") {
       openPopup("https://www.linkedin.com/sharing/share-offsite/?url=" + encodedUrl);
       closeSheet(root);
       return;
     }
+    if (action === "wechat") {
+      var canUseNativeShare = !isWechatBrowser && navigator.share && window.matchMedia && window.matchMedia("(pointer: coarse)").matches;
+      if (canUseNativeShare) {
+        navigator.share({ title: payload.title, text: payload.title, url: payload.shortUrl }).then(function () {
+          closeSheet(root);
+        }).catch(function (error) {
+          if (error && error.name === "AbortError") return;
+          setWechatView(root, true);
+        });
+      } else {
+        setWechatView(root, true);
+      }
+      return;
+    }
     if (action === "copy") {
-      copyText(payload.url).then(function (ok) {
-        showToast(ok ? "链接已复制" : "复制失败，请手动复制", ok ? "success" : "error");
+      copyText(payload.shortUrl).then(function (ok) {
+        showToast(ok ? "短链接已复制" : "复制失败，请手动复制", ok ? "success" : "error");
       });
       closeSheet(root);
+      return;
+    }
+    if (action === "copy-wechat") {
+      setShareStatus(root, "正在复制短链接…");
+      copyText(payload.shortUrl).then(function (ok) {
+        var message = ok ? "短链接已复制，可粘贴到微信" : "复制失败，请手动复制";
+        setShareStatus(root, message);
+        showToast(message, ok ? "success" : "error");
+      });
       return;
     }
   }
@@ -190,6 +289,13 @@
       var actionRoot = actionBtn.closest("[data-share-root]");
       if (!actionRoot) return;
       handleShareAction(actionRoot, actionBtn.getAttribute("data-share-action"));
+      return;
+    }
+
+    var wechatBack = event.target.closest("[data-share-wechat-back]");
+    if (wechatBack) {
+      var wechatRoot = wechatBack.closest("[data-share-root]");
+      if (wechatRoot) setWechatView(wechatRoot, false);
     }
   });
 

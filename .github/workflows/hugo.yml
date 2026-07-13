@@ -49,6 +49,9 @@ jobs:
       - name: Validate post metadata quality
         run: python3 scripts/check_metadata_quality.py
 
+      - name: Generate article short links
+        run: python3 scripts/generate_shortlinks.py
+
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v3
         with:

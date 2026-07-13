@@ -14,6 +14,10 @@
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="{{ site.Params.branding.themeColorLight | default "#f4f4f2" }}">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="{{ site.Params.branding.themeColorDark | default "#11151c" }}">
 <link rel="manifest" href="{{ "site.webmanifest" | absURL }}">
+{{- if .IsPage }}
+  {{- $socialImage := partial "templates/_funcs/get-social-image" . -}}
+<link rel="image_src" href="{{ $socialImage.Permalink }}">
+{{- end }}
 {{- with site.Params.analytics -}}
   {{- if and .enabled (eq (lower (default "" .provider)) "plausible") -}}
 <link rel="preconnect" href="https://plausible.io" crossorigin>

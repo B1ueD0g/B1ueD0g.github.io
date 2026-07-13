@@ -1,6 +1,12 @@
-<div class="bd-share" data-share-root data-share-title="{{ .Title | plainify }}" data-share-url="{{ .Permalink }}">
+{{- $shareKey := .RelPermalink -}}
+{{- with .File }}{{ $shareKey = .Path }}{{ end -}}
+{{- $shareID := substr (md5 $shareKey) 0 8 -}}
+{{- $shortURL := printf "%ss/%s/" site.BaseURL $shareID -}}
+<div class="bd-share" data-share-root data-share-title="{{ .Title | plainify }}" data-share-url="{{ .Permalink }}" data-share-short-url="{{ $shortURL }}">
   <button class="bd-share-trigger" type="button" data-share-open aria-haspopup="dialog" aria-expanded="false" aria-controls="bd-share-panel">
-    <span class="bd-share-trigger-icon" aria-hidden="true">↗</span>
+    <svg class="bd-share-trigger-icon lucide lucide-share-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.59 13.51 6.83 3.98M15.41 6.51 8.59 10.49"/>
+    </svg>
     <span>转发</span>
   </button>
 
@@ -8,25 +14,70 @@
     <button class="bd-share-backdrop" type="button" data-share-close aria-label="关闭转发面板"></button>
     <section class="bd-share-panel" id="bd-share-panel" role="dialog" aria-modal="true" aria-labelledby="bd-share-title" tabindex="-1">
       <header class="bd-share-head">
-        <h3 id="bd-share-title">转发到</h3>
-        <button class="bd-share-close" type="button" data-share-close aria-label="关闭">✕</button>
+        <div>
+          <span class="bd-share-kicker">SHARE / 转发</span>
+          <h3 id="bd-share-title">选择发布位置</h3>
+        </div>
+        <button class="bd-share-close" type="button" data-share-close aria-label="关闭">
+          <svg class="lucide lucide-x" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
       </header>
 
-      <div class="bd-share-grid">
-        <button type="button" class="bd-share-option" data-share-action="x">X</button>
-        <button type="button" class="bd-share-option" data-share-action="facebook">Facebook</button>
-        <button type="button" class="bd-share-option" data-share-action="linkedin">LinkedIn</button>
-        <button type="button" class="bd-share-option" data-share-action="copy">复制链接</button>
+      <div class="bd-share-context">
+        <strong data-share-preview-title>{{ .Title | plainify }}</strong>
+        <span data-share-preview-url>{{ $shortURL }}</span>
       </div>
+
+      <div class="bd-share-grid" data-share-options>
+        <button type="button" class="bd-share-option is-wechat" data-share-action="wechat">
+          <span class="bd-share-option-icon" aria-hidden="true">
+            <svg class="lucide lucide-messages-square" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4c.92 0 1.77.23 2.5.63A6 6 0 0 1 20 10c0 1.2-.36 2.32-.98 3.25L20 17l-3.76-1.02A6.1 6.1 0 0 1 14 16H9a6 6 0 0 1 0-12Z"/><path d="M8 8h.01M12 8h.01M16 8h.01"/><path d="M9 16a6.2 6.2 0 0 1-1.24-.13L4 17l.98-3.75A5.96 5.96 0 0 1 4 10c0-1.17.34-2.26.93-3.18"/></svg>
+          </span>
+          <span><strong>朋友圈</strong><small>微信分享</small></span>
+        </button>
+        <button type="button" class="bd-share-option is-linkedin" data-share-action="linkedin">
+          <span class="bd-share-option-icon bd-brand-linkedin" aria-hidden="true">in</span>
+          <span><strong>LinkedIn</strong><small>专业动态</small></span>
+        </button>
+        <button type="button" class="bd-share-option is-x" data-share-action="x">
+          <span class="bd-share-option-icon bd-brand-x" aria-hidden="true">X</span>
+          <span><strong>X</strong><small>发布动态</small></span>
+        </button>
+        <button type="button" class="bd-share-option is-link" data-share-action="copy">
+          <span class="bd-share-option-icon" aria-hidden="true">
+            <svg class="lucide lucide-link" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          </span>
+          <span><strong>链接</strong><small>复制短链</small></span>
+        </button>
+      </div>
+
+      <div class="bd-share-wechat" data-share-wechat hidden>
+        <button class="bd-share-wechat-back" type="button" data-share-wechat-back>
+          <svg class="lucide lucide-arrow-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
+          <span>返回</span>
+        </button>
+        <div class="bd-share-wechat-layout">
+          <div class="bd-share-qr-frame" data-share-qr-frame>
+            <img data-share-qr alt="微信扫码打开文章">
+          </div>
+          <div class="bd-share-wechat-copy">
+            <span class="bd-share-wechat-label">微信朋友圈</span>
+            <strong data-share-wechat-title>{{ .Title | plainify }}</strong>
+            <p data-share-wechat-guide>手机微信扫码打开，再点击右上角分享到朋友圈。</p>
+            <button type="button" class="bd-share-copy-short" data-share-action="copy-wechat">复制短链接</button>
+          </div>
+        </div>
+      </div>
+      <p class="bd-share-status" data-share-status aria-live="polite"></p>
     </section>
   </div>
 </div>
-{{- $shareSheet := resources.Get "js/share-sheet.js" | minify | fingerprint -}}
+{{- $shareVendor := resources.Get "js/vendor/qrcode-generator.js" -}}
+{{- $shareApp := resources.Get "js/share-sheet.js" -}}
+{{- $shareSheet := slice $shareVendor $shareApp | resources.Concat "js/share-sheet.bundle.js" | minify | fingerprint -}}
 
 <script>
   (function () {
-    var ua = navigator.userAgent || "";
-    if (/MicroMessenger/i.test(ua)) return;
     if (window.BlueDogShareSheetLoaderReady) return;
     window.BlueDogShareSheetLoaderReady = true;
     var script = document.createElement("script");

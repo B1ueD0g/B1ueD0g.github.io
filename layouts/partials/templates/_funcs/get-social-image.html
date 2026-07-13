@@ -1,0 +1,23 @@
+{{- $fallback := site.Params.socialCard | default "/branding/og-default.png" -}}
+{{- $image := $fallback | absURL -}}
+{{- $alt := .Title | default site.Title | plainify -}}
+{{- $isFallback := true -}}
+{{- $cover := .Params.cover.image | default "" -}}
+
+{{- if and $cover (ne $cover "/branding/banner-logo.webp") -}}
+  {{- $isFallback = false -}}
+  {{- $alt = .Params.cover.alt | default $alt | plainify -}}
+  {{- if eq .Params.cover.relative true -}}
+    {{- $image = (path.Join .RelPermalink $cover) | absURL -}}
+  {{- else -}}
+    {{- $image = $cover | absURL -}}
+  {{- end -}}
+{{- else if not $cover -}}
+  {{- $images := partial "templates/_funcs/get-page-images" . -}}
+  {{- with index $images 0 -}}
+    {{- $image = .Permalink -}}
+    {{- $isFallback = eq .Permalink ($fallback | absURL) -}}
+  {{- end -}}
+{{- end -}}
+
+{{- return (dict "Permalink" $image "Alt" $alt "IsFallback" $isFallback) -}}

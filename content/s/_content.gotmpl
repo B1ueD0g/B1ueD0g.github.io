@@ -1,0 +1,11 @@
+{{- range site.Data.shortlinks.items -}}
+  {{- $page := dict
+    "build" (dict "list" "never" "render" "always")
+    "kind" "page"
+    "path" .id
+    "title" .id
+    "type" "shortlink"
+    "params" (dict "source" .source "robotsNoIndex" true)
+  -}}
+  {{- $.AddPage $page -}}
+{{- end -}}

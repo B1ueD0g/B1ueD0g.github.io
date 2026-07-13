@@ -1,0 +1,71 @@
+{{- $target := site.GetPage .Params.source -}}
+{{- $fallbackImage := site.Params.socialCard | default "/branding/og-default.png" -}}
+{{- $image := $fallbackImage | absURL -}}
+{{- $isFallback := true -}}
+{{- if $target -}}
+  {{- with $target.Params.cover.image -}}
+    {{- if ne . "/branding/banner-logo.webp" -}}
+      {{- $isFallback = false -}}
+      {{- if eq $target.Params.cover.relative true -}}
+        {{- $image = (path.Join $target.RelPermalink .) | absURL -}}
+      {{- else -}}
+        {{- $image = . | absURL -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  {{- if $target }}
+  <title>{{ $target.Title | plainify }} | BlueDog's Blog</title>
+  <meta name="description" content="{{ with $target.Description }}{{ . | plainify }}{{ else }}{{ $target.Summary | plainify }}{{ end }}">
+  <link rel="canonical" href="{{ $target.Permalink }}">
+  <meta http-equiv="refresh" content="0; url={{ $target.RelPermalink }}">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="{{ site.Title | plainify }}">
+  <meta property="og:title" content="{{ $target.Title | plainify }}">
+  <meta property="og:description" content="{{ with $target.Description }}{{ . | plainify }}{{ else }}{{ $target.Summary | plainify }}{{ end }}">
+  <meta property="og:url" content="{{ .Permalink }}">
+  <link rel="image_src" href="{{ $image }}">
+  <meta itemprop="image" content="{{ $image }}">
+  <meta property="og:image" content="{{ $image }}">
+  <meta property="og:image:secure_url" content="{{ $image }}">
+  <meta property="og:image:alt" content="{{ $target.Title | plainify }}">
+  {{- if $isFallback }}
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  {{- end }}
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ $target.Title | plainify }}">
+  <meta name="twitter:description" content="{{ with $target.Description }}{{ . | plainify }}{{ else }}{{ $target.Summary | plainify }}{{ end }}">
+  <meta name="twitter:image" content="{{ $image }}">
+  <meta name="twitter:image:alt" content="{{ $target.Title | plainify }}">
+  <script>window.location.replace({{ $target.RelPermalink | jsonify | safeJS }});</script>
+  {{- else }}
+  <title>Short link not found | BlueDog's Blog</title>
+  <meta name="description" content="这个短链接不存在或已经失效。">
+  {{- end }}
+  <style>
+    :root{color-scheme:light dark;font-family:ui-sans-serif,system-ui,sans-serif;background:#f4f4f2;color:#11151c}
+    body{min-height:100vh;margin:0;display:grid;place-items:center;padding:24px;box-sizing:border-box}
+    main{width:min(560px,100%);border-top:2px solid currentColor;border-bottom:1px solid currentColor;padding:28px 0}
+    p{margin:0 0 12px;line-height:1.7}a{color:inherit;font-weight:700}
+  </style>
+</head>
+<body>
+  <main>
+    {{- if $target }}
+    <p>正在打开《{{ $target.Title | plainify }}》...</p>
+    <p><a href="{{ $target.RelPermalink }}">未自动跳转？点击继续阅读</a></p>
+    {{- else }}
+    <p>这个短链接不存在或已经失效。</p>
+    <p><a href="{{ "/" | relURL }}">返回首页</a></p>
+    {{- end }}
+  </main>
+</body>
+</html>
