@@ -9011,7 +9011,7 @@ body.home-page .home-search-wrap {
   grid-column: span 1 !important;
 }
 
-.about-single.about-pro .about-profile > :is(.about-block-identity, .about-block-ietf, .about-block-highlights, .about-block-works) {
+.about-single.about-pro .about-profile > :is(.about-block-identity, .about-block-ietf, .about-block-highlights, .about-block-works, .about-block-roadmap) {
   grid-column: 1 / -1 !important;
 }
 
@@ -9057,9 +9057,14 @@ article.about-single.about-pro .about-hero-topics {
 /* Keep the section rail on the same content axis as the profile blocks. */
 @media (min-width: 701px) {
   article.about-single.about-pro > .about-section-nav {
-    width: calc(100% - 64px) !important;
-    max-width: calc(100% - 64px) !important;
+    width: fit-content !important;
+    max-width: min(1080px, 100%) !important;
     margin-inline: auto !important;
+  }
+
+  article.about-single.about-pro > .about-section-nav a {
+    flex: 0 0 auto !important;
+    padding-inline: clamp(14px, 1.7vw, 24px) !important;
   }
 }
 
