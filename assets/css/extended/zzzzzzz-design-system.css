@@ -9776,3 +9776,20 @@ body.bd-share-opened .main {
     animation: none !important;
   }
 }
+
+/* Mobile About uses one centered content rail for every surface. */
+@media (max-width: 820px) {
+  article.about-single.about-pro {
+    width: calc(100% - 24px) !important;
+    max-width: calc(100% - 24px) !important;
+    margin-inline: auto !important;
+  }
+
+  article.about-single.about-pro > .post-header,
+  article.about-single.about-pro > .about-section-nav,
+  article.about-single.about-pro > .about-profile {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-inline: auto !important;
+  }
+}
