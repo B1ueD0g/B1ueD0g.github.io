@@ -836,6 +836,8 @@
         Object.keys(tocMap).forEach(function (key) {
           var isActive = key === id;
           tocMap[key].classList.toggle("is-active", isActive);
+          var item = tocMap[key].closest("li");
+          if (item) item.classList.toggle("is-active", isActive);
           if (isActive) tocMap[key].setAttribute("aria-current", "location");
           else tocMap[key].removeAttribute("aria-current");
         });
@@ -881,14 +883,48 @@
       if (detailsList.length === 0) return;
 
       var desktop = window.matchMedia("(min-width: 1280px)");
+      var rails = Array.prototype.slice.call(document.querySelectorAll(".editorial-toc-rail"));
+
+      function setDrawerState(rail, open) {
+        var toggle = rail.querySelector(".editorial-toc-toggle");
+        rail.classList.toggle("is-open", open);
+        if (toggle) toggle.setAttribute("aria-expanded", open ? "true" : "false");
+      }
 
       function syncState() {
         detailsList.forEach(function (details) {
           details.open = desktop.matches;
         });
+        rails.forEach(function (rail) {
+          rail.classList.toggle("is-drawer", desktop.matches);
+          setDrawerState(rail, false);
+        });
       }
 
       syncState();
+
+      rails.forEach(function (rail) {
+        var toggle = rail.querySelector(".editorial-toc-toggle");
+        if (toggle) {
+          toggle.addEventListener("click", function () {
+            if (!desktop.matches) return;
+            setDrawerState(rail, !rail.classList.contains("is-open"));
+          });
+        }
+
+        rail.querySelectorAll(".toc a[href^='#']").forEach(function (link) {
+          link.addEventListener("click", function () {
+            if (desktop.matches) setDrawerState(rail, false);
+          });
+        });
+      });
+
+      document.addEventListener("keydown", function (event) {
+        if (event.key !== "Escape" || !desktop.matches) return;
+        rails.forEach(function (rail) {
+          setDrawerState(rail, false);
+        });
+      });
 
       if (typeof desktop.addEventListener === "function") {
         desktop.addEventListener("change", syncState);
