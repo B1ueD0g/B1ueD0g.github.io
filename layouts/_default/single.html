@@ -3,6 +3,7 @@
 {{- $tagTerms := $.GetTerms $tagsTaxonomy -}}
 {{- $characterCount := strings.RuneCount (replaceRE `\s+` "" (.Plain | plainify)) -}}
 {{- $readingMinutes := div (add $characterCount 549) 550 -}}
+{{- $titleLength := strings.RuneCount (.Title | plainify) -}}
 
 <article class="post-single post-single-editorial">
   <header class="editorial-header">
@@ -17,7 +18,7 @@
     </div>
     <div class="editorial-hero">
       <div class="editorial-headline">
-        <h1 class="editorial-title entry-hint-parent">
+        <h1 class="editorial-title entry-hint-parent{{ if ge $titleLength 26 }} editorial-title-long{{ end }}">
           {{ .Title }}
           {{- if .Draft }}
           <span class="entry-hint" title="Draft">

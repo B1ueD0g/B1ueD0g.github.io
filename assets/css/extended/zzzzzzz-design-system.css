@@ -9793,3 +9793,42 @@ body.bd-share-opened .main {
     margin-inline: auto !important;
   }
 }
+
+/* Keep article hierarchy editorial without letting long titles become posters. */
+@media (min-width: 901px) {
+  article.post-single.post-single-editorial .editorial-header {
+    width: min(1080px, calc(100vw - 56px)) !important;
+    max-width: min(1080px, calc(100vw - 56px)) !important;
+  }
+
+  article.post-single.post-single-editorial .editorial-title,
+  article.post-single.post-single-editorial .editorial-title.entry-hint-parent {
+    width: min(100%, 1040px) !important;
+    max-width: 1040px !important;
+    font-size: clamp(2.7rem, 3.45vw, 3.8rem) !important;
+    line-height: 1.12 !important;
+  }
+
+  article.post-single.post-single-editorial .editorial-title-long,
+  article.post-single.post-single-editorial .editorial-title-long.entry-hint-parent {
+    font-size: clamp(2.5rem, 3.05vw, 3.35rem) !important;
+    line-height: 1.14 !important;
+  }
+}
+
+@media (max-width: 900px) {
+  article.post-single.post-single-editorial .editorial-title-long,
+  article.post-single.post-single-editorial .editorial-title-long.entry-hint-parent {
+    font-size: clamp(1.85rem, 7.8vw, 2.2rem) !important;
+    line-height: 1.16 !important;
+    text-wrap: balance;
+  }
+}
+
+/* Archive summaries and topics belong to the same information column as titles. */
+body.list .post-entry-with-date .entry-content,
+body.list .post-entry-with-date .entry-content p,
+body.list .post-entry-with-date .post-entry-topics {
+  width: 100% !important;
+  max-width: 100% !important;
+}
