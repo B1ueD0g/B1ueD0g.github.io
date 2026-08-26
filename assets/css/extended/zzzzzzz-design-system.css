@@ -8926,6 +8926,20 @@ body.list .post-entry-with-date .entry-content p {
     font-size: 0.86rem !important;
   }
 
+  .about-ietf-head {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 9px;
+  }
+
+  .about-ietf-head h2 {
+    width: 100%;
+  }
+
+  .about-ietf-status {
+    align-self: flex-start;
+  }
+
   .about-ietf-grid {
     grid-template-columns: 1fr;
   }
