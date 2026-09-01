@@ -1,6 +1,9 @@
 {{- $current := . -}}
 {{- if eq $current.Section "posts" -}}
   {{- $currentTags := $current.Params.tags | default (slice) -}}
+  {{- $currentCategories := $current.Params.categories | default (slice) -}}
+  {{- $currentType := partial "content_type.html" $current -}}
+  {{- $lowSignalTags := site.Params.relatedLowSignalTags | default (slice "技术实践" "网络安全") -}}
   {{- if gt (len $currentTags) 0 -}}
     {{- $candidates := where site.RegularPages "Section" "posts" -}}
     {{- $candidates = where $candidates "Permalink" "!=" $current.Permalink -}}
@@ -10,7 +13,22 @@
       {{- $tags := .Params.tags | default (slice) -}}
       {{- $intersects := intersect $currentTags $tags -}}
       {{- if gt (len $intersects) 0 -}}
-        {{- $scored = $scored | append (dict "page" . "score" (len $intersects)) -}}
+        {{- $score := 0 -}}
+        {{- range $intersects -}}
+          {{- if in $lowSignalTags . -}}
+            {{- $score = add $score 1 -}}
+          {{- else -}}
+            {{- $score = add $score 4 -}}
+          {{- end -}}
+        {{- end -}}
+        {{- if gt (len (intersect $currentCategories (.Params.categories | default (slice)))) 0 -}}
+          {{- $score = add $score 2 -}}
+        {{- end -}}
+        {{- $candidateType := partial "content_type.html" . -}}
+        {{- if eq $candidateType.key $currentType.key -}}
+          {{- $score = add $score 1 -}}
+        {{- end -}}
+        {{- $scored = $scored | append (dict "page" . "score" $score) -}}
       {{- end -}}
     {{- end -}}
     {{- if gt (len $scored) 0 -}}

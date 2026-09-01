@@ -1,0 +1,19 @@
+{
+  "name": "bluedog-blog",
+  "private": true,
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "quality:metadata": "python3 scripts/check_metadata_quality.py",
+    "generate:shortlinks": "python3 scripts/generate_shortlinks.py",
+    "generate:og": "python3 scripts/generate_og_cards.py",
+    "build:hugo": "hugo --gc --minify --printPathWarnings",
+    "index:search": "pagefind --site public",
+    "check:site": "python3 scripts/check_generated_site.py",
+    "build": "npm run quality:metadata && npm run generate:shortlinks && npm run generate:og && npm run build:hugo && npm run index:search && npm run check:site"
+  },
+  "devDependencies": {
+    "pagefind": "1.5.2"
+  }
+}

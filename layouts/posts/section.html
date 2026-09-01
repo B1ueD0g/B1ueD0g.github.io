@@ -46,10 +46,12 @@
 {{- $currentYear = $year }}
 {{- end }}
 <article class="post-entry post-entry-with-date">
+  {{- $contentType := partial "content_type.html" . -}}
   <div class="post-entry-date">
     <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date | time.Format site.Params.DateFormat }}</time>
   </div>
   <div class="post-entry-main">
+    <span class="post-entry-type post-entry-type-{{ $contentType.key }}">{{ $contentType.label }}</span>
     <header class="entry-header">
       <h2 class="entry-hint-parent">{{ .Title }}</h2>
     </header>

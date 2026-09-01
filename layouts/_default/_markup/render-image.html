@@ -18,7 +18,12 @@
   {{- end -}}
 {{- end -}}
 
-{{- $attributes := merge .Attributes (dict "alt" .Text "src" $src "loading" "lazy" "decoding" "async") -}}
+{{- $alt := strings.TrimSpace (.Text | plainify) -}}
+{{- if or (not $alt) (gt (len (findRE `(?i)^(图片|img|image(?:[-_ ]?[0-9]+)?)$` $alt)) 0) -}}
+  {{- $pageTitle := strings.TrimSpace (.Page.Title | plainify) -}}
+  {{- $alt = cond (ne $pageTitle "") (printf "%s 配图" $pageTitle) "文章配图" -}}
+{{- end -}}
+{{- $attributes := merge .Attributes (dict "alt" $alt "src" $src "loading" "lazy" "decoding" "async") -}}
 {{- with .Title -}}
   {{- $attributes = merge $attributes (dict "title" (transform.HTMLEscape .)) -}}
 {{- end -}}

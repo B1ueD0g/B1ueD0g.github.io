@@ -1,0 +1,140 @@
+{{- define "main" }}
+{{- $quickTags := site.Params.searchQuickTags | default (slice "零信任" "AI安全" "数据安全" "漏洞研究" "标准解读") -}}
+{{- $synonyms := site.Params.searchSynonyms | default dict -}}
+{{- $synonymHints := site.Params.searchSynonymHints | default (slice "零信任 ↔ zero trust" "AI安全 ↔ ai security") -}}
+{{- $posts := where site.RegularPages "Section" "posts" -}}
+{{- $posts = where $posts "Params.hiddenInHomeList" "!=" "true" -}}
+{{- $posts = $posts.ByDate.Reverse -}}
+{{- $latestPosts := first 3 $posts -}}
+{{- $years := slice -}}
+{{- $allTags := slice -}}
+{{- range $posts -}}
+  {{- $years = $years | append (.Date.Format "2006") -}}
+  {{- range (.Params.tags | default (slice)) -}}
+    {{- if not (in $allTags .) -}}
+      {{- $allTags = $allTags | append . -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- $years = uniq $years -}}
+{{- $allTags = sort (uniq $allTags) -}}
+{{- $filterTags := slice -}}
+{{- range $allTags -}}
+  {{- if not (in $quickTags .) -}}
+    {{- $filterTags = $filterTags | append . -}}
+  {{- end -}}
+{{- end -}}
+{{- $searchScript := resources.Get "js/archive-search.js" | minify | fingerprint -}}
+{{- $searchConfig := dict
+  "pagefindModule" ("pagefind/pagefind.js" | relURL)
+  "fallbackIndex" ("index.json" | relURL)
+  "baseURL" ("" | relURL)
+  "preferFallback" hugo.IsServer
+  "synonyms" $synonyms
+-}}
+
+<div class="search-app" data-search-app>
+  <header class="page-header search-page-header">
+    <p class="search-page-kicker">Archive Search</p>
+    <h1>{{ .Title }}</h1>
+    <p class="search-page-lead">检索长期研究记录、技术实践、标准工作与翻译笔记。</p>
+  </header>
+
+  <section class="search-stage" aria-label="站内搜索">
+    <div class="search-command">
+      <div class="search-command-shell">
+        <span class="search-command-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <circle cx="11" cy="11" r="6.5"></circle>
+            <path d="M16 16L21 21"></path>
+          </svg>
+        </span>
+        <label class="search-command-label" for="search-query-input">Search archive</label>
+        <input id="search-query-input" type="search" placeholder="搜索标题、标签、摘要与正文" autocomplete="off" enterkeyhint="search">
+        <button type="button" id="search-query-clear" class="search-command-clear" hidden>清除</button>
+      </div>
+      <div class="search-command-meta">
+        <p id="search-status" class="search-status">正在准备轻量搜索索引…</p>
+        <div class="search-shortcuts" aria-hidden="true">
+          <span><kbd>/</kbd> Focus</span>
+          <span><kbd>↑ ↓</kbd> Navigate</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="search-guide-tags" aria-label="推荐主题">
+      <span>Suggested:</span>
+      {{- range first 7 $quickTags }}
+      <button type="button" data-search-tag="{{ . }}">#{{ . }}</button>
+      {{- end }}
+    </div>
+
+    <section class="search-filters" aria-label="搜索筛选">
+      <div class="search-filter-group">
+        <span class="search-filter-heading">Year</span>
+        <div class="search-filter-row search-filter-row-years">
+          <button type="button" data-filter-year="" class="is-active">All</button>
+          {{- range $years }}
+          <button type="button" data-filter-year="{{ . }}">{{ . }}</button>
+          {{- end }}
+        </div>
+      </div>
+      {{- if gt (len $filterTags) 0 }}
+      <details class="search-more-filters">
+        <summary>更多标签 <span>{{ printf "%02d" (len $filterTags) }}</span></summary>
+        <div class="search-filter-row search-filter-row-tags">
+          <button type="button" data-filter-tag="" class="is-active">All tags</button>
+          {{- range $filterTags }}
+          <button type="button" data-filter-tag="{{ . }}">#{{ . }}</button>
+          {{- end }}
+        </div>
+      </details>
+      {{- end }}
+      <details class="search-guide-notes">
+        <summary>同义词提示</summary>
+        <div class="search-guide-synonyms">
+          {{- range $synonymHints }}
+          <button type="button" data-search-hint="{{ . }}">{{ . }}</button>
+          {{- end }}
+        </div>
+      </details>
+    </section>
+  </section>
+
+  <div id="search-recent" class="search-recent" hidden>
+    <span>Recent:</span>
+    <div id="search-recent-list" class="search-recent-list"></div>
+    <button type="button" id="search-recent-clear">Clear</button>
+  </div>
+  <div id="search-synonym-tip" class="search-synonym-tip" hidden></div>
+  <div id="search-active-state" class="search-active-state" hidden></div>
+  <div id="search-loading" class="search-loading" role="status">搜索索引加载中…</div>
+  <div id="search-empty" class="search-empty" hidden>
+    <p>没有找到结果，试试更短的关键词或推荐主题。</p>
+    <div class="search-empty-actions">
+      {{- range first 6 $quickTags }}
+      <button type="button" data-empty-tag="{{ . }}">#{{ . }}</button>
+      {{- end }}
+    </div>
+    <div class="search-empty-latest">
+      <span>Latest Dispatches</span>
+      {{- range $latestPosts }}
+      <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+      {{- end }}
+    </div>
+  </div>
+
+  <section class="search-results-shell search-results-shell-compact" aria-label="搜索结果">
+    <div class="search-results-main">
+      <div id="search-results-count" class="search-results-count" role="status" aria-live="polite"></div>
+      <div id="search-results" class="search-results"></div>
+      <div id="search-load-more" class="search-load-more" hidden>
+        <button type="button" id="search-load-more-button">Show more results</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script id="search-config" type="application/json">{{ $searchConfig | jsonify | safeJS }}</script>
+<script defer crossorigin="anonymous" src="{{ $searchScript.RelPermalink }}" integrity="{{ $searchScript.Data.Integrity }}"></script>
+{{- end }}

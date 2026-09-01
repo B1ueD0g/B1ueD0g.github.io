@@ -1,0 +1,18 @@
+{{- $records := slice -}}
+{{- $posts := where site.RegularPages "Section" "posts" -}}
+{{- $posts = where $posts "Params.searchHidden" "!=" true -}}
+{{- range $posts.ByDate.Reverse -}}
+  {{- $records = $records | append (dict
+    "title" (.Title | plainify)
+    "permalink" .Permalink
+    "relPermalink" .RelPermalink
+    "year" (.Date.Format "2006")
+    "date" (.Date.Format site.Params.DateFormat)
+    "dateISO" (.Date.Format "2006-01-02")
+    "unix" .Date.Unix
+    "tags" (.Params.tags | default (slice))
+    "summary" ((.Summary | plainify) | htmlUnescape)
+    "plain" ((.Plain | plainify) | htmlUnescape)
+  ) -}}
+{{- end -}}
+{{- $records | jsonify -}}

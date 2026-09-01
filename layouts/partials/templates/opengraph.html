@@ -16,7 +16,7 @@
   <meta property="og:locale" content="{{ . }}">
 {{- end }}
 
-{{- if .IsPage }}
+{{- if and .IsPage (eq .Section "posts") }}
   <meta property="og:type" content="article">
   {{- with .Section }}
     <meta property="article:section" content="{{ . }}">
@@ -39,11 +39,9 @@
 <meta property="og:image" content="{{ $socialImage.Permalink }}">
 <meta property="og:image:secure_url" content="{{ $socialImage.Permalink }}">
 <meta property="og:image:alt" content="{{ $socialImage.Alt }}">
-{{- if $socialImage.IsFallback }}
-<meta property="og:image:type" content="image/png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-{{- end }}
+<meta property="og:image:type" content="{{ $socialImage.Type }}">
+<meta property="og:image:width" content="{{ $socialImage.Width }}">
+<meta property="og:image:height" content="{{ $socialImage.Height }}">
 
 {{- with .Params.audio }}
   {{- range . | first 6 }}

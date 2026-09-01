@@ -75,10 +75,7 @@
   transform: translate3d(0, 0, 0);
 }
 
-.header .logo .logo-text-full {
-  font-size: clamp(2.74rem, 3.12vw, 3.96rem) !important;
-  line-height: 0.86 !important;
-}
+
 
 .header #menu a span {
   font-size: clamp(1.1rem, 0.98rem + 0.24vw, 1.28rem) !important;
@@ -139,10 +136,7 @@ body.home-page .home-curation {
   gap: clamp(22px, 3vw, 34px) !important;
 }
 
-body.home-page .home-curation-heading {
-  max-width: 860px !important;
-  width: 100% !important;
-}
+
 
 body.home-page .home-curation-grid {
   width: 100% !important;
@@ -155,9 +149,7 @@ body.home-page .home-curation-grid > * {
   min-width: 0 !important;
 }
 
-body.home-page .home-search-wrap {
-  margin-top: clamp(26px, 3vw, 34px) !important;
-}
+
 
 .search-results-shell,
 .search-results,
@@ -170,14 +162,9 @@ body.home-page .home-search-wrap {
   min-width: 0 !important;
 }
 
-.search-result-card {
-  overflow: hidden !important;
-}
 
-.search-result-open {
-  min-width: 110px !important;
-  white-space: nowrap !important;
-}
+
+
 
 .home-search-box input,
 .home-search-box button {
@@ -331,36 +318,11 @@ body.home-page .home-search-wrap {
     text-align: right !important;
   }
 
-  .about-pro .about-hero .post-title {
-    max-width: 8ch !important;
-    font-size: clamp(3.55rem, 4.1vw, 4.8rem) !important;
-    margin-inline: 0 !important;
-    text-align: left !important;
-  }
 
-  .about-pro .about-hero .post-description {
-    max-width: 34ch !important;
-    width: auto !important;
-    display: block !important;
-    margin-inline: 0 !important;
-    padding-inline: 0 !important;
-    text-align: left !important;
-    font-size: clamp(0.96rem, 0.92rem + 0.1vw, 1.04rem) !important;
-    line-height: 1.24 !important;
-    letter-spacing: -0.012em !important;
-    white-space: nowrap !important;
-    text-wrap: nowrap !important;
-  }
 
-  .about-pro .about-social,
-  .about-pro .about-social .social-icons {
-    width: auto !important;
-    margin-inline: 0 !important;
-    justify-content: flex-end !important;
-    align-items: center !important;
-    gap: 16px !important;
-    overflow: visible !important;
-  }
+
+
+
 
   .about-pro .about-social .social-icons a {
     width: 64px !important;
@@ -377,15 +339,7 @@ body.home-page .home-search-wrap {
     box-sizing: border-box !important;
   }
 
-  .about-pro .about-social .social-icons a svg,
-  .about-pro .about-social .social-icons a img {
-    width: 24px !important;
-    height: 24px !important;
-    display: block !important;
-    overflow: visible !important;
-    flex: 0 0 auto !important;
-    transform: none !important;
-  }
+
 
   .about-pro .about-block h2 {
     display: flex;
@@ -419,18 +373,7 @@ body.home-page .home-search-wrap {
     color: var(--primary) !important;
   }
 
-  .about-pro .about-work-panel[data-panel="translated"] .about-translation-note {
-    display: inline-flex !important;
-    align-items: center !important;
-    width: max-content !important;
-    max-width: 100% !important;
-    padding: 14px 0 0 18px !important;
-    border-left: 3px solid var(--bd-border-strong) !important;
-    white-space: nowrap !important;
-    font-size: clamp(0.82rem, 0.8rem + 0.08vw, 0.88rem) !important;
-    line-height: 1.28 !important;
-    letter-spacing: -0.01em !important;
-  }
+
 }
 
 @media (max-width: 1024px) {
@@ -453,11 +396,7 @@ body.home-page .home-search-wrap {
   }
 }
 
-.post-single .post-header,
-.post-single .post-footer {
-  width: min(1300px, calc(100vw - 72px)) !important;
-  max-width: min(1300px, calc(100vw - 72px)) !important;
-}
+
 
 .post-single .post-content,
 .post-single .toc {
@@ -465,20 +404,10 @@ body.home-page .home-search-wrap {
   max-width: min(var(--bd-content-max), calc(100vw - 72px)) !important;
 }
 
-.post-reading-shell.has-toc .post-content,
-.post-reading-shell.has-toc .toc {
-  width: 100% !important;
-  max-width: 100% !important;
-}
+
 
 @media (max-width: 900px) {
-  html,
-  body,
-  .main {
-    width: 100% !important;
-    max-width: 100% !important;
-    overflow-x: hidden !important;
-  }
+
 
   .header .nav {
     grid-template-columns: 1fr !important;
@@ -580,34 +509,13 @@ body.home-page .home-search-wrap {
     display: block !important;
   }
 
-  .about-pro .about-hero {
-    width: 100% !important;
-    max-width: 100% !important;
-    grid-template-columns: 1fr !important;
-    gap: 18px !important;
-    justify-items: center !important;
-    text-align: center !important;
-  }
 
-  .about-pro .about-hero-copy,
-  .about-pro .about-hero-connect {
-    justify-items: center !important;
-    text-align: center !important;
-  }
 
-  .about-pro .about-hero .post-title {
-    font-size: clamp(2.5rem, 8.2vw, 3.1rem) !important;
-    line-height: 0.98 !important;
-    margin-inline: auto !important;
-    text-align: center !important;
-  }
 
-  .about-pro .about-hero .post-description {
-    font-size: clamp(0.88rem, 3.7vw, 0.96rem) !important;
-    line-height: 1.24 !important;
-    margin-inline: auto !important;
-    text-align: center !important;
-  }
+
+
+
+
 
   .about-pro .about-social {
     margin-inline: auto !important;
@@ -843,11 +751,7 @@ body.home-page .home-search-wrap {
   max-width: min(var(--bd-content-max), calc(100vw - 72px)) !important;
 }
 
-.post-reading-shell.has-toc .post-content,
-.post-reading-shell.has-toc .toc {
-  width: 100% !important;
-  max-width: 100% !important;
-}
+
 
 .about-pro .about-highlight-list,
 .about-pro .about-highlight-list li {
@@ -872,9 +776,7 @@ body.home-page .home-search-wrap {
   min-width: 0 !important;
 }
 
-.search-result-card {
-  overflow: visible !important;
-}
+
 
 .search-result-open {
   min-width: auto !important;
@@ -1154,9 +1056,7 @@ body.home-page .home-search-wrap {
   min-width: 0 !important;
 }
 
-.search-result-card {
-  overflow: hidden !important;
-}
+
 
 .post-single .post-header,
 .post-single .post-footer {
@@ -1180,16 +1080,11 @@ body.home-page .home-search-wrap {
     align-items: flex-start !important;
   }
 
-  .post-reading-note {
-    border-radius: 24px !important;
-  }
+
 }
 
 @media (max-width: 900px) {
-  .about-pro .about-hero {
-    gap: 18px !important;
-    padding: 26px 18px !important;
-  }
+
 
   .about-pro .about-hero-copy,
   .about-pro .about-hero-connect {
@@ -1197,10 +1092,7 @@ body.home-page .home-search-wrap {
     text-align: center !important;
   }
 
-  .about-pro .about-hero .post-title {
-    font-size: clamp(2.9rem, 9vw, 3.9rem) !important;
-    line-height: 0.98 !important;
-  }
+
 
   .about-pro .about-hero .post-description {
     max-width: 100% !important;
@@ -1275,22 +1167,13 @@ body.home-page .home-search-wrap {
     max-width: calc(100vw - 24px) !important;
   }
 
-  .post-reading-aside {
-    gap: 14px !important;
-  }
 
-  .post-reading-note {
-    padding: 18px 16px 16px !important;
-  }
 
-  .post-reading-dek {
-    font-size: 0.88rem !important;
-  }
 
-  .post-reading-tags a {
-    min-height: 30px !important;
-    font-size: 0.72rem !important;
-  }
+
+
+
+
 
   .bd-footnote-preview {
     display: none !important;
@@ -1310,29 +1193,15 @@ body.home-page .home-search-wrap {
 /* About spacing refinement */
 
 @media (min-width: 901px) {
-  .about-pro > .post-header {
-    margin: 0 auto 10px !important;
-    padding-top: 32px !important;
-    padding-bottom: 10px !important;
-  }
 
-  .about-pro .about-profile {
-    padding-top: clamp(12px, 1.8vw, 20px) !important;
-  }
 
-  .about-pro .about-hero {
-    gap: 20px !important;
-    padding: clamp(26px, 3.6vw, 38px) !important;
-  }
 
-  .about-pro .about-hero-copy {
-    gap: 24px !important;
-  }
 
-  .about-pro .about-hero .post-title {
-    font-size: clamp(3.9rem, 4.7vw, 5rem) !important;
-    line-height: 0.96 !important;
-  }
+
+
+
+
+
 
   .about-pro .about-hero .post-description {
     margin-top: 10px !important;
@@ -1396,9 +1265,7 @@ body.home-page .home-search-wrap {
     gap: 18px !important;
   }
 
-  .about-pro .about-hero .post-title {
-    line-height: 1 !important;
-  }
+
 
   .about-pro .about-hero .post-description {
     margin-top: 0 !important;
@@ -1479,16 +1346,9 @@ body.home-page .home-search-wrap {
   margin: 0 auto !important;
 }
 
-.post-single.post-single-editorial .post-cover {
-  width: 100% !important;
-  max-width: 100% !important;
-  margin: 0 0 24px !important;
-}
 
-.post-single.post-single-editorial .post-cover img {
-  border-radius: 22px !important;
-  box-shadow: var(--bd-shadow-card) !important;
-}
+
+
 
 .post-single.post-single-editorial .editorial-flow {
   width: 100% !important;
@@ -2078,9 +1938,7 @@ body.home-page .home-search-wrap {
   }
 }
 
-.about-single.about-pro .about-hero-copy {
-  gap: 42px !important;
-}
+
 
 .about-single.about-pro .about-hero .post-description {
   margin-top: 16px !important;
@@ -2090,61 +1948,25 @@ body.home-page .home-search-wrap {
 /* 2026-03-24 mobile about/header lock */
 
 @media (max-width: 820px) {
-  .about-single.about-pro {
-    width: calc(100vw - 16px) !important;
-    max-width: calc(100vw - 16px) !important;
-  }
 
-  .header .nav {
-    width: calc(100% - 20px) !important;
-    max-width: calc(100% - 20px) !important;
-    grid-template-columns: 1fr !important;
-    gap: 10px !important;
-    padding: 10px 0 12px !important;
-  }
 
-  .header .logo {
-    grid-template-columns: minmax(0, 1fr) auto !important;
-    align-items: center !important;
-    gap: 10px !important;
-  }
 
-  .header .logo a {
-    max-width: calc(100% - 68px) !important;
-  }
 
-  .header .logo .logo-text-mobile {
-    font-size: clamp(1.52rem, 8.2vw, 1.92rem) !important;
-    line-height: 0.92 !important;
-    padding-block: 4px 6px !important;
-  }
 
-  .header #theme-toggle {
-    width: 50px !important;
-    height: 50px !important;
-    border-radius: 18px !important;
-  }
 
-  .header #theme-toggle svg {
-    width: 22px !important;
-    height: 22px !important;
-  }
 
-  .header #menu {
-    gap: 6px !important;
-  }
 
-  .header #menu a {
-    min-height: 44px !important;
-    padding: 8px 4px 10px !important;
-    border-radius: 16px !important;
-  }
 
-  .header #menu a span {
-    padding: 0 !important;
-    font-size: clamp(0.94rem, 4vw, 1rem) !important;
-    line-height: 1.02 !important;
-  }
+
+
+
+
+
+
+
+
+
+
 
   .about-pro > .post-header {
     width: calc(100% - 20px) !important;
@@ -2195,13 +2017,7 @@ body.home-page .home-search-wrap {
     gap: 10px !important;
   }
 
-  .about-pro .about-social .social-icons a {
-    width: 54px !important;
-    height: 54px !important;
-    min-width: 54px !important;
-    min-height: 54px !important;
-    border-radius: 18px !important;
-  }
+
 
   .about-pro .about-social .social-icons a svg,
   .about-pro .about-social .social-icons a img {
@@ -2217,10 +2033,7 @@ body.home-page .home-search-wrap {
     padding-top: 10px !important;
   }
 
-  .about-single.about-pro .about-profile {
-    grid-template-columns: 1fr !important;
-    gap: 18px !important;
-  }
+
 
   .about-pro .about-block,
   .about-pro .about-block-highlights,
@@ -2310,10 +2123,7 @@ body.home-page .home-search-wrap {
 /* 2026-03-26 mobile about final lock */
 
 @media (max-width: 820px) {
-  .about-single.about-pro {
-    width: calc(100vw - 16px) !important;
-    max-width: calc(100vw - 16px) !important;
-  }
+
 
   .about-single.about-pro > .post-header {
     width: 100% !important;
@@ -2330,15 +2140,9 @@ body.home-page .home-search-wrap {
     padding: 10px 0 12px !important;
   }
 
-  .header .logo {
-    grid-template-columns: minmax(0, 1fr) auto !important;
-    align-items: center !important;
-    gap: 10px !important;
-  }
 
-  .header .logo a {
-    max-width: calc(100vw - 84px) !important;
-  }
+
+
 
   .header .logo .logo-text-mobile {
     font-size: clamp(1.42rem, 8.2vw, 1.76rem) !important;
@@ -2357,9 +2161,7 @@ body.home-page .home-search-wrap {
     height: 22px !important;
   }
 
-  .header #menu {
-    gap: 6px !important;
-  }
+
 
   .header #menu a {
     min-height: 44px !important;
@@ -2432,19 +2234,9 @@ body.home-page .home-search-wrap {
     flex-wrap: nowrap !important;
   }
 
-  .about-single.about-pro .about-social .social-icons a {
-    width: 50px !important;
-    height: 50px !important;
-    min-width: 50px !important;
-    min-height: 50px !important;
-    border-radius: 18px !important;
-  }
 
-  .about-single.about-pro .about-social .social-icons a svg,
-  .about-single.about-pro .about-social .social-icons a img {
-    width: 21px !important;
-    height: 21px !important;
-  }
+
+
 
   .about-single.about-pro .about-profile {
     width: 100% !important;
@@ -2513,11 +2305,7 @@ body.home-page .home-search-wrap {
     font-size: clamp(1.88rem, 9.8vw, 2.2rem) !important;
   }
 
-  .about-single.about-pro .about-hero .post-description {
-    max-width: 14.5ch !important;
-    font-size: 0.88rem !important;
-    line-height: 1.22 !important;
-  }
+
 }
 
 /* 2026-03-26 mobile about scroll + hierarchy reset */
@@ -2646,9 +2434,7 @@ body.home-page .home-search-wrap {
   max-width: min(1180px, calc(100vw - 64px)) !important;
 }
 
-.search-page-header {
-  margin-top: clamp(34px, 5vh, 68px) !important;
-}
+
 
 .search-page-header h1 {
   margin-bottom: 10px !important;
@@ -2664,10 +2450,7 @@ body.home-page .home-search-wrap {
   line-height: 1.66 !important;
 }
 
-.search-stage {
-  gap: 16px !important;
-  margin-top: 22px !important;
-}
+
 
 .search-command {
   padding: 18px !important;
@@ -2752,9 +2535,7 @@ body.home-page .home-search-wrap {
   box-shadow: none !important;
 }
 
-.search-guide {
-  gap: 12px !important;
-}
+
 
 .search-guide-intro {
   display: flex !important;
@@ -2816,10 +2597,7 @@ body.home-page .home-search-wrap {
   gap: 12px !important;
 }
 
-.search-filter-group {
-  display: grid !important;
-  gap: 8px !important;
-}
+
 
 .search-filter-row {
   display: flex !important;
@@ -3111,11 +2889,7 @@ body.home-page .home-search-wrap {
     box-sizing: border-box !important;
   }
 
-  .header .nav {
-    width: 100% !important;
-    max-width: 100% !important;
-    padding-inline: 16px !important;
-  }
+
 
   .header .logo {
     grid-template-columns: minmax(0, 1fr) auto !important;
@@ -3129,11 +2903,7 @@ body.home-page .home-search-wrap {
     flex-basis: 52px !important;
   }
 
-  .header #menu {
-    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-    gap: 8px !important;
-    width: 100% !important;
-  }
+
 
   .header #menu a {
     width: 100% !important;
@@ -3142,39 +2912,17 @@ body.home-page .home-search-wrap {
     border-radius: 18px !important;
   }
 
-  body.home-page .home-shell {
-    width: calc(100vw - 32px) !important;
-    max-width: calc(100vw - 32px) !important;
-    overflow: hidden !important;
-  }
+
 
   body.home-page .home-info {
     overflow: visible !important;
   }
 
-  body.home-page .home-info .entry-header h1,
-  html.bd-ready body.home-page .home-info .entry-header h1 {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin-inline: auto !important;
-    font-size: 2.72rem !important;
-    line-height: 0.98 !important;
-    letter-spacing: 0 !important;
-    white-space: normal !important;
-    text-wrap: balance !important;
-    overflow-wrap: normal !important;
-  }
 
-  .about-single.about-pro {
-    overflow-x: hidden !important;
-  }
 
-  .about-single.about-pro > .post-header,
-  .about-single.about-pro .about-profile {
-    width: calc(100vw - 20px) !important;
-    max-width: calc(100vw - 20px) !important;
-    margin-inline: auto !important;
-  }
+
+
+
 
   .about-single.about-pro .about-hero,
   .about-single.about-pro .about-block {
@@ -3214,11 +2962,7 @@ body.home-page .home-search-wrap {
 }
 
 @media (max-width: 420px) {
-  body.home-page .home-info .entry-header h1,
-  html.bd-ready body.home-page .home-info .entry-header h1 {
-    font-size: 2.38rem !important;
-    line-height: 1 !important;
-  }
+
 
   .about-single.about-pro .about-hero .post-title {
     font-size: 2rem !important;
@@ -3226,10 +2970,7 @@ body.home-page .home-search-wrap {
     letter-spacing: 0 !important;
   }
 
-  .about-single.about-pro .about-hero .post-description {
-    font-size: 0.82rem !important;
-    line-height: 1.22 !important;
-  }
+
 }
 
 /* 2026-05-08 mobile containment hardening */
@@ -3375,9 +3116,7 @@ body.home-page .home-search-wrap {
     padding: 12px !important;
   }
 
-  body.home-page .home-search-glyph {
-    display: none !important;
-  }
+
 
   body.home-page .home-search-box input,
   body.home-page .home-search-box button {

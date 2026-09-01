@@ -7,16 +7,33 @@
   })();
 </script>
 <link rel="preload" href="{{ "fonts/RubikBurned-Regular.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{{ "fonts/BreeSerif-Regular.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{{ "fonts/Manrope-Variable.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
 <meta name="color-scheme" content="light dark">
 <link rel="sitemap" type="application/xml" title="Sitemap" href="{{ "sitemap.xml" | absURL }}">
 <link rel="icon" type="image/svg+xml" href="{{ site.Params.branding.faviconSvgLight | default "/branding/favicon-light.svg" | absURL }}" media="(prefers-color-scheme: light)">
 <link rel="icon" type="image/svg+xml" href="{{ site.Params.branding.faviconSvgDark | default "/branding/favicon-dark.svg" | absURL }}" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="{{ site.Params.branding.themeColorLight | default "#f4f4f2" }}">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="{{ site.Params.branding.themeColorDark | default "#11151c" }}">
-<link rel="manifest" href="{{ "site.webmanifest" | absURL }}">
 {{- if .IsPage }}
   {{- $socialImage := partial "templates/_funcs/get-social-image" . -}}
 <link rel="image_src" href="{{ $socialImage.Permalink }}">
+{{- end }}
+{{- if and .IsPage (eq .Section "posts") }}
+  {{- $contentType := partial "content_type.html" . -}}
+  {{- $tags := .Params.tags | default (slice) -}}
+  {{- $summary := .Summary | plainify | htmlUnescape | truncate 220 -}}
+<meta data-pagefind-meta="title[content]" content="{{ .Title | plainify }}">
+<meta data-pagefind-meta="summary[content]" content="{{ $summary }}">
+<meta data-pagefind-meta="date[content]" content="{{ .Date.Format "2006-01-02" }}">
+<meta data-pagefind-meta="year[content]" content="{{ .Date.Format "2006" }}">
+<meta data-pagefind-meta="tags[content]" content="{{ delimit $tags "||" }}">
+<meta data-pagefind-meta="contentType[content]" content="{{ $contentType.label }}">
+<meta data-pagefind-filter="year[content]" content="{{ .Date.Format "2006" }}">
+{{- range $tags }}
+<meta data-pagefind-filter="tag[content]" content="{{ . }}">
+{{- end }}
+<meta data-pagefind-sort="date[content]" content="{{ .Date.Format "2006-01-02" }}">
 {{- end }}
 {{- with site.Params.analytics -}}
   {{- if and .enabled (eq (lower (default "" .provider)) "plausible") -}}

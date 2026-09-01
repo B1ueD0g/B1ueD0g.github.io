@@ -19,7 +19,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      HUGO_VERSION: "0.155.3"
+      HUGO_VERSION: "0.157.0"
       HUGO_ENVIRONMENT: production
       TZ: Asia/Shanghai
     steps:
@@ -43,14 +43,20 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install metadata check dependencies
-        run: pip install pyyaml
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
+      - name: Install Node dependencies
+        run: npm ci
 
       - name: Validate post metadata quality
         run: python3 scripts/check_metadata_quality.py
 
       - name: Generate article short links
         run: python3 scripts/generate_shortlinks.py
+
+      - name: Generate article social cards
+        run: python3 scripts/generate_og_cards.py
 
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v3
@@ -75,14 +81,15 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build Pagefind index
-        run: npx -y pagefind --site public
+        run: npm run index:search
+
+      - name: Validate generated site contracts
+        run: npm run check:site
 
       - name: Install Lighthouse CI
-        continue-on-error: true
-        run: npm install -g @lhci/cli@0.14.x
+        run: npm install -g @lhci/cli@0.14.0
 
       - name: Run Lighthouse CI quality gate
-        continue-on-error: true
         run: lhci autorun --config=.lighthouserc.json
 
       - name: Submit sitemap URLs to IndexNow

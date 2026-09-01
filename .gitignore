@@ -1,5 +1,7 @@
 public/
 resources/
+node_modules/
+.lighthouseci/
 .hugo_build.lock
 .DS_Store
 __pycache__/

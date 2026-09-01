@@ -44,6 +44,7 @@ ShowRssButtonInSectionTermList = true
 ShowToc = true
 DateFormat = "2006-01-02"
 searchQuickTags = ["零信任", "AI安全", "数据安全", "漏洞研究", "云安全", "实操指南", "标准解读"]
+relatedLowSignalTags = ["技术实践", "网络安全", "安全治理"]
 searchSynonymHints = [
   "零信任 ↔ zero trust / zta",
   "AI安全 ↔ ai security / llm security",
@@ -97,6 +98,10 @@ favicon = "/branding/favicon.ico"
 favicon16x16 = "/branding/favicon-16x16.png"
 favicon32x32 = "/branding/favicon-32x32.png"
 apple_touch_icon = "/branding/apple-touch-icon.png"
+
+[params.schema]
+publisherType = "Person"
+personName = "Songbo Bu"
 
 [params.label]
 text = "BlueDog 's Blog"

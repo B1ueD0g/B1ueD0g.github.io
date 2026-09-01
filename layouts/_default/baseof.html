@@ -17,7 +17,7 @@
     {{- partial "head.html" . -}}
 </head>
 
-{{- if (or (ne .Kind `page` ) (eq .Layout `archives`) (eq .Layout `search`)) -}}
+{{- if (or (ne .Kind `page` ) (eq .Layout `archives`) (eq .Layout `search`) (eq .Layout `archive-search`)) -}}
 <body class="list" id="top">
 {{- else -}}
 <body id="top">

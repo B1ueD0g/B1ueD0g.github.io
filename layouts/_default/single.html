@@ -4,12 +4,13 @@
 {{- $characterCount := strings.RuneCount (replaceRE `\s+` "" (.Plain | plainify)) -}}
 {{- $readingMinutes := div (add $characterCount 549) 550 -}}
 {{- $titleLength := strings.RuneCount (.Title | plainify) -}}
+{{- $contentType := partial "content_type.html" . -}}
 
 <article class="post-single post-single-editorial">
   <header class="editorial-header">
     {{ partial "breadcrumbs.html" . }}
     <div class="editorial-entry-meta">
-      <span class="editorial-entry-kicker">Archive Entry</span>
+      <span class="editorial-entry-kicker">{{ $contentType.label }}</span>
       <div class="editorial-entry-facts" aria-label="Article details">
         <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006.01.02" }}</time>
         <span aria-hidden="true">/</span>
@@ -59,7 +60,7 @@
       {{- partial "cover.html" (dict "cxt" . "IsSingle" true "isHidden" $isHidden) }}
       {{- if .Content }}
       <div class="editorial-flow">
-        <div class="editorial-content">
+        <div class="editorial-content" data-pagefind-body>
           {{- if not (.Param "disableAnchoredHeadings") }}
           {{- partial "anchored_headings.html" .Content -}}
           {{- else }}{{ .Content }}{{ end }}

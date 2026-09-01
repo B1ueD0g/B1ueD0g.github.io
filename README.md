@@ -11,6 +11,8 @@ BlueDog 的 Hugo 博客源码仓库。
 
 ```bash
 cd "/Users/bluedog/Desktop/工作文件/自己的一些事情/Blog"
+python3 -m pip install -r requirements.txt
+npm ci
 hugo server -D
 ```
 
@@ -37,9 +39,19 @@ hugo server -D
 推送到 `main` 后，自动执行：
 
 1. 元数据质检
-2. Hugo 构建
-3. Pagefind 索引
-4. 部署到 GitHub Pages
+2. 文章分享图与短链接生成
+3. Hugo 构建
+4. Pagefind 索引
+5. 生成站点结构、无障碍与分享元数据质检
+6. 部署到 GitHub Pages
+
+本地完整生产验证：
+
+```bash
+npm run build
+```
+
+`hugo server` 开发模式使用外置 JSON 搜索回退；生产构建只加载 Pagefind 索引，不把全文数据嵌入搜索页 HTML。
 
 附加工作流：
 

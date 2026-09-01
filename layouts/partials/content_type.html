@@ -1,0 +1,26 @@
+{{- $key := .Params.contentType | default "" | lower -}}
+{{- $label := .Params.contentType | default "" -}}
+{{- $categories := .Params.categories | default (slice) -}}
+{{- $tags := .Params.tags | default (slice) -}}
+{{- $title := .Title | default "" -}}
+
+{{- if not $key -}}
+  {{- if or (in $categories "好文翻译") (in $tags "翻译") (in $tags "技术译文") -}}
+    {{- $key = "translation" -}}
+    {{- $label = "Translation" -}}
+  {{- else if or (in $categories "国学经典") (in $tags "读书笔记") (in $tags "阅读思考") -}}
+    {{- $key = "reading" -}}
+    {{- $label = "Reading Note" -}}
+  {{- else if or (in $categories "科研总结系列") (in $tags "科研方法") -}}
+    {{- $key = "research-method" -}}
+    {{- $label = "Research Method" -}}
+  {{- else if or (in $tags "实操指南") (in $title "教程") (in $title "部署") (in $title "搭建") -}}
+    {{- $key = "field-guide" -}}
+    {{- $label = "Field Guide" -}}
+  {{- else -}}
+    {{- $key = "original-analysis" -}}
+    {{- $label = "Original Analysis" -}}
+  {{- end -}}
+{{- end -}}
+
+{{- return (dict "key" $key "label" $label) -}}

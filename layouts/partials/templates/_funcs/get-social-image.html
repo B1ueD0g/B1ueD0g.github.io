@@ -2,6 +2,9 @@
 {{- $image := $fallback | absURL -}}
 {{- $alt := .Title | default site.Title | plainify -}}
 {{- $isFallback := true -}}
+{{- $type := "image/png" -}}
+{{- $width := 1200 -}}
+{{- $height := 630 -}}
 {{- $cover := .Params.cover.image | default "" -}}
 
 {{- if and $cover (ne $cover "/branding/banner-logo.webp") -}}
@@ -12,12 +15,28 @@
   {{- else -}}
     {{- $image = $cover | absURL -}}
   {{- end -}}
-{{- else if not $cover -}}
-  {{- $images := partial "templates/_funcs/get-page-images" . -}}
-  {{- with index $images 0 -}}
-    {{- $image = .Permalink -}}
-    {{- $isFallback = eq .Permalink ($fallback | absURL) -}}
+  {{- $extension := lower (path.Ext $cover) -}}
+  {{- if eq $extension ".jpg" }}{{ $type = "image/jpeg" }}{{ end -}}
+  {{- if eq $extension ".jpeg" }}{{ $type = "image/jpeg" }}{{ end -}}
+  {{- if eq $extension ".webp" }}{{ $type = "image/webp" }}{{ end -}}
+{{- else if and .IsPage (eq .Section "posts") -}}
+  {{- $hash := md5 (.Title | plainify) -}}
+  {{- $image = (printf "/generated/og/%s.png" $hash) | absURL -}}
+  {{- $isFallback = false -}}
+{{- else -}}
+  {{- with .Params.images -}}
+    {{- with index . 0 -}}
+      {{- $image = . | absURL -}}
+      {{- $isFallback = false -}}
+    {{- end -}}
   {{- end -}}
 {{- end -}}
 
-{{- return (dict "Permalink" $image "Alt" $alt "IsFallback" $isFallback) -}}
+{{- return (dict
+  "Permalink" $image
+  "Alt" $alt
+  "IsFallback" $isFallback
+  "Type" $type
+  "Width" $width
+  "Height" $height
+) -}}
