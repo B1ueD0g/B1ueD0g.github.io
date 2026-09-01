@@ -110,27 +110,10 @@
       return target.isContentEditable || tag === "input" || tag === "textarea" || tag === "select";
     }
 
-    function setupNavShrink() {
-      var header = document.querySelector(".header");
-      if (!header) return;
-      var ticking = false;
-      function updateState() {
-        ticking = false;
-        document.body.classList.toggle("nav-scrolled", window.scrollY > 18);
-      }
-      function onScroll() {
-        if (ticking) return;
-        ticking = true;
-        window.requestAnimationFrame(updateState);
-      }
-      updateState();
-      window.addEventListener("scroll", onScroll, { passive: true });
-    }
-
     function setupRevealOnScroll() {
       var nodes = Array.prototype.slice.call(
         document.querySelectorAll(
-          ".home-info, .home-surface-card, .about-pro .about-block, .about-pro .about-work-item, .post-entry, .post-entry-with-date, .search-command, .search-guide, .search-filters, .search-recent, .search-empty, .search-result-card"
+          ".home-info, .home-surface-card, .about-pro .about-block, .post-entry, .post-entry-with-date, .search-command, .search-guide, .search-filters, .search-recent, .search-empty"
         )
       );
       if (nodes.length === 0) return;
@@ -260,6 +243,7 @@
         var progress = (scrollTop - start) / (end - start);
         progress = Math.min(Math.max(progress, 0), 1);
         bar.style.transform = "scaleX(" + progress + ")";
+        document.body.classList.toggle("bd-reading-active", scrollTop > start + 160);
       }
 
       function onScroll() {
@@ -355,11 +339,29 @@
 
       var desktop = window.matchMedia("(min-width: 1280px)");
       var rails = Array.prototype.slice.call(document.querySelectorAll(".editorial-toc-rail"));
+      var backdrop = document.createElement("button");
+      backdrop.type = "button";
+      backdrop.className = "editorial-toc-backdrop";
+      backdrop.setAttribute("aria-label", "关闭文章目录");
+      backdrop.setAttribute("aria-hidden", "true");
+      backdrop.tabIndex = -1;
+      document.body.appendChild(backdrop);
 
-      function setDrawerState(rail, open) {
+      function syncBackdrop() {
+        var open = desktop.matches && rails.some(function (rail) {
+          return rail.classList.contains("is-open");
+        });
+        document.body.classList.toggle("bd-toc-drawer-open", open);
+        backdrop.setAttribute("aria-hidden", open ? "false" : "true");
+        backdrop.tabIndex = open ? 0 : -1;
+      }
+
+      function setDrawerState(rail, open, restoreFocus) {
         var toggle = rail.querySelector(".editorial-toc-toggle");
         rail.classList.toggle("is-open", open);
         if (toggle) toggle.setAttribute("aria-expanded", open ? "true" : "false");
+        syncBackdrop();
+        if (restoreFocus && toggle) toggle.focus({ preventScroll: true });
       }
 
       function syncState() {
@@ -376,7 +378,12 @@
 
       rails.forEach(function (rail) {
         var toggle = rail.querySelector(".editorial-toc-toggle");
+        var body = rail.querySelector(".editorial-toc-rail-body");
         if (toggle) {
+          if (body) {
+            if (!body.id) body.id = "editorial-toc-drawer";
+            toggle.setAttribute("aria-controls", body.id);
+          }
           toggle.addEventListener("click", function () {
             if (!desktop.matches) return;
             setDrawerState(rail, !rail.classList.contains("is-open"));
@@ -390,11 +397,19 @@
         });
       });
 
+      backdrop.addEventListener("click", function () {
+        var openRail = rails.find(function (rail) { return rail.classList.contains("is-open"); });
+        rails.forEach(function (rail) { setDrawerState(rail, false); });
+        if (openRail) setDrawerState(openRail, false, true);
+      });
+
       document.addEventListener("keydown", function (event) {
         if (event.key !== "Escape" || !desktop.matches) return;
+        var openRail = rails.find(function (rail) { return rail.classList.contains("is-open"); });
         rails.forEach(function (rail) {
           setDrawerState(rail, false);
         });
+        if (openRail) setDrawerState(openRail, false, true);
       });
 
       if (typeof desktop.addEventListener === "function") {
@@ -600,6 +615,7 @@
             resolved = source;
           }
           anchor.setAttribute("data-lightbox-anchor", "1");
+          anchor.setAttribute("aria-haspopup", "dialog");
         }
         var index = items.length;
         items.push({
@@ -608,18 +624,31 @@
         });
         img.classList.add("is-lightbox-ready");
         img.setAttribute("data-lightbox-index", String(index));
+        if (anchor) {
+          anchor.setAttribute("data-lightbox-index", String(index));
+          anchor.setAttribute("aria-label", "查看大图：" + (items[index].caption || "文章配图"));
+        } else {
+          img.setAttribute("role", "button");
+          img.setAttribute("tabindex", "0");
+          img.setAttribute("aria-label", "查看大图：" + (items[index].caption || "文章配图"));
+        }
       });
 
       if (items.length === 0) return;
 
       var overlay = document.createElement("div");
       overlay.className = "bd-lightbox";
+      overlay.setAttribute("role", "dialog");
+      overlay.setAttribute("aria-modal", "true");
+      overlay.setAttribute("aria-label", "文章图片查看器");
+      overlay.setAttribute("aria-hidden", "true");
       overlay.innerHTML =
         '<button type="button" class="bd-lightbox-close" aria-label="Close">×</button>' +
         '<button type="button" class="bd-lightbox-prev" aria-label="Previous">‹</button>' +
-        '<img class="bd-lightbox-img" alt="" />' +
+        '<img class="bd-lightbox-img" alt="" draggable="false" />' +
         '<button type="button" class="bd-lightbox-next" aria-label="Next">›</button>' +
-        '<div class="bd-lightbox-caption"></div>';
+        '<div id="bd-lightbox-caption" class="bd-lightbox-caption"></div>';
+      overlay.setAttribute("aria-describedby", "bd-lightbox-caption");
       document.body.appendChild(overlay);
 
       var closeBtn = overlay.querySelector(".bd-lightbox-close");
@@ -628,6 +657,7 @@
       var imageEl = overlay.querySelector(".bd-lightbox-img");
       var captionEl = overlay.querySelector(".bd-lightbox-caption");
       var activeIndex = -1;
+      var previousFocus = null;
 
       function render(index) {
         if (index < 0 || index >= items.length) return;
@@ -642,8 +672,13 @@
 
       function open(index) {
         render(index);
+        previousFocus = document.activeElement;
+        overlay.setAttribute("aria-hidden", "false");
         overlay.classList.add("is-open");
         document.body.classList.add("bd-lightbox-open");
+        window.requestAnimationFrame(function () {
+          closeBtn.focus({ preventScroll: true });
+        });
         trackEvent("image_lightbox_open", {
           page: window.location.pathname,
           index: String(index),
@@ -651,8 +686,13 @@
       }
 
       function close() {
+        if (!overlay.classList.contains("is-open")) return;
         overlay.classList.remove("is-open");
+        overlay.setAttribute("aria-hidden", "true");
         document.body.classList.remove("bd-lightbox-open");
+        if (previousFocus && typeof previousFocus.focus === "function") {
+          previousFocus.focus({ preventScroll: true });
+        }
       }
 
       function next() {
@@ -666,11 +706,10 @@
       }
 
       document.addEventListener("click", function (event) {
-        var img = event.target.closest(".editorial-content img.is-lightbox-ready, .post-content img.is-lightbox-ready");
-        if (!img) return;
-        var anchor = img.closest("a[data-lightbox-anchor='1']");
-        if (anchor) event.preventDefault();
-        var index = parseInt(img.getAttribute("data-lightbox-index") || "-1", 10);
+        var trigger = event.target.closest(".editorial-content img.is-lightbox-ready, .post-content img.is-lightbox-ready, a[data-lightbox-anchor='1']");
+        if (!trigger) return;
+        event.preventDefault();
+        var index = parseInt(trigger.getAttribute("data-lightbox-index") || "-1", 10);
         if (Number.isNaN(index) || index < 0) return;
         open(index);
       });
@@ -683,10 +722,36 @@
       });
 
       document.addEventListener("keydown", function (event) {
-        if (!overlay.classList.contains("is-open")) return;
-        if (event.key === "Escape") close();
-        if (event.key === "ArrowRight") next();
-        if (event.key === "ArrowLeft") prev();
+        if (!overlay.classList.contains("is-open")) {
+          var imageTrigger = event.target.closest && event.target.closest("img.is-lightbox-ready[role='button']");
+          if (imageTrigger && (event.key === "Enter" || event.key === " ")) {
+            event.preventDefault();
+            open(parseInt(imageTrigger.getAttribute("data-lightbox-index") || "-1", 10));
+          }
+          return;
+        }
+        if (event.key === "Escape") {
+          event.preventDefault();
+          close();
+        } else if (event.key === "ArrowRight") {
+          event.preventDefault();
+          next();
+        } else if (event.key === "ArrowLeft") {
+          event.preventDefault();
+          prev();
+        } else if (event.key === "Tab") {
+          var controls = [closeBtn, prevBtn, nextBtn].filter(function (control) {
+            return control.offsetParent !== null;
+          });
+          if (!controls.length) return;
+          var current = controls.indexOf(document.activeElement);
+          var nextIndex = event.shiftKey ? current - 1 : current + 1;
+          if (current < 0) nextIndex = event.shiftKey ? controls.length - 1 : 0;
+          if (nextIndex < 0) nextIndex = controls.length - 1;
+          if (nextIndex >= controls.length) nextIndex = 0;
+          event.preventDefault();
+          controls[nextIndex].focus();
+        }
       });
     }
 
@@ -826,15 +891,6 @@
         return node;
       }
 
-      function prepareGlitchTitle(titleNode) {
-        if (!titleNode || titleNode.dataset.bdGlitchTitle === "1") return;
-        var source = (titleNode.textContent || "").replace(/\s+/g, " ").trim();
-        if (!source) return;
-        titleNode.dataset.bdGlitchTitle = "1";
-        titleNode.setAttribute("data-lab-title", source);
-        titleNode.classList.add("bd-glitch-title");
-      }
-
       if (!document.querySelector(".bd-lab-frame")) {
         var frame = document.createElement("div");
         frame.className = "bd-lab-frame";
@@ -843,8 +899,7 @@
           '<span class="bd-lab-corner bd-lab-corner-tl"></span>' +
           '<span class="bd-lab-corner bd-lab-corner-tr"></span>' +
           '<span class="bd-lab-corner bd-lab-corner-bl"></span>' +
-          '<span class="bd-lab-corner bd-lab-corner-br"></span>' +
-          '<span class="bd-lab-scanline"></span>';
+          '<span class="bd-lab-corner bd-lab-corner-br"></span>';
         body.prepend(frame);
       }
 
@@ -858,12 +913,6 @@
       if (articleHeader) {
         ensureAccent(articleHeader, "bd-lab-matrix", "", true);
       }
-
-      Array.prototype.slice.call(
-        document.querySelectorAll(
-          "body.home-page .home-info .entry-header h1, .search-page-header h1, .about-pro .about-hero .post-title, article.post-single.post-single-editorial .editorial-title"
-        )
-      ).forEach(prepareGlitchTitle);
 
       var surfaces = Array.prototype.slice.call(
         document.querySelectorAll(
@@ -900,10 +949,19 @@
       window.setTimeout(function () {
         root.classList.add("bd-lab-online");
       }, 80);
-    }
 
-    function setupPageTransition() {
-      document.body.classList.remove("is-page-leaving");
+      var ambientMedia = window.matchMedia("(min-width: 1024px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)");
+      if (mode === "home" && ambientMedia.matches) {
+        root.classList.add("bd-lab-ambient");
+        var ambientTimer = window.setTimeout(function () {
+          root.classList.remove("bd-lab-ambient");
+        }, 8000);
+        document.addEventListener("visibilitychange", function () {
+          if (!document.hidden) return;
+          window.clearTimeout(ambientTimer);
+          root.classList.remove("bd-lab-ambient");
+        }, { once: true });
+      }
     }
 
     function copyEmail(email) {
@@ -977,7 +1035,6 @@
 
     setupThemeToggleA11y();
     setupGeneratedA11yLabels();
-    setupNavShrink();
     setupColdLabSystem();
     setupRevealOnScroll();
     setupSearchShortcut();
@@ -989,5 +1046,4 @@
     runWhenIdle(setupHeadingHighlight, 800);
     runWhenIdle(setupFootnotePreview, 950);
     runWhenIdle(setupLightbox, 1240);
-    setupPageTransition();
   })();

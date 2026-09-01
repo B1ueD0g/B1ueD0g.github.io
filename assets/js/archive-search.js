@@ -395,7 +395,9 @@
       activeResultIndex = -1;
       return;
     }
-    activeResultIndex = Math.max(0, Math.min(cards.length - 1, index));
+    var nextIndex = Math.max(0, Math.min(cards.length - 1, index));
+    if (nextIndex === activeResultIndex && !shouldFocus) return;
+    activeResultIndex = nextIndex;
     cards.forEach(function (card, cardIndex) {
       card.classList.toggle("is-active", cardIndex === activeResultIndex);
     });
@@ -407,35 +409,63 @@
     });
   }
 
+  function comparablePath(value) {
+    try {
+      return new URL(value, window.location.origin).pathname.replace(/\/$/, "");
+    } catch (error) {
+      return String(value || "").replace(/\/$/, "");
+    }
+  }
+
+  function canHydratePrerenderedResults(payload, bundle) {
+    if (!resultsRoot || resultsRoot.getAttribute("data-prerendered") !== "true") return false;
+    if (bundle.raw || state.year || state.tag) return false;
+    var cards = resultCards();
+    if (cards.length !== payload.items.length) return false;
+    return cards.every(function (card, index) {
+      var link = card.querySelector(".search-result-title a");
+      return link && comparablePath(link.href) === comparablePath(payload.items[index].record.url);
+    });
+  }
+
   function renderResults(payload, bundle) {
     activeResultIndex = -1;
     if (!resultsRoot || !resultsCount) return;
-    resultsRoot.innerHTML = "";
+    var preservePrerendered = canHydratePrerenderedResults(payload, bundle);
+    resultsRoot.removeAttribute("data-prerendered");
 
     if (!payload.total) {
+      resultsRoot.innerHTML = "";
       resultsCount.innerHTML = "";
       if (loadMoreWrap) loadMoreWrap.hidden = true;
       return;
     }
 
     resultsCount.innerHTML = '<span class="search-results-label">Results</span><span class="search-results-total">' + String(payload.total).padStart(2, "0") + '</span><span class="search-results-help">Showing ' + String(payload.items.length).padStart(2, "0") + " · ↑ ↓ Navigate</span>";
-    var fragment = document.createDocumentFragment();
-    payload.items.forEach(function (item, index) {
-      var record = item.record;
-      var article = document.createElement("article");
-      article.className = "search-result-card bd-reveal is-revealed is-result-entering";
-      article.setAttribute("data-result-index", String(index));
-      article.innerHTML =
-        '<div class="search-result-meta"><span class="search-result-index">' + String(index + 1).padStart(2, "0") + '</span><span class="search-result-date">' + escapeHTML(record.dateISO) + "</span></div>" +
-        '<div class="search-result-body"><div class="search-result-top"><div class="search-result-tags">' + record.tags.slice(0, 3).map(function (tag) {
-          return '<button type="button" class="search-result-tag" data-result-tag="' + escapeHTML(tag) + '">#' + escapeHTML(tag) + "</button>";
-        }).join("") + '</div><span class="search-result-year">' + escapeHTML(record.year) + "</span></div>" +
-        '<h2 class="search-result-title"><a href="' + escapeHTML(record.url) + '">' + highlightText(record.title, bundle.primaryTerms) + "</a></h2>" +
-        '<p class="search-result-excerpt">' + record.excerptHTML + "</p>" +
-        '<div class="search-result-footer"><a class="search-result-open" href="' + escapeHTML(record.url) + '">Open</a></div></div>';
-      fragment.appendChild(article);
-    });
-    resultsRoot.appendChild(fragment);
+    if (preservePrerendered) {
+      resultCards().forEach(function (card) {
+        card.classList.remove("search-result-card-prerendered");
+      });
+    } else {
+      resultsRoot.innerHTML = "";
+      var fragment = document.createDocumentFragment();
+      payload.items.forEach(function (item, index) {
+        var record = item.record;
+        var article = document.createElement("article");
+        article.className = "search-result-card";
+        article.setAttribute("data-result-index", String(index));
+        article.innerHTML =
+          '<div class="search-result-meta"><span class="search-result-index">' + String(index + 1).padStart(2, "0") + '</span><span class="search-result-date">' + escapeHTML(record.dateISO) + "</span></div>" +
+          '<div class="search-result-body"><div class="search-result-top"><div class="search-result-tags">' + record.tags.slice(0, 3).map(function (tag) {
+            return '<button type="button" class="search-result-tag" data-result-tag="' + escapeHTML(tag) + '">#' + escapeHTML(tag) + "</button>";
+          }).join("") + '</div><span class="search-result-year">' + escapeHTML(record.year) + "</span></div>" +
+          '<h2 class="search-result-title"><a href="' + escapeHTML(record.url) + '">' + highlightText(record.title, bundle.primaryTerms) + "</a></h2>" +
+          '<p class="search-result-excerpt">' + record.excerptHTML + "</p>" +
+          '<div class="search-result-footer"><a class="search-result-open" href="' + escapeHTML(record.url) + '">Open</a></div></div>';
+        fragment.appendChild(article);
+      });
+      resultsRoot.appendChild(fragment);
+    }
     if (loadMoreWrap && loadMoreButton) {
       var remaining = Math.max(0, payload.total - payload.items.length);
       loadMoreWrap.hidden = remaining === 0;
@@ -461,7 +491,12 @@
     if (!run.preserveLimit) resultLimit = initialResultLimit;
     state.query = input ? input.value.trim() : state.query;
     if (clearButton) clearButton.hidden = !state.query;
-    if (resultsRoot) resultsRoot.setAttribute("aria-busy", "true");
+    if (resultsRoot) {
+      resultsRoot.setAttribute("aria-busy", "true");
+      if (resultsRoot.getAttribute("data-prerendered") !== "true" || state.query || state.year || state.tag) {
+        resultsRoot.classList.add("is-updating");
+      }
+    }
     if (statusNode) statusNode.textContent = "正在检索…";
 
     try {
@@ -490,7 +525,12 @@
       if (statusNode) statusNode.textContent = "搜索索引加载失败。";
       console.error("Archive search failed", error);
     } finally {
-      if (resultsRoot) resultsRoot.setAttribute("aria-busy", "false");
+      if (resultsRoot) {
+        resultsRoot.setAttribute("aria-busy", "false");
+        window.requestAnimationFrame(function () {
+          resultsRoot.classList.remove("is-updating");
+        });
+      }
     }
   }
 
@@ -589,7 +629,7 @@
     });
 
     if (resultsRoot) {
-      resultsRoot.addEventListener("pointermove", function (event) {
+      resultsRoot.addEventListener("pointerover", function (event) {
         var card = event.target.closest(".search-result-card");
         if (card) setActiveResult(Number(card.getAttribute("data-result-index") || 0), false);
       });

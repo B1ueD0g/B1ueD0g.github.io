@@ -16,6 +16,15 @@
       {{- $src = printf "%s#%s" $src . -}}
     {{- end -}}
   {{- end -}}
+{{- else -}}
+  {{- with .Page.Params.remote_image_dimensions -}}
+    {{- with .width -}}
+      {{- $width = printf "%v" . -}}
+    {{- end -}}
+    {{- with .height -}}
+      {{- $height = printf "%v" . -}}
+    {{- end -}}
+  {{- end -}}
 {{- end -}}
 
 {{- $alt := strings.TrimSpace (.Text | plainify) -}}

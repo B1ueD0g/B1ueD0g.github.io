@@ -35,6 +35,9 @@ cover:
   hidden: true
   hiddenInList: true
   hiddenInSingle: true
+remote_image_dimensions:
+  width: 3200
+  height: 1800
 ---
 
 ## 摘要

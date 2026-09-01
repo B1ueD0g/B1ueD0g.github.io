@@ -3,7 +3,9 @@
 
 from __future__ import annotations
 
+import gzip
 import json
+import re
 import sys
 from html.parser import HTMLParser
 from pathlib import Path
@@ -15,6 +17,8 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parents[1]
 PUBLIC = ROOT / "public"
 MAX_SEARCH_HTML_BYTES = 100_000
+MAX_STYLESHEET_GZIP_BYTES = 70_000
+INITIAL_SEARCH_RESULTS = 8
 
 
 class PageAudit(HTMLParser):
@@ -26,6 +30,7 @@ class PageAudit(HTMLParser):
         self.images: list[dict[str, str]] = []
         self.meta: dict[str, str] = {}
         self.manifests: list[str] = []
+        self.stylesheets: list[str] = []
         self.json_ld: list[str] = []
         self._json_buffer: list[str] | None = None
 
@@ -47,8 +52,12 @@ class PageAudit(HTMLParser):
             key = values.get("property") or values.get("name")
             if key:
                 self.meta[key.lower()] = values.get("content", "")
-        elif tag == "link" and "manifest" in values.get("rel", "").lower().split():
-            self.manifests.append(values.get("href", ""))
+        elif tag == "link":
+            relations = values.get("rel", "").lower().split()
+            if "manifest" in relations:
+                self.manifests.append(values.get("href", ""))
+            if "stylesheet" in relations:
+                self.stylesheets.append(values.get("href", ""))
         elif tag == "script" and values.get("type", "").lower() == "application/ld+json":
             self._json_buffer = []
 
@@ -112,6 +121,7 @@ def main() -> int:
             except json.JSONDecodeError as error:
                 errors.append(f"{path.relative_to(PUBLIC)} has invalid JSON-LD #{index}: {error}")
         pages[path] = (parser, nodes)
+        is_article_page = any("BlogPosting" in schema_types(node) for node in nodes)
 
         if parser.duplicate_ids:
             errors.append(
@@ -120,11 +130,33 @@ def main() -> int:
         for attribute, target in parser.id_refs:
             if target not in parser.ids:
                 errors.append(f"{path.relative_to(PUBLIC)} has unresolved {attribute}=#{target}")
+        external_article_images: list[dict[str, str]] = []
         for image in parser.images:
             if "alt" not in image:
                 errors.append(f"{path.relative_to(PUBLIC)} has an image without alt: {image.get('src', '')}")
             elif not image.get("alt", "").strip() and image.get("role") != "presentation" and image.get("aria-hidden") != "true":
                 errors.append(f"{path.relative_to(PUBLIC)} has an unexplained empty image alt: {image.get('src', '')}")
+            source = urlparse(image.get("src", ""))
+            is_external = source.scheme in {"http", "https"} and source.netloc not in {
+                "bluedog.website",
+                "www.bluedog.website",
+            }
+            if is_article_page and is_external:
+                external_article_images.append(image)
+
+        has_dimensioned_external_image = any(
+            image.get("width", "").isdigit() and image.get("height", "").isdigit()
+            for image in external_article_images
+        )
+        if has_dimensioned_external_image:
+            for image in external_article_images:
+                width = image.get("width", "")
+                height = image.get("height", "")
+                if not width.isdigit() or not height.isdigit() or int(width) <= 0 or int(height) <= 0:
+                    errors.append(
+                        f"{path.relative_to(PUBLIC)} has an external article image without "
+                        f"positive width and height: {image.get('src', '')}"
+                    )
         if parser.manifests:
             errors.append(f"{path.relative_to(PUBLIC)} links an unsupported web app manifest")
 
@@ -167,6 +199,10 @@ def main() -> int:
                 errors.append(f"search page still contains legacy payload {forbidden}")
         if "noindex" not in search_parser.meta.get("robots", "").lower():
             errors.append("search page is not marked noindex")
+        if search_text.count("search-result-card-prerendered") != INITIAL_SEARCH_RESULTS:
+            errors.append(f"search page must pre-render exactly {INITIAL_SEARCH_RESULTS} result cards")
+        if search_text.count("data-prerendered") != 1:
+            errors.append("search results container must be marked as pre-rendered")
 
     about_path = PUBLIC / "about" / "index.html"
     if about_path.is_file():
@@ -188,6 +224,39 @@ def main() -> int:
     if article_count == 0:
         errors.append("no BlogPosting schema nodes were generated")
 
+    stylesheet_size = 0
+    home_path = PUBLIC / "index.html"
+    home_parser = pages.get(home_path, (PageAudit(), []))[0]
+    stylesheets = []
+    for href in home_parser.stylesheets:
+        stylesheet_path = local_path(href)
+        if stylesheet_path and stylesheet_path.name.startswith("stylesheet."):
+            stylesheets.append(stylesheet_path)
+    if len(stylesheets) != 1:
+        errors.append(f"homepage must reference one production stylesheet, found {len(stylesheets)}")
+    else:
+        stylesheet = stylesheets[0]
+        stylesheet_bytes = stylesheet.read_bytes()
+        stylesheet_text = stylesheet_bytes.decode("utf-8")
+        stylesheet_size = len(gzip.compress(stylesheet_bytes, compresslevel=9, mtime=0))
+        if stylesheet_size > MAX_STYLESHEET_GZIP_BYTES:
+            errors.append(
+                f"production stylesheet gzip size {stylesheet_size:,} exceeds "
+                f"{MAX_STYLESHEET_GZIP_BYTES:,} bytes"
+            )
+        animation_values = re.findall(
+            r"(?:^|[;{])animation(?:-[a-z-]+)?\s*:\s*([^;}]+)",
+            stylesheet_text,
+            flags=re.IGNORECASE,
+        )
+        if any(re.search(r"\binfinite\b", value, flags=re.IGNORECASE) for value in animation_values):
+            errors.append("production stylesheet contains an infinite animation")
+        for value in re.findall(r"will-change\s*:\s*([^;}]+)", stylesheet_text, flags=re.IGNORECASE):
+            normalized = value.strip().lower()
+            if not normalized.startswith(("auto", "initial", "inherit", "unset")):
+                errors.append(f"production stylesheet contains persistent will-change: {value.strip()}")
+                break
+
     if errors:
         for error in errors:
             print(f"[ERROR] {error}")
@@ -198,7 +267,7 @@ def main() -> int:
     print(
         f"[OK] Generated-site quality gate passed: {len(html_files)} HTML pages, "
         f"{article_count} articles, {len(referenced_cards)} social cards, "
-        f"search HTML {search_size:,} bytes."
+        f"search HTML {search_size:,} bytes, CSS gzip {stylesheet_size:,} bytes."
     )
     return 0
 

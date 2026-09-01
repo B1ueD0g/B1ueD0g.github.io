@@ -153,7 +153,6 @@ html[data-theme="dark"] .header {
   gap: var(--space-2);
   max-width: min(1240px, calc(100% - 48px));
   margin: 0 auto;
-  transition: min-height 0.22s ease, padding 0.22s ease;
 }
 
 .logo,
@@ -169,7 +168,6 @@ html[data-theme="dark"] .header {
   line-height: 1.28;
   display: inline-block;
   padding-bottom: 0.2em;
-  transition: font-size 0.22s ease, letter-spacing 0.22s ease;
 }
 
 
@@ -244,17 +242,6 @@ html[data-theme="dark"] #theme-toggle:hover {
   text-decoration: underline;
   text-underline-offset: 5px;
   text-decoration-thickness: 2px;
-}
-
-body.nav-scrolled .nav {
-  min-height: 72px;
-  padding-top: 4px;
-  padding-bottom: 4px;
-}
-
-body.nav-scrolled .logo a {
-  font-size: var(--fs-logo-compact);
-  letter-spacing: 0.02em;
 }
 
 a {
@@ -667,7 +654,7 @@ body.home-page .custom-min-footer {
   height: 8px;
   border-radius: 999px;
   background: var(--min-text-color);
-  animation: searchPulse 1s ease-in-out infinite;
+  animation: searchPulse 900ms ease-in-out 2;
 }
 
 

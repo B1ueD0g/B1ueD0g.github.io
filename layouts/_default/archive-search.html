@@ -6,6 +6,7 @@
 {{- $posts = where $posts "Params.hiddenInHomeList" "!=" "true" -}}
 {{- $posts = $posts.ByDate.Reverse -}}
 {{- $latestPosts := first 3 $posts -}}
+{{- $initialPosts := first 8 $posts -}}
 {{- $years := slice -}}
 {{- $allTags := slice -}}
 {{- range $posts -}}
@@ -108,7 +109,7 @@
   </div>
   <div id="search-synonym-tip" class="search-synonym-tip" hidden></div>
   <div id="search-active-state" class="search-active-state" hidden></div>
-  <div id="search-loading" class="search-loading" role="status">搜索索引加载中…</div>
+  <div id="search-loading" class="search-loading" role="status" hidden>搜索索引加载中…</div>
   <div id="search-empty" class="search-empty" hidden>
     <p>没有找到结果，试试更短的关键词或推荐主题。</p>
     <div class="search-empty-actions">
@@ -126,8 +127,35 @@
 
   <section class="search-results-shell search-results-shell-compact" aria-label="搜索结果">
     <div class="search-results-main">
-      <div id="search-results-count" class="search-results-count" role="status" aria-live="polite"></div>
-      <div id="search-results" class="search-results"></div>
+      <div id="search-results-count" class="search-results-count" role="status" aria-live="polite">
+        <span class="search-results-label">Results</span>
+        <span class="search-results-total">{{ printf "%02d" (len $posts) }}</span>
+        <span class="search-results-help">Showing {{ printf "%02d" (len $initialPosts) }} · ↑ ↓ Navigate</span>
+      </div>
+      <div id="search-results" class="search-results" data-prerendered="true">
+        {{- range $index, $post := $initialPosts }}
+        {{- $summary := $post.Params.summary | default $post.Summary | plainify | htmlUnescape | truncate 180 -}}
+        <article class="search-result-card search-result-card-prerendered" data-result-index="{{ $index }}">
+          <div class="search-result-meta">
+            <span class="search-result-index">{{ printf "%02d" (add $index 1) }}</span>
+            <span class="search-result-date">{{ $post.Date.Format "2006-01-02" }}</span>
+          </div>
+          <div class="search-result-body">
+            <div class="search-result-top">
+              <div class="search-result-tags">
+                {{- range first 3 ($post.Params.tags | default (slice)) }}
+                <button type="button" class="search-result-tag" data-result-tag="{{ . }}">#{{ . }}</button>
+                {{- end }}
+              </div>
+              <span class="search-result-year">{{ $post.Date.Format "2006" }}</span>
+            </div>
+            <h2 class="search-result-title"><a href="{{ $post.RelPermalink }}">{{ $post.Title }}</a></h2>
+            <p class="search-result-excerpt">{{ $summary }}</p>
+            <div class="search-result-footer"><a class="search-result-open" href="{{ $post.RelPermalink }}">Open</a></div>
+          </div>
+        </article>
+        {{- end }}
+      </div>
       <div id="search-load-more" class="search-load-more" hidden>
         <button type="button" id="search-load-more-button">Show more results</button>
       </div>

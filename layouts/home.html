@@ -108,8 +108,6 @@
 
 <script>
   window.addEventListener("DOMContentLoaded", function () {
-    document.body.classList.add("home-page");
-
     var searchPath = {{ $searchPath | jsonify | safeJS }};
     var input = document.getElementById("home-search-input");
     var button = document.getElementById("home-search-btn");
