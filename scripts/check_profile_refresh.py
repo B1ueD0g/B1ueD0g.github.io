@@ -6,6 +6,7 @@ from copy import deepcopy
 from html.parser import HTMLParser
 import json
 from pathlib import Path
+import re
 import sys
 
 import yaml
@@ -27,6 +28,9 @@ class Sections(HTMLParser):
         self.vendor_groups = []
         self.strong_text = None
         self.bold_paper_names = []
+        self.doi_text = None
+        self.doi_href = None
+        self.paper_doi_links = []
 
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
@@ -43,6 +47,9 @@ class Sections(HTMLParser):
             self.strong_text = ""
         if tag == "a":
             href = attrs.get("href", "")
+            if "research-doi-link" in classes and "research-papers" in self.stack:
+                self.doi_text = ""
+                self.doi_href = href
             self.links.add(href)
             for key in self.stack:
                 self.section_links.setdefault(key, set()).add(href)
@@ -50,6 +57,10 @@ class Sections(HTMLParser):
                 self.cve_links.add(href)
 
     def handle_endtag(self, tag):
+        if tag == "a" and self.doi_text is not None:
+            self.paper_doi_links.append((self.doi_href, self.doi_text))
+            self.doi_text = None
+            self.doi_href = None
         if tag == "strong" and self.strong_text is not None:
             if self.strong_text.casefold() in {"卜宋博", "songbo bu"}:
                 self.bold_paper_names.append(self.strong_text)
@@ -58,6 +69,8 @@ class Sections(HTMLParser):
             self.stack.pop()
 
     def handle_data(self, value):
+        if self.doi_text is not None:
+            self.doi_text += value
         if self.strong_text is not None:
             self.strong_text += value
         for key in self.stack:
@@ -94,6 +107,11 @@ def validate(data, ledger):
             errors.append(f"Comment-stage standard incorrectly published: {record['id']}")
         if record["section"] == "papers" and record.get("type") and item["type"] != record["type"]:
             errors.append(f"Publication type mismatch: {record['id']}")
+        if record["section"] == "papers" and item.get("doi") != record.get("doi"):
+            errors.append(f"Paper DOI evidence mismatch: {record['id']}")
+    for item in data["works"]:
+        if item["type"].startswith("研究-") and item.get("doi") and not re.fullmatch(r"10\.\d{4,9}/\S+", item["doi"]):
+            errors.append(f"Invalid DOI syntax: {item['title']}")
     security_records = {r["url"]: r for r in ledger["records"] if r["section"] == "security"}
     for item in data["security"]["items"]:
         record = security_records.get(item["url"], {})
@@ -123,6 +141,9 @@ def validate_rendered(data, ledger, html):
     paper_count = sum(item["type"].startswith("研究-") for item in data["works"])
     if len(page.bold_paper_names) != paper_count:
         errors.append("Personal author credit not bold in every paper")
+    expected_dois = [(f"https://doi.org/{item['doi']}", item["doi"]) for item in data["works"] if item["type"].startswith("研究-") and item.get("doi")]
+    if sorted(page.paper_doi_links) != sorted(expected_dois):
+        errors.append("Paper DOI links missing, duplicated or mislabeled")
     expected_sections = {"ietf": "about-ietf", "activity": "about-ietf", "security": "about-security", "works": "about-work-panel-published", "pending": "about-work-panel-inprogress", "papers": "research-papers"}
     for record in ledger["records"]:
         if record.get("url") and record["url"] not in page.links:
@@ -215,6 +236,13 @@ def main():
     bad_data = deepcopy(data)
     next(x for x in bad_data["works"] if x["title"].startswith("基于AIoT"))["type"] = "研究-预印本"
     assert "Publication type mismatch: paper-aiot-mastitis" in validate(bad_data, ledger), "Negative control missed changed publication type"
+    bad_data = deepcopy(data)
+    next(x for x in bad_data["works"] if x["title"].startswith("基于AIoT"))["doi"] = "10.14088/incorrect"
+    assert "Paper DOI evidence mismatch: paper-aiot-mastitis" in validate(bad_data, ledger), "Negative control missed wrong DOI mapping"
+    doi_url = f"https://doi.org/{next(x for x in data['works'] if x.get('doi'))['doi']}"
+    assert "Paper DOI links missing, duplicated or mislabeled" in validate_rendered(data, ledger, html.replace(doi_url, "#", 1)), "Negative control missed broken DOI href"
+    bad_html = html.replace('class=research-doi-link', 'class=removed-doi-link', 1).replace('class="research-doi-link"', 'class="removed-doi-link"', 1)
+    assert "Paper DOI links missing, duplicated or mislabeled" in validate_rendered(data, ledger, bad_html), "Negative control missed omitted DOI anchor"
     about_html = (ROOT / "public/about/index.html").read_text()
     errors.extend(validate_about(data, about_html))
     assert "Removed Selected Research summary restored on About" in validate_about(data, about_html + '<section id="about-research-summary">Selected Research</section>'), "Negative control missed restored summary"
@@ -227,7 +255,8 @@ def main():
     if errors:
         print("\n".join(errors), file=sys.stderr)
         return 1
-    print(f"PASS: {len(ledger['records'])} evidence mappings; compact portfolio, 5 standard identifiers, featured CVEs, collapsed vendor directory, publication types, author emphasis and focused About page; 12 negative controls detected. Source entailment and visual review remain separate checks.")
+    doi_count = sum(bool(item.get("doi")) for item in data["works"] if item["type"].startswith("研究-"))
+    print(f"PASS: {len(ledger['records'])} evidence mappings; {doi_count} clickable paper DOIs, compact portfolio, 5 standard identifiers, featured CVEs, collapsed vendor directory, publication types, author emphasis and focused About page; 15 negative controls detected. Source entailment and visual review remain separate checks.")
     return 0
 
 

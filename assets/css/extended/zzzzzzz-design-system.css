@@ -9834,6 +9834,7 @@ article.about-single.about-pro .about-ietf-head > h2 { font-size: 0.88rem !impor
 article.about-single.about-pro .about-record-copy > a { text-decoration-thickness: 1px; text-decoration-color: color-mix(in srgb, var(--primary) 22%, transparent); text-underline-offset: 4px; }
 article.about-single.about-pro .about-record-copy > a:hover { color: var(--bd-ui-accent); text-decoration-color: var(--bd-ui-accent); }
 #research-papers .about-evidence-detail { font-family: var(--bd-font-ui); color: var(--bd-ui-muted); font-size: 0.78rem; line-height: 1.8; }
+#research-papers .research-doi-link { overflow-wrap: anywhere; word-break: normal; text-underline-offset: 3px; }
 article.about-single.about-pro .about-ietf-item { padding: 22px !important; border-color: var(--bd-ui-border) !important; background: var(--bd-ui-subtle) !important; box-shadow: none !important; }
 article.about-single.about-pro .about-ietf-item:hover { border-color: var(--bd-ui-accent) !important; }
 article.about-single.about-pro .about-ietf-note { color: var(--bd-ui-muted) !important; }

@@ -74,7 +74,7 @@
       <h3 class="research-publication-heading">{{ $group.title }}</h3>
       <ul class="about-record-list">
         {{- range $index, $item := where $aboutData.works "type" "in" $group.types }}
-        <li><span class="about-record-index">{{ printf "%02d" (add $index 1) }}</span><span class="about-record-copy">{{ if .url }}<a href="{{ .url }}" target="_blank" rel="noopener noreferrer">{{ .title }}</a>{{ else }}<strong>{{ .title }}</strong>{{ end }}<small class="about-evidence-detail">{{ replace .type "研究-" "" }} · {{ replaceRE "(?i)(Songbo Bu|卜宋博)" "**${1}**" .note | markdownify }}</small></span></li>
+        <li><span class="about-record-index">{{ printf "%02d" (add $index 1) }}</span><span class="about-record-copy">{{ if .url }}<a href="{{ .url }}" target="_blank" rel="noopener noreferrer">{{ .title }}</a>{{ else }}<strong>{{ .title }}</strong>{{ end }}<small class="about-evidence-detail">{{ replace .type "研究-" "" }} · {{ replaceRE "(?i)(Songbo Bu|卜宋博)" "**${1}**" .note | markdownify }}{{ with .doi }} · DOI：<a class="research-doi-link" href="{{ printf "https://doi.org/%s" . }}" target="_blank" rel="noopener noreferrer">{{ . }}</a>{{ end }}</small></span></li>
         {{- end }}
       </ul>
       {{- end }}
