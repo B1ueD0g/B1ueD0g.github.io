@@ -25,6 +25,8 @@ class Sections(HTMLParser):
         self.featured_cards = 0
         self.advisories = 0
         self.vendor_groups = []
+        self.strong_text = None
+        self.bold_paper_names = []
 
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
@@ -37,6 +39,8 @@ class Sections(HTMLParser):
             self.vendor_groups.append("open" in attrs)
         if tag == "section":
             self.stack.append(attrs.get("id", ""))
+        if tag == "strong" and "research-papers" in self.stack:
+            self.strong_text = ""
         if tag == "a":
             href = attrs.get("href", "")
             self.links.add(href)
@@ -46,10 +50,16 @@ class Sections(HTMLParser):
                 self.cve_links.add(href)
 
     def handle_endtag(self, tag):
+        if tag == "strong" and self.strong_text is not None:
+            if self.strong_text.casefold() in {"卜宋博", "songbo bu"}:
+                self.bold_paper_names.append(self.strong_text)
+            self.strong_text = None
         if tag == "section" and self.stack:
             self.stack.pop()
 
     def handle_data(self, value):
+        if self.strong_text is not None:
+            self.strong_text += value
         for key in self.stack:
             self.text[key] = self.text.get(key, "") + value
 
@@ -110,6 +120,9 @@ def validate_rendered(data, ledger, html):
     errors = []
     page = Sections()
     page.feed(html)
+    paper_count = sum(item["type"].startswith("研究-") for item in data["works"])
+    if len(page.bold_paper_names) != paper_count:
+        errors.append("Personal author credit not bold in every paper")
     expected_sections = {"ietf": "about-ietf", "activity": "about-ietf", "security": "about-security", "works": "about-work-panel-published", "pending": "about-work-panel-inprogress", "papers": "research-papers"}
     for record in ledger["records"]:
         if record.get("url") and record["url"] not in page.links:
@@ -130,8 +143,8 @@ def validate_rendered(data, ledger, html):
     featured = sum(bool(item.get("cve_url")) for item in data["security"]["items"])
     if page.featured_cards != featured or page.advisories != len(data["security"]["items"]) - featured:
         errors.append("Security featured cards/advisory directory mismatch")
-    if len(page.vendor_groups) != 3 or any(page.vendor_groups):
-        errors.append("Vendor directory must be three initially collapsed groups")
+    if len(page.vendor_groups) != 4 or any(page.vendor_groups):
+        errors.append("Vendor directory must be four initially collapsed groups")
     if data["ietf"]["intro"] not in page.text.get("about-ietf", ""):
         errors.append("IETF introduction missing from rendered page")
     if data["security"]["intro"] not in page.text.get("about-security", ""):
@@ -155,6 +168,23 @@ def validate_rendered(data, ledger, html):
     return errors
 
 
+def validate_about(data, html):
+    errors = []
+    about = Sections()
+    about.feed(html)
+    if "about-research-summary" in about.text or "#about-research-summary" in about.links:
+        errors.append("Removed Selected Research summary restored on About")
+    if "about-work-panel-published" in about.text or "about-security" in about.text:
+        errors.append("About still duplicates the full directory")
+    honors = about.text.get("about-honors", "")
+    if any(value in honors for value in ("CVE-2022-1407", "CVE-2022-1408", "CVE-2022-1409", "CNVD-2023-77801")):
+        errors.append("Vulnerability identifiers still displayed as honors")
+    for key, section in (("certifications", "about-certifications"), ("honors", "about-honors")):
+        if any(item not in about.text.get(section, "") for item in data[key]):
+            errors.append(f"Remaining {key} record omitted")
+    return errors
+
+
 def main():
     data = yaml.safe_load((ROOT / "data/about.yaml").read_text())
     ledger = json.loads(LEDGER.read_text())
@@ -170,6 +200,7 @@ def main():
     assert "Preprint publication boundary missing" in validate(bad_data, ledger), "Negative control missed status inflation"
     html = (ROOT / "public/research/index.html").read_text()
     errors.extend(validate_rendered(data, ledger, html))
+    assert "Personal author credit not bold in every paper" in validate_rendered(data, ledger, html.replace("<strong>卜宋博</strong>", "卜宋博", 1)), "Negative control missed lost author emphasis"
     bad_html = html.replace("Active individual I-D · Author", "Published RFC · Author")
     assert "Record status rendered in wrong panel or omitted: principal-binding" in validate_rendered(data, ledger, bad_html), "Negative control missed inflated rendered draft status"
     cve = data["security"]["items"][0]["cve_url"]
@@ -180,16 +211,14 @@ def main():
     next(x for x in bad_data["works"] if "T/CCF 0010" in x["title"])["title"] = "零信任数据隐身协议"
     assert "Published standard identifier mismatch: T/CCF 0010—2026" in validate(bad_data, ledger), "Negative control missed standard identifier loss"
     bad_html = html.replace('class=security-vendor-group', 'open class=security-vendor-group').replace('class="security-vendor-group"', 'open class="security-vendor-group"')
-    assert "Vendor directory must be three initially collapsed groups" in validate_rendered(data, ledger, bad_html), "Negative control missed expanded long directory"
+    assert "Vendor directory must be four initially collapsed groups" in validate_rendered(data, ledger, bad_html), "Negative control missed expanded long directory"
     bad_data = deepcopy(data)
     next(x for x in bad_data["works"] if x["title"].startswith("基于AIoT"))["type"] = "研究-预印本"
     assert "Publication type mismatch: paper-aiot-mastitis" in validate(bad_data, ledger), "Negative control missed changed publication type"
-    about = Sections()
-    about.feed((ROOT / "public/about/index.html").read_text())
-    if "/research/" not in about.links or "about-research-summary" not in about.text:
-        errors.append("About lacks the new summary/Research link")
-    if "about-work-panel-published" in about.text or "about-security" in about.text:
-        errors.append("About still duplicates the full directory")
+    about_html = (ROOT / "public/about/index.html").read_text()
+    errors.extend(validate_about(data, about_html))
+    assert "Removed Selected Research summary restored on About" in validate_about(data, about_html + '<section id="about-research-summary">Selected Research</section>'), "Negative control missed restored summary"
+    assert "Vulnerability identifiers still displayed as honors" in validate_about(data, about_html + '<section id="about-honors">CVE-2022-1407 CNVD-2023-77801</section>'), "Negative control missed misplaced vulnerability identifiers"
     for path in ("public/index.html", "public/about/index.html", "public/research/index.html"):
         parser = Sections()
         parser.feed((ROOT / path).read_text())
@@ -198,7 +227,7 @@ def main():
     if errors:
         print("\n".join(errors), file=sys.stderr)
         return 1
-    print(f"PASS: {len(ledger['records'])} evidence mappings; compact portfolio, 5 standard identifiers, featured CVEs, collapsed vendor directory and publication types; 9 negative controls detected. Source entailment and visual review remain separate checks.")
+    print(f"PASS: {len(ledger['records'])} evidence mappings; compact portfolio, 5 standard identifiers, featured CVEs, collapsed vendor directory, publication types, author emphasis and focused About page; 12 negative controls detected. Source entailment and visual review remain separate checks.")
     return 0
 
 

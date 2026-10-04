@@ -30,7 +30,6 @@
     {{- if not $isResearch }}
     {{- with $aboutData.profile.roles }}<a href="#about-identity">Identity</a>{{- end }}
     {{- with $aboutData.highlights }}<a href="#about-highlights">Highlights</a>{{- end }}
-    <a href="#about-research-summary">Research</a>
     {{- else }}
     <a href="#research-papers">Papers</a>
     {{- with $aboutData.ietf }}<a href="#about-ietf">IETF</a>{{- end }}
@@ -67,16 +66,6 @@
     </section>
     {{- end }}
 
-    <section class="about-block about-block-research-summary" id="about-research-summary">
-      <h2>Selected Research · 科研与作品</h2>
-      <p class="about-ietf-intro">聚焦 AI 智能体身份与授权、远程证明及 TLS 形式化分析，贯通安全研究、开放标准与工程实践。</p>
-      <ul class="about-record-list">
-        <li><span class="about-record-index">01</span><span class="about-record-copy"><a href="/research/#research-papers">EarlyAttestationBleed · 预印本</a><small class="about-evidence-detail">机密计算与远程证明协议安全研究。</small></span></li>
-        <li><span class="about-record-index">02</span><span class="about-record-copy"><a href="/research/#about-ietf">{{ len $aboutData.ietf.items }} 项活跃个人 Internet-Draft</a><small class="about-evidence-detail">AI 智能体安全、责任证据组合、远程证明与 TLS。</small></span></li>
-        <li><span class="about-record-index">03</span><span class="about-record-copy"><a href="/research/#about-works">企业级 AI 智能体应用效能评估规范</a><small class="about-evidence-detail">T/CECC 58—2026 起草人；2026-08-10 发布，2026-08-31 实施。</small></span></li>
-      </ul>
-      <a class="about-ietf-link" href="/research/">查看完整 Research & Works →</a>
-    </section>
     {{- end }}
 
     {{- if $isResearch }}
@@ -86,7 +75,7 @@
       <h3 class="research-publication-heading">{{ $group.title }}</h3>
       <ul class="about-record-list">
         {{- range $index, $item := where $aboutData.works "type" "in" $group.types }}
-        <li><span class="about-record-index">{{ printf "%02d" (add $index 1) }}</span><span class="about-record-copy">{{ if .url }}<a href="{{ .url }}" target="_blank" rel="noopener noreferrer">{{ .title }}</a>{{ else }}<strong>{{ .title }}</strong>{{ end }}<small class="about-evidence-detail">{{ replace .type "研究-" "" }} · {{ .note }}</small></span></li>
+        <li><span class="about-record-index">{{ printf "%02d" (add $index 1) }}</span><span class="about-record-copy">{{ if .url }}<a href="{{ .url }}" target="_blank" rel="noopener noreferrer">{{ .title }}</a>{{ else }}<strong>{{ .title }}</strong>{{ end }}<small class="about-evidence-detail">{{ replace .type "研究-" "" }} · {{ replaceRE "(?i)(Songbo Bu|卜宋博)" "**${1}**" .note | markdownify }}</small></span></li>
         {{- end }}
       </ul>
       {{- end }}
@@ -148,7 +137,7 @@
       <h3 class="security-directory-title">GitHub Security Advisories</h3>
       <div class="security-directory">
         {{- $items := .items }}
-        {{- range $vendor := slice (dict "name" "Privasys" "prefix" "https://github.com/Privasys/") (dict "name" "Cocos AI" "prefix" "https://github.com/ultravioletrs/cocos/") (dict "name" "Contrast" "prefix" "https://github.com/edgelesssys/contrast/") }}
+        {{- range $vendor := slice (dict "name" "Privasys" "prefix" "https://github.com/Privasys/") (dict "name" "Veraison" "prefix" "https://github.com/veraison/") (dict "name" "Cocos AI" "prefix" "https://github.com/ultravioletrs/cocos/") (dict "name" "Contrast" "prefix" "https://github.com/edgelesssys/contrast/") }}
         {{- $entries := slice }}
         {{- range $items }}
           {{- if and (not .cve_url) (hasPrefix .url $vendor.prefix) }}{{ $entries = $entries | append . }}{{- end }}
