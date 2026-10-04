@@ -72,7 +72,7 @@
       "isPartOf" (dict "@id" $websiteID)
     -}}
     {{- $graph = $graph | append $article $person $breadcrumbList -}}
-  {{- else if eq .Layout "about" -}}
+  {{- else if and (eq .Layout "about") (ne (.Param "profileView") "research") -}}
     {{- $profilePage := dict
       "@type" "ProfilePage"
       "@id" (printf "%s#profile" .Permalink)

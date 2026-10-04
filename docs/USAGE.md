@@ -10,6 +10,7 @@
 
 - 个人主页配置：`content/about/index.md`
 - 个人主页结构化数据：`data/about.yaml`
+- 科研成果与作品页面：`content/research/index.md`；与 About 共用 `data/about.yaml`，不要另建重复成果清单。
 - 已发布归档：`content/posts/archive/`
 - 待发布归档：`content/posts/pending/`（默认 `draft: true`）
 - 样式文件：`assets/css/extended/custom.css`
@@ -133,6 +134,9 @@ push 后会自动构建并发布到 GitHub Pages。
 - 结构化内容：`data/about.yaml`
 - 页面开关与描述：`content/about/index.md`
 - 社交链接：`hugo.toml` 里的 `[[params.socialIcons]]`
+- About 保留个人介绍与精选摘要；Research & Works 展示论文/预印本、IETF、公开漏洞披露及分类作品。
+- IETF 版本/日期、共同发现者与标准状态应以公开一手记录更新；不能把预印本写成录用论文、个人草案写成 RFC。
+- `docs/profile-refresh-2026-10-04.json` 是本次核验快照，`python3 scripts/check_profile_refresh.py` 在构建后检查来源映射、页面分工和状态边界。后续有真实新版本时应同时更新快照和断言，不沿用旧日期。
 
 ---
 

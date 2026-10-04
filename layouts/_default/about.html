@@ -1,11 +1,12 @@
 {{- define "main" }}
 {{- $aboutData := site.Data.about -}}
 {{- $useProfileData := .Param "useProfileData" | default false -}}
+{{- $isResearch := eq (.Param "profileView") "research" -}}
 <article class="post-single about-single about-pro">
   <header class="post-header">
     <div class="about-hero">
       <div class="about-hero-copy">
-        <p class="about-hero-kicker">Research Profile / 01</p>
+        <p class="about-hero-kicker">{{ if $isResearch }}Research & Works / 02{{ else }}Research Profile / 01{{ end }}</p>
         <h1 class="post-title entry-hint-parent">{{ .Title }}</h1>
         {{- with .Description }}
         <div class="post-description">{{ . }}</div>
@@ -26,15 +27,25 @@
 
   {{- if and $useProfileData $aboutData }}
   <nav class="about-section-nav" aria-label="About sections">
+    {{- if not $isResearch }}
     {{- with $aboutData.profile.roles }}<a href="#about-identity">Identity</a>{{- end }}
     {{- with $aboutData.highlights }}<a href="#about-highlights">Highlights</a>{{- end }}
+    <a href="#about-research-summary">Research</a>
+    {{- else }}
+    <a href="#research-papers">Papers</a>
     {{- with $aboutData.ietf }}<a href="#about-ietf">IETF</a>{{- end }}
+    {{- with $aboutData.security }}<a href="#about-security">Security</a>{{- end }}
+    {{- with $aboutData.works }}<a href="#about-works">Standards & Works</a>{{- end }}
+    <a href="/about/">About Me ↗</a>
+    {{- end }}
+    {{- if not $isResearch }}
     {{- with $aboutData.certifications }}<a href="#about-certifications">Certifications</a>{{- end }}
     {{- with $aboutData.honors }}<a href="#about-honors">Honors</a>{{- end }}
-    {{- with $aboutData.works }}<a href="#about-works">Works</a>{{- end }}
     {{- with $aboutData.roadmap }}<a href="#about-roadmap">Next</a>{{- end }}
+    {{- end }}
   </nav>
   <div class="about-profile">
+    {{- if not $isResearch }}
     {{- with $aboutData.profile.roles }}
     <section class="about-block about-block-title about-block-identity" id="about-identity">
       <h2>{{ $aboutData.profile.title | default "Roles · 定位" }}</h2>
@@ -56,6 +67,29 @@
     </section>
     {{- end }}
 
+    <section class="about-block about-block-research-summary" id="about-research-summary">
+      <h2>Selected Research · 科研与作品</h2>
+      <p class="about-ietf-intro">研究主线聚焦 AI 智能体身份与授权、远程证明、TLS 形式化分析，以及把安全要求连接到可核验的实现与交付。</p>
+      <ul class="about-record-list">
+        <li><span class="about-record-index">01</span><span class="about-record-copy"><a href="/research/#research-papers">EarlyAttestationBleed · 公开预印本</a><small class="about-evidence-detail">共同研究与相关协同漏洞披露；论文状态、作者和来源在成果页逐项列明。</small></span></li>
+        <li><span class="about-record-index">02</span><span class="about-record-copy"><a href="/research/#about-ietf">{{ len $aboutData.ietf.items }} 项活跃个人 Internet-Draft</a><small class="about-evidence-detail">AI Agent 安全、责任证据组合、远程证明与 TLS；截至 2026-10-04，不等同于 RFC 或 IETF 共识。</small></span></li>
+        <li><span class="about-record-index">03</span><span class="about-record-copy"><a href="/research/#about-works">企业级 AI 智能体应用效能评估规范</a><small class="about-evidence-detail">T/CECC 58—2026 起草人；2026-08-10 发布，2026-08-31 实施。</small></span></li>
+      </ul>
+      <a class="about-ietf-link" href="/research/">查看完整 Research & Works →</a>
+    </section>
+    {{- end }}
+
+    {{- if $isResearch }}
+    <section class="about-block about-block-papers" id="research-papers">
+      <h2>Papers & Preprints · 论文与预印本</h2>
+      <p class="about-ietf-intro">仅列公开研究；预印本与同行评审发表分别标注，不展示未公开投稿状态。</p>
+      <ul class="about-record-list">
+        {{- range $index, $item := where $aboutData.works "type" "eq" "研究-预印本" }}
+        <li><span class="about-record-index">{{ printf "%02d" (add $index 1) }}</span><span class="about-record-copy"><a href="{{ .url }}" target="_blank" rel="noopener noreferrer">{{ .title }}</a><small class="about-evidence-detail">{{ .type }} · {{ .note }}</small></span></li>
+        {{- end }}
+      </ul>
+    </section>
+
     {{- with $aboutData.ietf }}
     <section class="about-block about-block-ietf" id="about-ietf">
       <div class="about-ietf-head">
@@ -69,13 +103,50 @@
           <span class="about-ietf-meta"><span>{{ .group }}</span><span>{{ .status }}</span></span>
           <strong>{{ .title }}</strong>
           <span class="about-ietf-note">{{ .note }}</span>
+          {{- with .version }}<span class="about-ietf-note">{{ . }}</span>{{- end }}
           <span class="about-ietf-link">Official record <span aria-hidden="true">↗</span></span>
         </a>
         {{- end }}
       </div>
+      {{- with .activities }}
+      <h3>Selected Reviews & Discussions · 审阅与讨论</h3>
+      <ul class="about-record-list">
+        {{- range $index, $item := . }}
+        <li>
+          <span class="about-record-index">{{ printf "%02d" (add $index 1) }}</span>
+          <span class="about-record-copy">
+            <a href="{{ .url }}" target="_blank" rel="noopener noreferrer">{{ .title }}</a>
+            <small class="about-evidence-detail">{{ .date }} · {{ .role }}<br>{{ .note }}</small>
+          </span>
+        </li>
+        {{- end }}
+      </ul>
+      {{- end }}
     </section>
     {{- end }}
 
+    {{- with $aboutData.security }}
+    <section class="about-block about-block-security" id="about-security">
+      <h2>{{ .title }}</h2>
+      <p class="about-ietf-intro">{{ .intro }}</p>
+      <ul class="about-record-list">
+        {{- range $index, $item := .items }}
+        <li>
+          <span class="about-record-index">{{ printf "%02d" (add $index 1) }}</span>
+          <span class="about-record-copy">
+            <a href="{{ .url }}" target="_blank" rel="noopener noreferrer">{{ .title }}</a>
+            <small class="about-evidence-detail">{{ .date }} · {{ .role }}<br>{{ .note }}
+              {{- with .cve_url }} <a href="{{ . }}" target="_blank" rel="noopener noreferrer">CVE 官方记录 ↗</a>{{- end }}
+            </small>
+          </span>
+        </li>
+        {{- end }}
+      </ul>
+    </section>
+    {{- end }}
+
+    {{- end }}
+    {{- if not $isResearch }}
     {{- with $aboutData.highlights }}
     {{- $highlightLead := "" -}}
     {{- if gt (len .) 0 }}
@@ -119,7 +190,8 @@
 
     {{- with $aboutData.certifications }}
     <section class="about-block about-block-certifications" id="about-certifications">
-      <h2>Certifications · 证书</h2>
+      <h2>Certifications · 历年认证</h2>
+      <p class="about-evidence-detail">展示取得记录，不代表所有认证当前均在有效期内。</p>
       <ul class="about-cert-list about-record-list">
         {{- range $index, $item := . }}
         <li>
@@ -145,8 +217,10 @@
     </section>
     {{- end }}
 
+    {{- end }}
+    {{- if $isResearch }}
     {{- with $aboutData.works }}
-    {{- $published := where . "type" "in" (slice "编写-书籍" "翻译-书籍" "编制-标准" "媒体-发布") -}}
+    {{- $published := where . "type" "in" (slice "编写-书籍" "翻译-书籍" "编制-标准" "媒体-发布" "媒体-测评" "编写-文章") -}}
     {{- $inProgress := where . "type" "in" (slice "编写-书籍（待出版）" "翻译-书籍（待出版）" "编制-标准（待发布）") -}}
     {{- $translatedReferences := where . "type" "in" (slice "翻译-标准" "翻译-白皮书" "翻译-报告") -}}
     {{- $defaultPanel := "published" -}}
@@ -156,10 +230,10 @@
     {{- $defaultPanel = "translated" -}}
     {{- end -}}
     <section class="about-block about-block-works" id="about-works">
-      <h2>Works · 成果物</h2>
+      <h2>Standards, Books & Writing · 标准与作品</h2>
       <div class="about-work-tabs" role="tablist" aria-label="Works tabs">
         {{- if gt (len $published) 0 }}
-        <button class="about-work-tab{{ if eq $defaultPanel "published" }} is-active{{ end }}" type="button" role="tab" data-target="published" aria-label="已发布（书籍 / 标准）" title="已发布（书籍 / 标准）" aria-selected="{{ if eq $defaultPanel "published" }}true{{ else }}false{{ end }}" aria-controls="about-work-panel-published" tabindex="{{ if eq $defaultPanel "published" }}0{{ else }}-1{{ end }}">
+        <button class="about-work-tab{{ if eq $defaultPanel "published" }} is-active{{ end }}" type="button" role="tab" data-target="published" aria-label="已发布（标准 / 书籍 / 文章）" title="已发布（标准 / 书籍 / 文章）" aria-selected="{{ if eq $defaultPanel "published" }}true{{ else }}false{{ end }}" aria-controls="about-work-panel-published" tabindex="{{ if eq $defaultPanel "published" }}0{{ else }}-1{{ end }}">
           <span class="about-work-tab-label">已发布</span>
           <span class="about-work-tab-count">{{ printf "%02d" (len $published) }}</span>
         </button>
@@ -180,15 +254,17 @@
       <div class="about-work-panels">
         {{- if gt (len $published) 0 }}
         <section class="about-work-panel{{ if eq $defaultPanel "published" }} is-active{{ end }}" id="about-work-panel-published" role="tabpanel" data-panel="published" aria-label="已发布成果物"{{ if ne $defaultPanel "published" }} hidden{{ end }}>
+          {{- range $group := slice (dict "title" "Standards · 团体标准" "types" (slice "编制-标准")) (dict "title" "Books · 书籍" "types" (slice "编写-书籍" "翻译-书籍")) (dict "title" "Writing & Media · 文章与媒体测评" "types" (slice "编写-文章" "媒体-发布" "媒体-测评")) }}
+          <h3>{{ $group.title }}</h3>
           <ul class="about-work-list">
-            {{- range $published }}
+            {{- range $index, $item := where $published "type" "in" $group.types }}
             {{- $typeClass := "about-work-type-translation" -}}
             {{- if in (slice "编写-书籍" "翻译-书籍" "编写-书籍（待出版）" "翻译-书籍（待出版）") .type -}}
             {{- $typeClass = "about-work-type-book" -}}
             {{- else if in (slice "编制-标准" "编制-标准（待发布）") .type -}}
             {{- $typeClass = "about-work-type-standard" -}}
             {{- end -}}
-            <li class="about-work-item">
+            <li class="about-work-item" data-index="{{ printf "%02d" (add $index 1) }}">
               <span class="about-work-type {{ $typeClass }}">{{ .type }}</span>
               <div class="about-work-main">
                 {{- if .url }}
@@ -203,22 +279,24 @@
                 <span class="about-work-title">{{ .title }}</span>
                 {{- end }}
               </div>
+              {{- with .note }}<p class="about-evidence-detail about-work-note">{{ . }}</p>{{- end }}
             </li>
             {{- end }}
           </ul>
+          {{- end }}
         </section>
         {{- end }}
         {{- if gt (len $inProgress) 0 }}
         <section class="about-work-panel{{ if eq $defaultPanel "inprogress" }} is-active{{ end }}" id="about-work-panel-inprogress" role="tabpanel" data-panel="inprogress" aria-label="待发布成果物"{{ if ne $defaultPanel "inprogress" }} hidden{{ end }}>
           <ul class="about-work-list">
-            {{- range $inProgress }}
+            {{- range $index, $item := $inProgress }}
             {{- $typeClass := "about-work-type-translation" -}}
             {{- if in (slice "编写-书籍" "翻译-书籍" "编写-书籍（待出版）" "翻译-书籍（待出版）") .type -}}
             {{- $typeClass = "about-work-type-book" -}}
             {{- else if in (slice "编制-标准" "编制-标准（待发布）") .type -}}
             {{- $typeClass = "about-work-type-standard" -}}
             {{- end -}}
-            <li class="about-work-item">
+            <li class="about-work-item" data-index="{{ printf "%02d" (add $index 1) }}">
               <span class="about-work-type {{ $typeClass }}">{{ .type }}</span>
               <div class="about-work-main">
                 {{- if .url }}
@@ -233,6 +311,7 @@
                 <span class="about-work-title">{{ .title }}</span>
                 {{- end }}
               </div>
+              {{- with .note }}<p class="about-evidence-detail about-work-note">{{ . }}</p>{{- end }}
             </li>
             {{- end }}
           </ul>
@@ -241,14 +320,14 @@
         {{- if gt (len $translatedReferences) 0 }}
         <section class="about-work-panel{{ if eq $defaultPanel "translated" }} is-active{{ end }}" id="about-work-panel-translated" role="tabpanel" data-panel="translated" aria-label="翻译节选"{{ if ne $defaultPanel "translated" }} hidden{{ end }}>
           <ul class="about-work-list">
-            {{- range $translatedReferences }}
+            {{- range $index, $item := $translatedReferences }}
             {{- $typeClass := "about-work-type-translation" -}}
             {{- if in (slice "编写-书籍" "翻译-书籍" "编写-书籍（待出版）" "翻译-书籍（待出版）") .type -}}
             {{- $typeClass = "about-work-type-book" -}}
             {{- else if in (slice "编制-标准" "编制-标准（待发布）") .type -}}
             {{- $typeClass = "about-work-type-standard" -}}
             {{- end -}}
-            <li class="about-work-item">
+            <li class="about-work-item" data-index="{{ printf "%02d" (add $index 1) }}">
               <span class="about-work-type {{ $typeClass }}">{{ .type }}</span>
               <div class="about-work-main">
                 {{- if .url }}
@@ -360,6 +439,8 @@
     </script>
     {{- end }}
 
+    {{- end }}
+    {{- if not $isResearch }}
     {{- with $aboutData.roadmap }}
     <section class="about-block about-block-roadmap" id="about-roadmap">
       <h2>Next · 进行中</h2>
@@ -372,6 +453,7 @@
         {{- end }}
       </ul>
     </section>
+    {{- end }}
     {{- end }}
   </div>
   {{- else if .Content }}

@@ -164,6 +164,12 @@ url = "/posts/"
 weight = 20
 
 [[menu.main]]
+identifier = "research"
+name = "Research"
+url = "/research/"
+weight = 25
+
+[[menu.main]]
 identifier = "me"
 name = "Me"
 url = "/about/"

@@ -7251,9 +7251,10 @@ html[data-theme="dark"] .about-pro .about-hero-kicker {
 @media (max-width: 700px) {
   .header .nav {
     min-height: 64px !important;
+    height: auto !important;
     padding: 9px 14px !important;
     display: grid !important;
-    grid-template-columns: auto minmax(0, 1fr) !important;
+    grid-template-columns: minmax(0, 1fr) !important;
     align-items: center !important;
     gap: 8px !important;
   }
@@ -7261,6 +7262,12 @@ html[data-theme="dark"] .about-pro .about-hero-kicker {
   .header .logo {
     display: flex !important;
     align-items: center !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+    max-width: none !important;
+    overflow: visible !important;
+    grid-column: 1 !important;
+    grid-row: 1 !important;
     gap: 8px !important;
     min-width: 0 !important;
   }
@@ -7293,7 +7300,10 @@ html[data-theme="dark"] .about-pro .about-hero-kicker {
     padding: 0 !important;
     display: flex !important;
     align-items: center !important;
-    justify-content: flex-end !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+    grid-column: 1 !important;
+    grid-row: 2 !important;
     gap: 1px !important;
     overflow: visible !important;
   }
@@ -8108,12 +8118,43 @@ body.home-page .home-search-wrap {
   grid-column: span 1 !important;
 }
 
-.about-single.about-pro .about-profile > :is(.about-block-identity, .about-block-ietf, .about-block-highlights, .about-block-works, .about-block-roadmap) {
+.about-single.about-pro .about-profile > :is(.about-block-identity, .about-block-ietf, .about-block-security, .about-block-papers, .about-block-research-summary, .about-block-highlights, .about-block-works, .about-block-roadmap) {
   grid-column: 1 / -1 !important;
 }
 
-.about-single.about-pro .about-block-ietf {
+.about-single.about-pro :is(.about-block-ietf, .about-block-security, .about-block-papers, .about-block-research-summary) {
   padding: 22px 20px 20px !important;
+}
+
+.about-evidence-detail {
+  display: block;
+  margin-top: 6px;
+  color: var(--bd-ink-muted);
+  font-size: 0.78rem;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.about-work-note {
+  grid-column: 2 / -1;
+  margin-bottom: 0;
+}
+
+.about-record-copy a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  overflow-wrap: anywhere;
+}
+
+.about-pro .about-work-item[data-index]::before {
+  content: attr(data-index);
+  counter-increment: none;
+}
+
+.about-block-ietf > h3,
+.about-work-panel > h3 {
+  margin-top: 28px;
+  margin-bottom: 12px;
 }
 
 @media (max-width: 700px) {
@@ -8131,6 +8172,10 @@ body.home-page .home-search-wrap {
 
   .about-single.about-pro .about-profile > .about-block {
     grid-column: 1 !important;
+  }
+
+  .about-work-note {
+    grid-column: 1 / -1;
   }
 }
 
