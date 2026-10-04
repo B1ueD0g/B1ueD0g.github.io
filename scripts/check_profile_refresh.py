@@ -20,13 +20,30 @@ class Sections(HTMLParser):
         self.stack = []
         self.text = {}
         self.links = set()
+        self.section_links = {}
+        self.cve_links = set()
+        self.featured_cards = 0
+        self.advisories = 0
+        self.vendor_groups = []
 
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
+        classes = attrs.get("class", "").split()
+        if "security-featured-card" in classes:
+            self.featured_cards += 1
+        if "security-advisory" in classes:
+            self.advisories += 1
+        if tag == "details" and "security-vendor-group" in classes:
+            self.vendor_groups.append("open" in attrs)
         if tag == "section":
             self.stack.append(attrs.get("id", ""))
         if tag == "a":
-            self.links.add(attrs.get("href", ""))
+            href = attrs.get("href", "")
+            self.links.add(href)
+            for key in self.stack:
+                self.section_links.setdefault(key, set()).add(href)
+            if "about-cve-link" in attrs.get("class", "").split():
+                self.cve_links.add(href)
 
     def handle_endtag(self, tag):
         if tag == "section" and self.stack:
@@ -39,8 +56,6 @@ class Sections(HTMLParser):
 
 def validate(data, ledger):
     errors = []
-    if "不等同于 RFC、工作组采纳或 IETF 共识" not in data["ietf"]["intro"]:
-        errors.append("I-D status boundary missing")
     if len(data["ietf"]["items"]) != 5:
         errors.append("Expected five dated I-D records")
     groups = {
@@ -52,7 +67,7 @@ def validate(data, ledger):
         "papers": data["works"],
     }
     for record in ledger["records"]:
-        matches = [item for item in groups[record["section"]] if item.get("url") == record["url"]]
+        matches = [item for item in groups[record["section"]] if (item.get("url") == record["url"] if record.get("url") else item["title"] == record.get("title"))]
         if len(matches) != 1 or not record.get("evidence") or not record.get("role"):
             errors.append(f"Missing/ambiguous evidence mapping: {record['id']}")
             continue
@@ -67,11 +82,23 @@ def validate(data, ledger):
             errors.append(f"Finder credit missing: {record['id']}")
         if record["section"] == "pending" and item["type"] != "编制-标准（待发布）":
             errors.append(f"Comment-stage standard incorrectly published: {record['id']}")
+        if record["section"] == "papers" and record.get("type") and item["type"] != record["type"]:
+            errors.append(f"Publication type mismatch: {record['id']}")
+    security_records = {r["url"]: r for r in ledger["records"] if r["section"] == "security"}
+    for item in data["security"]["items"]:
+        record = security_records.get(item["url"], {})
+        if not record.get("credit") or not record.get("evidence"):
+            errors.append(f"Security entry lacks Finder evidence: {item['title']}")
+    for record in ledger["standard_identifiers"]:
+        matches = [item for item in data["works"] if item.get("url") == record["url"]]
+        expected_title = f"{record['number']}《{record['name']}》"
+        if len(matches) != 1 or matches[0]["title"] != expected_title or matches[0]["type"] != "编制-标准":
+            errors.append(f"Published standard identifier mismatch: {record['number']}")
     standard = [x for x in data["works"] if "T/CECC 58—2026" in x["title"]]
     if len(standard) != 1 or standard[0]["type"] != "编制-标准" or "效能" not in standard[0]["title"]:
         errors.append("Agent evaluation standard remains pending or misnamed")
     preprint = [x for x in data["works"] if x["title"].startswith("EarlyAttestationBleed:")]
-    if len(preprint) != 1 or preprint[0]["type"] != "研究-预印本" or "非已确认录用论文" not in preprint[0].get("note", ""):
+    if len(preprint) != 1 or preprint[0]["type"] != "研究-预印本" or "Preprint" not in preprint[0].get("note", ""):
         errors.append("Preprint publication boundary missing")
     media = [x for x in data["works"] if "万字详解智能体2.0" in x["title"]]
     if not media or media[0]["type"] != "媒体-测评":
@@ -85,18 +112,42 @@ def validate_rendered(data, ledger, html):
     page.feed(html)
     expected_sections = {"ietf": "about-ietf", "activity": "about-ietf", "security": "about-security", "works": "about-work-panel-published", "pending": "about-work-panel-inprogress", "papers": "research-papers"}
     for record in ledger["records"]:
-        if record["url"] not in page.links:
+        if record.get("url") and record["url"] not in page.links:
             errors.append(f"Source link not rendered: {record['id']}")
         for item in {"ietf": data["ietf"]["items"], "activity": data["ietf"]["activities"], "security": data["security"]["items"], "works": data["works"], "pending": data["works"], "papers": data["works"]}[record["section"]]:
-            if item.get("url") == record["url"]:
+            if (item.get("url") == record["url"] if record.get("url") else item["title"] == record.get("title")):
                 rendered = page.text.get(expected_sections[record["section"]], "")
-                for field in ("title", "note", "version", "role", "status", "date"):
-                    if item.get(field) and item[field] not in rendered:
+                # User-selected compact lists show titles; source/role metadata stays in the ledger.
+                fields = ("title",) if record["section"] in {"activity", "security"} else ("title", "note", "version", "role", "status", "date")
+                for field in fields:
+                    values = item.get(field, "").split(" · ") if field == "title" and record["section"] == "security" else [item.get(field, "")]
+                    if any(value and value not in rendered for value in values):
                         errors.append(f"Record {field} rendered in wrong panel or omitted: {record['id']}")
+                if record["section"] in {"activity", "security"} and item.get("note") and item["note"] in rendered:
+                    errors.append(f"Requested detail paragraph still rendered: {record['id']}")
+                if item.get("cve_url") and (item["cve_url"] not in page.cve_links or item["cve_url"] not in page.section_links.get("about-security", set())):
+                    errors.append(f"Official CVE link missing: {record['id']}")
+    featured = sum(bool(item.get("cve_url")) for item in data["security"]["items"])
+    if page.featured_cards != featured or page.advisories != len(data["security"]["items"]) - featured:
+        errors.append("Security featured cards/advisory directory mismatch")
+    if len(page.vendor_groups) != 3 or any(page.vendor_groups):
+        errors.append("Vendor directory must be three initially collapsed groups")
     if data["ietf"]["intro"] not in page.text.get("about-ietf", ""):
-        errors.append("I-D boundary missing from rendered page")
+        errors.append("IETF introduction missing from rendered page")
     if data["security"]["intro"] not in page.text.get("about-security", ""):
-        errors.append("Finder-selection boundary missing from rendered page")
+        errors.append("Security introduction missing from rendered page")
+    published = page.text.get("about-work-panel-published", "")
+    for record in ledger["standard_identifiers"]:
+        if f"{record['number']}《{record['name']}》" not in published:
+            errors.append(f"Standard identifier not rendered: {record['number']}")
+    for removed in ("CSA 大中华区署名文章，", "不是该报道的记者署名", "起草人；中国电子商会发布。", "不等同于 RFC", "不是该草案的作者署名", "不将团队全部发现计作个人成果", "非已确认录用论文", "不展示未公开投稿状态", "最终起草署名待核验"):
+        if removed in " ".join(page.text.values()):
+            errors.append(f"Internal audit wording leaked into portfolio: {removed}")
+    for item in data["works"]:
+        if item["type"] in {"编制-标准", "编写-文章", "媒体-测评"} and item.get("note"):
+            errors.append(f"Requested published-work note restored: {item['title']}")
+        if item["type"].startswith("研究-") and item["title"] in published:
+            errors.append(f"Paper duplicated in Standards and Works: {item['title']}")
     if "效能评估规范" in page.text.get("about-work-panel-inprogress", ""):
         errors.append("Published standard leaked into pending panel")
     if data["translation_note"] not in page.text.get("about-work-panel-translated", "") or data["translation_note"] in page.text.get("about-work-panel-published", ""):
@@ -119,8 +170,20 @@ def main():
     assert "Preprint publication boundary missing" in validate(bad_data, ledger), "Negative control missed status inflation"
     html = (ROOT / "public/research/index.html").read_text()
     errors.extend(validate_rendered(data, ledger, html))
-    bad_html = html.replace("不等同于 RFC、工作组采纳或 IETF 共识", "已发布国际标准")
-    assert "I-D boundary missing from rendered page" in validate_rendered(data, ledger, bad_html), "Negative control missed removed rendered boundary"
+    bad_html = html.replace("Active individual I-D · Author", "Published RFC · Author")
+    assert "Record status rendered in wrong panel or omitted: principal-binding" in validate_rendered(data, ledger, bad_html), "Negative control missed inflated rendered draft status"
+    cve = data["security"]["items"][0]["cve_url"]
+    assert "Official CVE link missing: CVE-2026-92701" in validate_rendered(data, ledger, html.replace(cve, "#")), "Negative control missed missing CVE link"
+    bad_html = html.replace("</h2>", "</h2><p>不将团队全部发现计作个人成果</p>", 1)
+    assert any("Internal audit wording" in e for e in validate_rendered(data, ledger, bad_html)), "Negative control missed audit prose"
+    bad_data = deepcopy(data)
+    next(x for x in bad_data["works"] if "T/CCF 0010" in x["title"])["title"] = "零信任数据隐身协议"
+    assert "Published standard identifier mismatch: T/CCF 0010—2026" in validate(bad_data, ledger), "Negative control missed standard identifier loss"
+    bad_html = html.replace('class=security-vendor-group', 'open class=security-vendor-group').replace('class="security-vendor-group"', 'open class="security-vendor-group"')
+    assert "Vendor directory must be three initially collapsed groups" in validate_rendered(data, ledger, bad_html), "Negative control missed expanded long directory"
+    bad_data = deepcopy(data)
+    next(x for x in bad_data["works"] if x["title"].startswith("基于AIoT"))["type"] = "研究-预印本"
+    assert "Publication type mismatch: paper-aiot-mastitis" in validate(bad_data, ledger), "Negative control missed changed publication type"
     about = Sections()
     about.feed((ROOT / "public/about/index.html").read_text())
     if "/research/" not in about.links or "about-research-summary" not in about.text:
@@ -135,7 +198,7 @@ def main():
     if errors:
         print("\n".join(errors), file=sys.stderr)
         return 1
-    print(f"PASS: {len(ledger['records'])} evidence mappings rendered in Research; About remains concise; 4 negative controls detected. Source entailment and visual review remain separate checks.")
+    print(f"PASS: {len(ledger['records'])} evidence mappings; compact portfolio, 5 standard identifiers, featured CVEs, collapsed vendor directory and publication types; 9 negative controls detected. Source entailment and visual review remain separate checks.")
     return 0
 
 
