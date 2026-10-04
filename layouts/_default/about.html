@@ -2,7 +2,7 @@
 {{- $aboutData := site.Data.about -}}
 {{- $useProfileData := .Param "useProfileData" | default false -}}
 {{- $isResearch := eq (.Param "profileView") "research" -}}
-<article class="post-single about-single about-pro">
+<article class="post-single about-single about-pro{{ if $isResearch }} research-pro{{ end }}">
   <header class="post-header">
     <div class="about-hero">
       <div class="about-hero-copy">
@@ -34,8 +34,7 @@
     <a href="#research-papers">Papers</a>
     {{- with $aboutData.ietf }}<a href="#about-ietf">IETF</a>{{- end }}
     {{- with $aboutData.security }}<a href="#about-security">Security</a>{{- end }}
-    {{- with $aboutData.works }}<a href="#about-works">Standards & Works</a>{{- end }}
-    <a href="/about/">About Me ↗</a>
+    {{- with $aboutData.works }}<a href="#about-works" aria-label="Standards & Works">Works</a>{{- end }}
     {{- end }}
     {{- if not $isResearch }}
     {{- with $aboutData.certifications }}<a href="#about-certifications">Certifications</a>{{- end }}

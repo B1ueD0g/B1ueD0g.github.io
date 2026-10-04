@@ -97,10 +97,11 @@
         {{- range site.Menus.main }}
         {{- $menu_item_url := (cond (strings.HasSuffix .URL "/") .URL (printf "%s/" .URL) ) | absLangURL -}}
         {{- $page_url:= $currentPage.Permalink | absLangURL -}}
-        {{- $is_current := eq $menu_item_url $page_url -}}
+        {{- $is_exact := eq $menu_item_url $page_url -}}
+        {{- $is_current := or $is_exact (and (ne .URL "/") (strings.HasPrefix $page_url $menu_item_url)) -}}
         {{- $is_search := eq (site.GetPage .KeyName).Layout `search` -}}
         <li>
-            <a href="{{ .URL | absLangURL }}"{{ if $is_current }} class="is-current" aria-current="page"{{ end }} title="{{ .Title | default .Name }} {{- cond $is_search (" (Alt + /)" | safeHTMLAttr) ("" | safeHTMLAttr ) }}"
+            <a href="{{ .URL | absLangURL }}"{{ if $is_current }} class="is-current" aria-current="{{ if $is_exact }}page{{ else }}location{{ end }}"{{ end }} title="{{ .Title | default .Name }} {{- cond $is_search (" (Alt + /)" | safeHTMLAttr) ("" | safeHTMLAttr ) }}"
                 {{- cond $is_search (" accesskey=/" | safeHTMLAttr) ("" | safeHTMLAttr ) }}>
                     <span>
                         {{- .Pre -}}

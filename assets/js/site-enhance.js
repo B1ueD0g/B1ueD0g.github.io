@@ -435,6 +435,7 @@
       var activeId = "";
       var ticking = false;
       var navTicking = false;
+      var layoutTicking = false;
 
       function syncOverflowState() {
         navTicking = false;
@@ -507,6 +508,17 @@
         window.requestAnimationFrame(updateActive);
       }
 
+      function refreshLayout() {
+        if (layoutTicking) return;
+        layoutTicking = true;
+        window.requestAnimationFrame(function () {
+          layoutTicking = false;
+          computeOffsets();
+          requestUpdate();
+          requestOverflowSync();
+        });
+      }
+
       links.forEach(function (link) {
         link.addEventListener("click", function () {
           var id = decodeURIComponent((link.getAttribute("href") || "").slice(1));
@@ -519,16 +531,17 @@
       syncOverflowState();
       window.addEventListener("scroll", requestUpdate, { passive: true });
       nav.addEventListener("scroll", requestOverflowSync, { passive: true });
-      window.addEventListener("resize", function () {
-        computeOffsets();
-        requestUpdate();
-        requestOverflowSync();
+      window.addEventListener("resize", refreshLayout);
+      window.addEventListener("load", refreshLayout);
+      sections.forEach(function (section) {
+        section.querySelectorAll("details").forEach(function (details) {
+          details.addEventListener("toggle", refreshLayout);
+        });
       });
-      window.addEventListener("load", function () {
-        computeOffsets();
-        requestUpdate();
-        requestOverflowSync();
-      });
+      if ("ResizeObserver" in window) {
+        var sectionResizeObserver = new ResizeObserver(refreshLayout);
+        sections.forEach(function (section) { sectionResizeObserver.observe(section); });
+      }
     }
 
     function setupFootnotePreview() {
@@ -906,7 +919,6 @@
       var homeHero = document.querySelector("body.home-page .home-info");
       if (homeHero) {
         ensureAccent(homeHero, "bd-lab-matrix", "", true);
-        ensureAccent(homeHero, "bd-lab-status", "SYSTEM ONLINE", false);
       }
 
       var articleHeader = document.querySelector("article.post-single.post-single-editorial .editorial-header");
