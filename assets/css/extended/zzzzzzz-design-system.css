@@ -8210,6 +8210,12 @@ body.home-page .home-search-wrap {
   margin-top: 18px;
 }
 
+@media (min-width: 701px) {
+  .security-featured-grid > .security-featured-card:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+}
+
 .security-featured-card {
   display: flex;
   flex-direction: column;

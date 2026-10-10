@@ -25,6 +25,7 @@ class Sections(HTMLParser):
         self.cve_links = set()
         self.featured_cards = 0
         self.advisories = 0
+        self.advisory_links = []
         self.vendor_groups = []
         self.strong_text = None
         self.bold_paper_names = []
@@ -47,6 +48,8 @@ class Sections(HTMLParser):
             self.strong_text = ""
         if tag == "a":
             href = attrs.get("href", "")
+            if "security-advisory" in classes:
+                self.advisory_links.append(href)
             if "research-doi-link" in classes and "research-papers" in self.stack:
                 self.doi_text = ""
                 self.doi_href = href
@@ -117,6 +120,16 @@ def validate(data, ledger):
         record = security_records.get(item["url"], {})
         if not record.get("credit") or not record.get("evidence"):
             errors.append(f"Security entry lacks Finder evidence: {item['title']}")
+    security_urls = [item["url"] for item in data["security"]["items"]]
+    if len(security_urls) != len(set(security_urls)):
+        errors.append("Duplicate CVE/GHSA source in security inventory")
+    for promotion in ledger.get("security_promotions", []):
+        matches = [item for item in data["security"]["items"] if item["url"] == promotion["url"]]
+        record = security_records.get(promotion["url"], {})
+        if len(matches) != 1 or matches[0]["title"].split(" · ")[0] != promotion["cve"] or matches[0].get("cve_url") != promotion["cve_url"]:
+            errors.append(f"CVE promotion mapping mismatch: {promotion['cve']}")
+        if record.get("id") != promotion["cve"] or record.get("ghsa_id") != promotion["ghsa"] or record.get("state") != "PUBLISHED" or promotion.get("credited_user") != "B1ueD0g" or promotion.get("credit_type") != "finder" or promotion.get("credit_state") != "accepted":
+            errors.append(f"CVE promotion lacks published Finder evidence: {promotion['cve']}")
     for record in ledger["standard_identifiers"]:
         matches = [item for item in data["works"] if item.get("url") == record["url"]]
         expected_title = f"{record['number']}《{record['name']}》"
@@ -164,6 +177,9 @@ def validate_rendered(data, ledger, html):
     featured = sum(bool(item.get("cve_url")) for item in data["security"]["items"])
     if page.featured_cards != featured or page.advisories != len(data["security"]["items"]) - featured:
         errors.append("Security featured cards/advisory directory mismatch")
+    for promotion in ledger.get("security_promotions", []):
+        if promotion["url"] in page.advisory_links:
+            errors.append(f"Promoted CVE remains in GHSA directory: {promotion['cve']}")
     if len(page.vendor_groups) != 4 or any(page.vendor_groups):
         errors.append("Vendor directory must be four initially collapsed groups")
     if data["ietf"]["intro"] not in page.text.get("about-ietf", ""):
@@ -243,6 +259,20 @@ def main():
     assert "Paper DOI links missing, duplicated or mislabeled" in validate_rendered(data, ledger, html.replace(doi_url, "#", 1)), "Negative control missed broken DOI href"
     bad_html = html.replace('class=research-doi-link', 'class=removed-doi-link', 1).replace('class="research-doi-link"', 'class="removed-doi-link"', 1)
     assert "Paper DOI links missing, duplicated or mislabeled" in validate_rendered(data, ledger, bad_html), "Negative control missed omitted DOI anchor"
+    promotions = ledger.get("security_promotions", [])
+    if promotions:
+        promotion = promotions[0]
+        bad_data = deepcopy(data)
+        duplicate = deepcopy(next(x for x in bad_data["security"]["items"] if x["url"] == promotion["url"]))
+        duplicate["title"] = f"{promotion['ghsa']} · duplicate"
+        duplicate.pop("cve_url")
+        bad_data["security"]["items"].append(duplicate)
+        assert "Duplicate CVE/GHSA source in security inventory" in validate(bad_data, ledger), "Negative control missed restored GHSA duplicate"
+        bad_data = deepcopy(data)
+        next(x for x in bad_data["security"]["items"] if x["url"] == promotion["url"])["cve_url"] = "https://www.cve.org/CVERecord?id=CVE-2026-108269"
+        assert f"CVE promotion mapping mismatch: {promotion['cve']}" in validate(bad_data, ledger), "Negative control missed swapped CVE URL"
+        bad_html = html + f'<a class="security-advisory" href="{promotion["url"]}">{promotion["ghsa"]}</a>'
+        assert f"Promoted CVE remains in GHSA directory: {promotion['cve']}" in validate_rendered(data, ledger, bad_html), "Negative control missed rendered GHSA duplicate"
     about_html = (ROOT / "public/about/index.html").read_text()
     errors.extend(validate_about(data, about_html))
     assert "Removed Selected Research summary restored on About" in validate_about(data, about_html + '<section id="about-research-summary">Selected Research</section>'), "Negative control missed restored summary"
@@ -256,7 +286,7 @@ def main():
         print("\n".join(errors), file=sys.stderr)
         return 1
     doi_count = sum(bool(item.get("doi")) for item in data["works"] if item["type"].startswith("研究-"))
-    print(f"PASS: {len(ledger['records'])} evidence mappings; {doi_count} clickable paper DOIs, compact portfolio, 5 standard identifiers, featured CVEs, collapsed vendor directory, publication types, author emphasis and focused About page; 15 negative controls detected. Source entailment and visual review remain separate checks.")
+    print(f"PASS: {len(ledger['records'])} evidence mappings; {doi_count} clickable paper DOIs, compact portfolio, 5 standard identifiers, featured CVEs, collapsed vendor directory, publication types, author emphasis and focused About page; {15 + (3 if promotions else 0)} negative controls detected. Source entailment and visual review remain separate checks.")
     return 0
 
 
