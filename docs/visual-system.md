@@ -34,9 +34,11 @@ Research keeps its title and full introduction across the desktop header. Topic 
 
 ## A small 404 walk
 
-The 404 page is a real seven-by-five tile game. A navy dog with an orange scarf walks around bushes and collects three reading stars. Direction keys, WASD and four 44px direction buttons control the same production state. Map boundaries and bushes block movement; revisiting a collected star does not increase the score. All three stars are reachable. Finishing reveals a real article drawn from the current Hugo archive. Start/replay restores the original map and keyboard focus.
+The 404 page is a seeded seven-by-five island game. Each new island changes its paths, bushes, stars, mailbox, optional bone and paired violet portals. Free exploration and a move-budget challenge share the same movement rules. The dog collects three reading stars and then delivers them to the mailbox. A portal jump costs one move and never bounces recursively; a bone gives 50 points and three extra challenge moves, once only. Blocking a bush or boundary does not consume a move. The challenge budget comes from the shortest legal delivery route plus a small margin, without requiring the optional bone. Delivery on the final move wins.
 
-The visual direction uses a small paper island, sage stepping stones, a blue mailbox and golden stars, with a Canva illustration as art reference. The implementation is editable native SVG and page-local CSS/JavaScript. Step hops and collection bursts are finite, event-driven animations; reduced motion or a hidden page cancels them. The game captures direction keys only while its board or controls have focus. Search inputs and whole-page keyboard scrolling keep their normal behavior. Home, Articles, GET search, skip-game navigation and three real article links remain available without JavaScript.
+Replay restores the same map; shuffle and the next island create a new one. Later islands add a few bushes while retaining a playable route. Points reward stars, optional detours and efficient delivery. Each mode keeps a best single-island score on the current device; unavailable or corrupted storage falls back to the current session. A terminal result still offers a real current-archive article, and a win also offers the next island. There is no network leaderboard or real-time countdown. The production engine is independently tested for deterministic variety, the actual directed portal graph, optional-bone delivery paths, budgets, scoring, terminal states and malformed maps.
+
+The visual direction uses a small paper island, sage stepping stones, a blue mailbox and golden stars, with a Canva illustration as art reference. Native SVG renders the generated map, and the pure engine is bundled before its page-local controller. Step hops, collection bursts and portal feedback are finite, event-driven animations; reduced motion or a hidden page cancels them. Direction keys, WASD and four 44px direction buttons control the same state, with keyboard capture limited to the board and controls. Search inputs and whole-page scrolling keep their normal behavior. Home, Articles, GET search, skip-game navigation and three real article links remain available without JavaScript.
 
 ## Whole-page translation
 
@@ -74,6 +76,7 @@ Run `npm run build`, `node scripts/check_interaction_states.cjs` and `python3 sc
 node scripts/check_visual_system.cjs --base-url http://127.0.0.1:8767 --output-dir /path/to/private/qa --playwright-module /path/to/installed/playwright
 node scripts/check_home_composition.cjs --base-url http://127.0.0.1:8767 --output-dir /path/to/private/home-qa --playwright-module /path/to/installed/playwright
 node scripts/check_not_found.cjs --base-url http://127.0.0.1:8767 --output-dir /path/to/private/404-qa --playwright-module /path/to/installed/playwright
+node scripts/check_not_found_engine.cjs
 node scripts/check_language_switch.cjs --base-url http://127.0.0.1:8767 --output-dir /path/to/private/language-qa --playwright-module /path/to/installed/playwright
 python3 scripts/check_release_integrations.py
 ```

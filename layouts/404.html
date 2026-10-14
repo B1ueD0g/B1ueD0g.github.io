@@ -2,45 +2,55 @@
 {{- $posts := (where site.RegularPages "Section" "posts").ByDate.Reverse -}}
 {{- $picks := first 3 $posts -}}
 {{- $archive := slice -}}{{- range $posts -}}{{- $archive = $archive | append (dict "url" .RelPermalink "title" .Title) -}}{{- end -}}
-{{- $walls := slice "2,0" "2,1" "4,0" "4,1" "1,3" "2,3" "4,3" "5,3" "3,4" -}}
-{{- $fragments := slice (slice 1 0) (slice 4 2) (slice 6 4) -}}
-{{- $map := dict "columns" 7 "rows" 5 "walls" $walls "start" (slice 0 2) "fragments" $fragments "originX" 104 "originY" 88 "stepX" 72 "stepY" 56 -}}
+{{- $walls := slice "2,0" "2,1" "4,0" "1,3" "4,3" "3,4" -}}
+{{- $stars := slice (slice 1 0) (slice 4 2) (slice 6 4) -}}
+{{- $portals := slice (slice 3 1) (slice 5 3) -}}
+{{- $map := dict "seed" "paper-island-fallback" "level" 1 "mode" "free" "columns" 7 "rows" 5 "walls" $walls "start" (slice 0 2) "mailbox" (slice 6 0) "stars" $stars "bone" (slice 0 4) "portals" $portals "optimalMoves" 16 "budget" 24 "originX" 104 "originY" 88 "stepX" 72 "stepY" 56 -}}
 <section class="dog-not-found" aria-labelledby="dog-title">
-  <header class="dog-intro"><p class="dog-kicker">404 <span aria-hidden="true">·</span> 一条意外的小路</p><h1 id="dog-title">页面走丢了，小狗没有。</h1><p>带它找到 3 颗阅读星，信箱里会出现一篇意外的好文章。</p></header>
+  <header class="dog-intro"><p class="dog-kicker">404 <span aria-hidden="true">·</span> 一条意外的小路</p><h1 id="dog-title">页面走丢了，小狗没有。</h1><p>换张地图，换条路线。寻宝、穿过紫门，再把星星送到信箱。</p></header>
   <div class="dog-game-card">
-    <div class="dog-game-heading"><span>今天，绕一点路也没关系。</span><span class="dog-score" aria-label="收集进度"><span id="dog-count">0 / 3</span><span class="dog-score-stars" aria-hidden="true">{{ range seq 1 3 }}<svg viewBox="0 0 24 24" data-score-star="{{ . }}"><path d="m12 2 3 6.5 7 1-5 5 1.2 7L12 18l-6.2 3.5L7 14.5l-5-5 7-1Z"/></svg>{{ end }}</span></span></div>
-    <div id="dog-board" class="dog-board" tabindex="0" role="group" aria-label="小狗地图。开始后，用方向键或 W A S D 移动，寻找三颗星星。" data-state="ready" data-x="0" data-y="2" data-found="0">
+    <div class="dog-game-heading"><span>第 <strong id="dog-level">1</strong> 座小岛</span><span class="dog-score" aria-label="收集进度"><span id="dog-count">0 / 3</span><span class="dog-score-stars" aria-hidden="true">{{ range seq 1 3 }}<svg viewBox="0 0 24 24" data-score-star="{{ . }}"><path d="m12 2 3 6.5 7 1-5 5 1.2 7L12 18l-6.2 3.5L7 14.5l-5-5 7-1Z"/></svg>{{ end }}</span></span></div>
+    <div id="dog-modes" class="dog-modes" role="group" aria-label="选择小游戏模式" hidden><button type="button" data-dog-mode="free" aria-pressed="true">自由寻宝</button><button type="button" data-dog-mode="challenge" aria-pressed="false">限步邮差</button></div>
+    <div id="dog-board" class="dog-board" tabindex="0" role="group" aria-label="小狗地图。用方向键或 W A S D 移动。收集三颗星后，走到蓝色信箱完成投递。" data-phase="ready" data-x="0" data-y="2" data-found="0" data-moves="0" data-mode="free" data-score="0" data-remaining="" data-portal-jumps="0">
       <svg class="dog-scene" viewBox="0 0 640 400" aria-hidden="true" focusable="false">
         <g class="dog-clouds"><path d="M24 49q8-17 24-7 11-24 32-6 16-6 21 11Z"/><path d="M505 355q10-20 27-9 13-18 28-1 17-2 22 14Z"/></g>
         <path class="dog-island-shadow" d="M43 94Q42 54 88 56L555 55Q600 54 601 100L602 326Q594 368 547 370L92 369Q36 366 39 326Z"/>
         <path class="dog-island" d="M40 76Q44 40 91 42L553 40Q596 41 599 83L600 312Q595 352 549 354L91 353Q38 351 39 313Z"/>
-        <g class="dog-map-tiles">
+        <g id="dog-tiles" class="dog-map-tiles">
           {{- range $row := seq 0 4 -}}{{- range $column := seq 0 6 -}}
           {{- $x := add 104 (mul $column 72) -}}{{- $y := add 88 (mul $row 56) -}}{{- $key := printf "%d,%d" $column $row -}}
           {{- if in $walls $key }}<g class="dog-obstacle" transform="translate({{ $x }} {{ $y }})"><ellipse cx="0" cy="10" rx="25" ry="12"/><path d="M-20 8Q-28-5-13-12q4-15 16-8 20-4 21 11 11 5 2 19Z"/><path class="dog-leaf-line" d="M-5 8 3-11M1-3l-8-4M-1 2l11-4"/></g>
           {{- else }}<rect class="dog-path-tile" x="{{ sub $x 28 }}" y="{{ sub $y 21 }}" width="56" height="42" rx="11"/>
           {{- end -}}{{- end -}}{{- end }}
         </g>
-        <g class="dog-mailbox" transform="translate(578 25)"><path d="M-8 34v25M-14 59H0"/><path class="dog-mailbox-box" d="M-24 10Q-24 0-14 0H9q10 0 10 10v23h-43Z"/><path class="dog-mailbox-front" d="M-24 10Q-24 0-14 0t10 10v23h-20Z"/><path class="dog-mailbox-slot" d="M-19 13h10M6 7v12h8"/></g>
-        {{- range $index, $point := $fragments -}}{{- $x := add 104 (mul (index $point 0) 72) -}}{{- $y := add 88 (mul (index $point 1) 56) }}
+        <g id="dog-mailbox" class="dog-mailbox" transform="translate(540 54)"><path d="M-8 34v25M-14 59H0"/><path class="dog-mailbox-box" d="M-24 10Q-24 0-14 0H9q10 0 10 10v23h-43Z"/><path class="dog-mailbox-front" d="M-24 10Q-24 0-14 0t10 10v23h-20Z"/><path class="dog-mailbox-slot" d="M-19 13h10M6 7v12h8"/></g>
+        <g id="dog-items">
+        {{- range $index, $point := $stars -}}{{- $x := add 104 (mul (index $point 0) 72) -}}{{- $y := add 88 (mul (index $point 1) 56) }}
         <g class="dog-fragment" data-fragment="{{ index $point 0 }},{{ index $point 1 }}" transform="translate({{ $x }} {{ $y }})"><ellipse cy="15" rx="13" ry="4"/><path d="m0-18 5 10 11 2-8 8 2 12-10-6-10 6 2-12-8-8 11-2Z"/></g>
         {{- end }}
+        <g class="dog-bone" data-bone="0,4" transform="translate(104 312)"><ellipse class="dog-bone-shadow" cy="12" rx="17" ry="5"/><path class="dog-bone-shape" d="M-11-7Q-17-17-22-10q-4 6 2 10-5 7 1 11 7 4 10-4h19q4 9 11 3 5-5-1-10 6-6 0-11-7-5-11 4Z"/></g>
+        {{- range $index, $point := $portals -}}{{- $x := add 104 (mul (index $point 0) 72) -}}{{- $y := add 88 (mul (index $point 1) 56) }}
+        <g class="dog-portal" data-portal="{{ index $point 0 }},{{ index $point 1 }}" transform="translate({{ $x }} {{ $y }})"><ellipse cy="4" rx="22" ry="16"/><ellipse cy="4" rx="15" ry="10"/><text class="dog-portal-label" x="0" y="8" text-anchor="middle">{{ if eq $index 0 }}A{{ else }}B{{ end }}</text></g>
+        {{- end }}
+        </g>
         <g id="dog-player" transform="translate(104 200)"><ellipse class="dog-ground-shadow" cy="22" rx="28" ry="6"/><g id="dog-hop"><g id="dog-drawing"><path class="dog-tail" d="M-25 1Q-48-4-41-21q8-10 17 2-11-7-10 3 0 7 11 8Z"/><path class="dog-body" d="M-25-14Q-34-9-29 9l7 10h33l12-13-6-22Z"/><path class="dog-feet" d="M-23 12h11v14h-11Zm28 0h10v14H5Z"/><path class="dog-ear" d="m4-26 0-19 19 14M27-29l14-14 0 28Z"/><circle class="dog-head" cx="19" cy="-14" r="20"/><path class="dog-muzzle" d="M25-15q19 0 18 9-1 11-16 8L17-4Z"/><circle class="dog-eye" cx="25" cy="-18" r="3"/><circle class="dog-pupil" cx="25.8" cy="-18" r="1.3"/><path class="dog-nose" d="m38-10 7 1-4 5Z"/><path class="dog-smile" d="M34-4q-1 7-8 5"/><circle class="dog-cheek" cx="22" cy="-5" r="4"/><path class="dog-scarf" d="M0-1q14 8 30 2l-3 9Q11 15-4 7Z"/><path class="dog-scarf" d="m9 10-9 19-5-4 4-18Z"/></g></g></g>
         <g id="dog-burst" opacity="0"><path d="M0-25v-9M0 25v9M-25 0h-9M25 0h9M-18-18l-6-6M18 18l6 6M18-18l6-6M-18 18l-6 6"/></g>
         <g class="dog-little-plants"><path d="M43 340q-15-10-12-21 12 2 12 21 5-21 17-23 1 15-17 23M598 116q-9-9-5-17 9 2 5 17 8-11 16-8-3 10-16 8"/><circle cx="49" cy="325" r="3"/></g>
       </svg>
     </div>
+    <div class="dog-legend" aria-label="地图说明"><span><span class="dog-legend-star" aria-hidden="true">✦</span> 三颗星 → 信箱</span><span><span class="dog-legend-bone" aria-hidden="true"><svg viewBox="-26 -18 52 36" focusable="false"><path class="dog-bone-shape" d="M-11-7Q-17-17-22-10q-4 6 2 10-5 7 1 11 7 4 10-4h19q4 9 11 3 5-5-1-10 6-6 0-11-7-5-11 4Z"/></svg></span> 骨头加分</span><span><span class="dog-legend-portal" aria-hidden="true">◎</span> 紫门互通</span></div>
+    <div class="dog-game-stats" aria-label="本岛成绩"><span>得分 <strong id="dog-score">0</strong></span><span>本机最佳 <strong id="dog-best">0</strong></span><span id="dog-budget">自由散步</span></div>
     <div class="dog-controls" id="dog-controls" hidden>
-      <div class="dog-start-wrap"><button type="button" id="dog-start">开始散步 <span aria-hidden="true">→</span></button><p>方向键 / WASD<br>或点方向按钮</p></div>
+      <div class="dog-start-wrap"><div class="dog-action-row"><button type="button" id="dog-start">开始散步 <span aria-hidden="true">→</span></button><button type="button" id="dog-shuffle">换张地图</button></div><p>方向键 / WASD，或点方向按钮</p></div>
       <div class="dog-direction-pad" aria-label="小狗方向控制"><button class="dog-up" data-dog-move="up" type="button" aria-label="向上走一步" disabled>↑</button><button class="dog-left" data-dog-move="left" type="button" aria-label="向左走一步" disabled>←</button><button class="dog-down" data-dog-move="down" type="button" aria-label="向下走一步" disabled>↓</button><button class="dog-right" data-dog-move="right" type="button" aria-label="向右走一步" disabled>→</button></div>
     </div>
-    <p class="dog-status" id="dog-status" role="status" aria-live="polite" aria-atomic="true">找到三颗星，下一篇文章就藏在信箱里。</p>
-    <section id="dog-result" class="dog-result" aria-labelledby="dog-result-heading" hidden><h2 id="dog-result-heading">找到啦，信箱里有一篇文章。</h2><a id="dog-result-link" href="{{ (index $posts 0).RelPermalink }}">{{ (index $posts 0).Title }} <span aria-hidden="true">↗</span></a></section>
+    <p class="dog-status" id="dog-status" role="status" aria-live="polite" aria-atomic="true">找到三颗星，再把它们送进蓝色信箱。</p>
+    <section id="dog-result" class="dog-result" aria-labelledby="dog-result-heading" hidden><h2 id="dog-result-heading">找到啦，信箱里有一篇文章。</h2><a id="dog-result-link" href="{{ (index $posts 0).RelPermalink }}">{{ (index $posts 0).Title }} <span aria-hidden="true">↗</span></a><button type="button" id="dog-next" hidden>下一座小岛 <span aria-hidden="true">→</span></button></section>
   </div>
   <nav class="dog-exits" aria-label="继续浏览"><a href="{{ "" | relLangURL }}">回到首页</a><a href="{{ "posts/" | relLangURL }}">文章归档</a><a id="dog-skip" href="{{ (index $posts 0).RelPermalink }}">跳过小游戏，随机读一篇 ↗</a></nav>
   <form class="dog-search" action="{{ "search/" | relLangURL }}" method="get" role="search"><label class="dog-sr-only" for="dog-query">搜索文章</label><input id="dog-query" type="search" name="q" placeholder="或者，搜索一个关键词"><button type="submit" aria-label="搜索文章">搜索 →</button></form>
   <div class="dog-fallback" id="dog-fallback"><p>沿着这些文章继续走。</p><ul>{{ range $picks }}<li><a href="{{ .RelPermalink }}">{{ .Title }} ↗</a></li>{{ end }}</ul></div>
 </section>
 <script type="application/json" id="dog-map">{{ $map | jsonify | safeJS }}</script><script type="application/json" id="dog-archive">{{ $archive | jsonify | safeJS }}</script>
-{{- $script := resources.Get "js/not-found.js" | minify | fingerprint -}}<script defer src="{{ $script.RelPermalink }}" integrity="{{ $script.Data.Integrity }}" crossorigin="anonymous"></script>
+{{- $engine := resources.Get "js/not-found-engine.js" -}}{{- $controller := resources.Get "js/not-found.js" -}}{{- $script := slice $engine $controller | resources.Concat "js/not-found-game.js" | minify | fingerprint -}}<script defer src="{{ $script.RelPermalink }}" integrity="{{ $script.Data.Integrity }}" crossorigin="anonymous"></script>
 {{- end -}}

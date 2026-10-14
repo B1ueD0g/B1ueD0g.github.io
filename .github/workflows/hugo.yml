@@ -55,6 +55,9 @@ jobs:
       - name: Validate release integrations
         run: python3 scripts/check_release_integrations.py
 
+      - name: Validate 404 game engine
+        run: node scripts/check_not_found_engine.cjs
+
       - name: Validate post metadata quality
         run: python3 scripts/check_metadata_quality.py
 
