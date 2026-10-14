@@ -356,22 +356,58 @@
         backdrop.tabIndex = open ? 0 : -1;
       }
 
+      var savedTabIndexes = new WeakMap();
+      var desktopMode = desktop.matches;
+
+      function syncDrawerAvailability(rail) {
+        var body = rail.querySelector(".editorial-toc-rail-body");
+        if (!body) return;
+        var closed = desktop.matches && !rail.classList.contains("is-open");
+        body.toggleAttribute("inert", closed);
+        if (closed) body.setAttribute("aria-hidden", "true");
+        else body.removeAttribute("aria-hidden");
+        // Preserve keyboard behavior in browsers that do not implement inert.
+        body.querySelectorAll("a[href], button, input, select, textarea, [tabindex]").forEach(function (element) {
+          if (closed) {
+            if (!savedTabIndexes.has(element)) savedTabIndexes.set(element, element.getAttribute("tabindex"));
+            element.setAttribute("tabindex", "-1");
+          } else if (savedTabIndexes.has(element)) {
+            var original = savedTabIndexes.get(element);
+            if (original === null) element.removeAttribute("tabindex");
+            else element.setAttribute("tabindex", original);
+            savedTabIndexes.delete(element);
+          }
+        });
+      }
+
       function setDrawerState(rail, open, restoreFocus) {
         var toggle = rail.querySelector(".editorial-toc-toggle");
+        if (!open && restoreFocus && toggle) toggle.focus({ preventScroll: true });
         rail.classList.toggle("is-open", open);
         if (toggle) toggle.setAttribute("aria-expanded", open ? "true" : "false");
+        syncDrawerAvailability(rail);
         syncBackdrop();
-        if (restoreFocus && toggle) toggle.focus({ preventScroll: true });
+        if (open) {
+          var firstLink = rail.querySelector(".toc a[aria-current='location']") || rail.querySelector(".toc a[href^='#']");
+          if (firstLink) firstLink.focus({ preventScroll: true });
+        }
       }
 
       function syncState() {
+        var changedMode = desktopMode !== desktop.matches;
+        var active = document.activeElement;
         detailsList.forEach(function (details) {
           details.open = desktop.matches;
         });
         rails.forEach(function (rail) {
           rail.classList.toggle("is-drawer", desktop.matches);
           setDrawerState(rail, false);
+          if (changedMode && rail.contains(active)) {
+            var control = rail.querySelector(desktop.matches ? ".editorial-toc-toggle" : ".toc summary");
+            if (control) control.focus({ preventScroll: true });
+          }
         });
+        desktopMode = desktop.matches;
       }
 
       syncState();
@@ -386,30 +422,29 @@
           }
           toggle.addEventListener("click", function () {
             if (!desktop.matches) return;
-            setDrawerState(rail, !rail.classList.contains("is-open"));
+            var open = !rail.classList.contains("is-open");
+            setDrawerState(rail, open, !open);
           });
         }
 
         rail.querySelectorAll(".toc a[href^='#']").forEach(function (link) {
           link.addEventListener("click", function () {
-            if (desktop.matches) setDrawerState(rail, false);
+            if (desktop.matches) setDrawerState(rail, false, true);
           });
         });
       });
 
       backdrop.addEventListener("click", function () {
         var openRail = rails.find(function (rail) { return rail.classList.contains("is-open"); });
-        rails.forEach(function (rail) { setDrawerState(rail, false); });
-        if (openRail) setDrawerState(openRail, false, true);
+        rails.forEach(function (rail) { setDrawerState(rail, false, rail === openRail); });
       });
 
       document.addEventListener("keydown", function (event) {
         if (event.key !== "Escape" || !desktop.matches) return;
         var openRail = rails.find(function (rail) { return rail.classList.contains("is-open"); });
         rails.forEach(function (rail) {
-          setDrawerState(rail, false);
+          setDrawerState(rail, false, rail === openRail);
         });
-        if (openRail) setDrawerState(openRail, false, true);
       });
 
       if (typeof desktop.addEventListener === "function") {

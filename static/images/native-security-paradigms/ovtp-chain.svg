@@ -2,13 +2,13 @@
   <title id="title">OVTP evidence chain</title>
   <desc id="desc">A conceptual evidence chain carrying operator, voucher and trace information across services and AI agent tools.</desc>
   <defs>
-    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+    <marker id="arrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="12" markerHeight="12" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
       <path d="M 0 0 L 10 5 L 0 10 z" fill="#226b5a"/>
     </marker>
   </defs>
   <rect width="1280" height="720" fill="#f7fbfa"/>
-  <text x="70" y="78" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="34" font-weight="700" fill="#142235">OVTP：把“访问”还原为可判责的任务链</text>
-  <text x="70" y="116" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="18" fill="#536171">凭据不是操作者，权限不是任务授权，日志也不等于追溯链。</text>
+  <text x="70" y="78" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="34" font-weight="700" fill="#11151c">OVTP：把“访问”还原为可判责的任务链</text>
+  <text x="70" y="116" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="18" fill="#56616a">凭据不是操作者，权限不是任务授权，日志也不等于追溯链。</text>
 
   <g font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif">
     <rect x="76" y="220" width="180" height="110" rx="16" fill="#ffffff" stroke="#2b8a72" stroke-width="2"/>
@@ -36,7 +36,7 @@
     <path d="M732 275 L790 275" stroke="#226b5a" stroke-width="4" fill="none" marker-end="url(#arrow)"/>
     <path d="M970 275 L1028 275" stroke="#226b5a" stroke-width="4" fill="none" marker-end="url(#arrow)"/>
 
-    <rect x="178" y="410" width="924" height="150" rx="18" fill="#172434"/>
+    <rect x="178" y="410" width="924" height="150" rx="18" fill="#11151c"/>
     <text x="222" y="454" font-size="24" font-weight="700" fill="#ffffff">Traceable Evidence Plane</text>
     <text x="222" y="492" font-size="18" fill="#dce8e5">trace_id、operator_id、voucher_id、policy_decision、service_path、tool_call、data_scope</text>
     <text x="222" y="528" font-size="18" fill="#dce8e5">跨域传递时必须完整、可校验、可串联；任何断点都会让后继节点“看不清”。</text>

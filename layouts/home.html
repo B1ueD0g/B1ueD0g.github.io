@@ -74,7 +74,11 @@
               <span class="home-stream-index">{{ printf "%02d" (add $index 1) }}</span>
               <a class="home-stream-link" href="{{ $post.RelPermalink }}">
                 <span class="home-stream-date">{{ $post.Date.Format "2006.01.02" }}</span>
+                {{- if eq $index 0 }}<span class="home-stream-featured">推荐阅读</span>{{- end }}
                 <strong class="home-stream-title">{{ $post.Title }}</strong>
+                {{- if eq $index 0 }}
+                <span class="home-stream-summary">{{ $post.Params.summary | default $post.Summary | plainify | htmlUnescape | truncate 64 }}</span>
+                {{- end }}
                 {{- with first 2 ($post.Params.tags | default (slice)) }}
                 <span class="home-stream-tags">
                   {{- range . }}

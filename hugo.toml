@@ -1,7 +1,7 @@
 baseURL = "https://bluedog.website/"
 languageCode = "zh-CN"
 defaultContentLanguage = "zh"
-title = "BlueDog 's Blog"
+title = "BlueDog’s Blog"
 theme = "PaperMod"
 enableRobotsTXT = true
 buildDrafts = false
@@ -104,7 +104,7 @@ publisherType = "Person"
 personName = "Songbo Bu"
 
 [params.label]
-text = "BlueDog 's Blog"
+text = "BlueDog’s Blog"
 mobileText = "BlueDog"
 
 [params.branding]
@@ -159,7 +159,7 @@ weight = 10
 
 [[menu.main]]
 identifier = "article"
-name = "Article"
+name = "Articles"
 url = "/posts/"
 weight = 20
 
@@ -171,6 +171,6 @@ weight = 25
 
 [[menu.main]]
 identifier = "me"
-name = "Me"
+name = "About"
 url = "/about/"
 weight = 30

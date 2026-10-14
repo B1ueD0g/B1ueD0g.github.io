@@ -3,6 +3,8 @@
     var ua = navigator.userAgent || "";
     if (/MicroMessenger/i.test(ua)) {
       document.documentElement.classList.add("wechat-safe");
+      // Preserve the webview layout before the body can paint.
+      document.documentElement.classList.remove("bd-cold-lab");
     }
   })();
 </script>

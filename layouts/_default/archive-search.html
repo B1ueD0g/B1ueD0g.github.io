@@ -137,21 +137,18 @@
         {{- $summary := $post.Params.summary | default $post.Summary | plainify | htmlUnescape | truncate 180 -}}
         <article class="search-result-card search-result-card-prerendered" data-result-index="{{ $index }}">
           <div class="search-result-meta">
-            <span class="search-result-index">{{ printf "%02d" (add $index 1) }}</span>
-            <span class="search-result-date">{{ $post.Date.Format "2006-01-02" }}</span>
+            <time class="search-result-date" datetime="{{ $post.Date.Format "2006-01-02" }}">{{ $post.Date.Format "2006-01-02" }}</time>
           </div>
           <div class="search-result-body">
             <div class="search-result-top">
               <div class="search-result-tags">
-                {{- range first 3 ($post.Params.tags | default (slice)) }}
+                {{- range first 2 ($post.Params.tags | default (slice)) }}
                 <button type="button" class="search-result-tag" data-result-tag="{{ . }}">#{{ . }}</button>
                 {{- end }}
               </div>
-              <span class="search-result-year">{{ $post.Date.Format "2006" }}</span>
             </div>
             <h2 class="search-result-title"><a href="{{ $post.RelPermalink }}">{{ $post.Title }}</a></h2>
             <p class="search-result-excerpt">{{ $summary }}</p>
-            <div class="search-result-footer"><a class="search-result-open" href="{{ $post.RelPermalink }}">Open</a></div>
           </div>
         </article>
         {{- end }}

@@ -402,11 +402,13 @@
       card.classList.toggle("is-active", cardIndex === activeResultIndex);
     });
     var link = cards[activeResultIndex].querySelector(".search-result-title a");
-    if (shouldFocus && link) link.focus({ preventScroll: true });
-    cards[activeResultIndex].scrollIntoView({
-      block: "nearest",
-      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
-    });
+    if (shouldFocus) {
+      if (link) link.focus({ preventScroll: true });
+      cards[activeResultIndex].scrollIntoView({
+        block: "nearest",
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+      });
+    }
   }
 
   function comparablePath(value) {
@@ -455,13 +457,12 @@
         article.className = "search-result-card";
         article.setAttribute("data-result-index", String(index));
         article.innerHTML =
-          '<div class="search-result-meta"><span class="search-result-index">' + String(index + 1).padStart(2, "0") + '</span><span class="search-result-date">' + escapeHTML(record.dateISO) + "</span></div>" +
-          '<div class="search-result-body"><div class="search-result-top"><div class="search-result-tags">' + record.tags.slice(0, 3).map(function (tag) {
+          '<div class="search-result-meta"><time class="search-result-date" datetime="' + escapeHTML(record.dateISO) + '">' + escapeHTML(record.dateISO) + "</time></div>" +
+          '<div class="search-result-body"><div class="search-result-top"><div class="search-result-tags">' + record.tags.slice(0, 2).map(function (tag) {
             return '<button type="button" class="search-result-tag" data-result-tag="' + escapeHTML(tag) + '">#' + escapeHTML(tag) + "</button>";
-          }).join("") + '</div><span class="search-result-year">' + escapeHTML(record.year) + "</span></div>" +
+          }).join("") + "</div></div>" +
           '<h2 class="search-result-title"><a href="' + escapeHTML(record.url) + '">' + highlightText(record.title, bundle.primaryTerms) + "</a></h2>" +
-          '<p class="search-result-excerpt">' + record.excerptHTML + "</p>" +
-          '<div class="search-result-footer"><a class="search-result-open" href="' + escapeHTML(record.url) + '">Open</a></div></div>';
+          '<p class="search-result-excerpt">' + record.excerptHTML + "</p></div>";
         fragment.appendChild(article);
       });
       resultsRoot.appendChild(fragment);
@@ -525,10 +526,10 @@
       if (statusNode) statusNode.textContent = "搜索索引加载失败。";
       console.error("Archive search failed", error);
     } finally {
-      if (resultsRoot) {
+      if (resultsRoot && serial === requestSerial) {
         resultsRoot.setAttribute("aria-busy", "false");
         window.requestAnimationFrame(function () {
-          resultsRoot.classList.remove("is-updating");
+          if (serial === requestSerial) resultsRoot.classList.remove("is-updating");
         });
       }
     }
@@ -634,7 +635,7 @@
         if (card) setActiveResult(Number(card.getAttribute("data-result-index") || 0), false);
       });
       resultsRoot.addEventListener("click", function (event) {
-        var link = event.target.closest(".search-result-title a, .search-result-open");
+        var link = event.target.closest(".search-result-title a");
         if (link && state.query) saveRecentSearch(state.query);
       });
     }
@@ -650,7 +651,8 @@
         event.preventDefault();
         input.focus();
       }
-      if (!active || !active.closest || !active.closest(".search-results")) return;
+      var target = event.target;
+      if (!target || !target.closest || !target.closest(".search-results")) return;
       if (event.key === "ArrowDown") {
         event.preventDefault();
         setActiveResult(activeResultIndex + 1, true);

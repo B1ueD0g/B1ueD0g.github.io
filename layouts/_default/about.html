@@ -28,18 +28,18 @@
   {{- if and $useProfileData $aboutData }}
   <nav class="about-section-nav" aria-label="About sections">
     {{- if not $isResearch }}
-    {{- with $aboutData.profile.roles }}<a href="#about-identity">Identity</a>{{- end }}
-    {{- with $aboutData.highlights }}<a href="#about-highlights">Highlights</a>{{- end }}
+    {{- with $aboutData.profile.roles }}<a href="#about-identity">身份</a>{{- end }}
+    {{- with $aboutData.highlights }}<a href="#about-highlights">亮点</a>{{- end }}
     {{- else }}
-    <a href="#research-papers">Papers</a>
-    {{- with $aboutData.ietf }}<a href="#about-ietf">IETF</a>{{- end }}
-    {{- with $aboutData.security }}<a href="#about-security">Security</a>{{- end }}
-    {{- with $aboutData.works }}<a href="#about-works" aria-label="Standards & Works">Works</a>{{- end }}
+    <a href="#research-papers">论文</a>
+    {{- with $aboutData.ietf }}<a href="#about-ietf">草案</a>{{- end }}
+    {{- with $aboutData.security }}<a href="#about-security">披露</a>{{- end }}
+    {{- with $aboutData.works }}<a href="#about-works" aria-label="标准与作品">作品</a>{{- end }}
     {{- end }}
     {{- if not $isResearch }}
-    {{- with $aboutData.certifications }}<a href="#about-certifications">Certifications</a>{{- end }}
-    {{- with $aboutData.honors }}<a href="#about-honors">Honors</a>{{- end }}
-    {{- with $aboutData.roadmap }}<a href="#about-roadmap">Next</a>{{- end }}
+    {{- with $aboutData.certifications }}<a href="#about-certifications">认证</a>{{- end }}
+    {{- with $aboutData.honors }}<a href="#about-honors">荣誉</a>{{- end }}
+    {{- with $aboutData.roadmap }}<a href="#about-roadmap">进行中</a>{{- end }}
     {{- end }}
   </nav>
   <div class="about-profile">
@@ -68,6 +68,27 @@
     {{- end }}
 
     {{- if $isResearch }}
+    <section class="research-selected" aria-labelledby="research-selected-heading">
+      <h2 id="research-selected-heading">Selected Work · 阅读起点</h2>
+      <div class="research-selected-grid">
+        {{- range first 1 (where $aboutData.works "type" "研究-预印本") }}
+        <a class="research-selected-item" href="{{ .url }}" target="_blank" rel="noopener noreferrer">
+          <span class="research-selected-type">Preprint · 预印本</span>
+          <strong>{{ .title }}</strong>
+          <span class="research-selected-note">{{ .note }}</span>
+          <span class="research-selected-action">阅读预印本 <span aria-hidden="true">↗</span></span>
+        </a>
+        {{- end }}
+        {{- range first 1 $aboutData.ietf.items }}
+        <a class="research-selected-item" href="{{ .url }}" target="_blank" rel="noopener noreferrer">
+          <span class="research-selected-type">Individual Internet-Draft · 个人草案</span>
+          <strong>{{ .title }}</strong>
+          <span class="research-selected-note">{{ .note }}</span>
+          <span class="research-selected-action">查看公开草案 <span aria-hidden="true">↗</span></span>
+        </a>
+        {{- end }}
+      </div>
+    </section>
     <section class="about-block about-block-papers" id="research-papers">
       <h2>Papers & Preprints · 论文与预印本</h2>
       {{- range $group := slice (dict "title" "Publications · 已发表论文" "types" (slice "研究-期刊论文" "研究-会议论文")) (dict "title" "Preprints · 预印本" "types" (slice "研究-预印本")) }}

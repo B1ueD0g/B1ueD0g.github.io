@@ -13,6 +13,12 @@ const output = option('--output-dir', '/tmp/bluedog-home-composition');
 const sizes = [[1800,1008],[1920,1080],[1440,1080],[1440,900],[1440,812],
   [1366,768],[1280,720],[1101,650],[1440,650],[1024,768],[390,844]];
 
+async function settle(page) {
+  await page.waitForSelector('html.bd-ready');
+  await page.evaluate(() => document.fonts.ready);
+  await page.waitForTimeout(350);
+}
+
 async function measure(page) {
   return page.evaluate(() => {
     const rect = selector => {
@@ -63,9 +69,9 @@ function validate(data) {
       try {
         const errors = [];
         page.on('pageerror', error => errors.push(error.message));
-        const response = await page.goto(base, {waitUntil:'networkidle'});
+        const response = await page.goto(base, {waitUntil:'domcontentloaded'});
         assert.equal(response.status(), 200);
-        await page.evaluate(() => document.fonts.ready);
+        await settle(page);
         for (const theme of ['light','dark']) {
           if (theme === 'dark') {
             await page.locator('#theme-toggle').click();
@@ -88,7 +94,8 @@ function validate(data) {
     // Reintroduce the rejected large-screen geometry in a browser-only fixture.
     // A visible footer alone must not allow the shrunken, top-heavy layout to pass.
     const control = await browser.newPage({viewport:{width:1800,height:1008}});
-    await control.goto(base, {waitUntil:'networkidle'});
+    await control.goto(base, {waitUntil:'domcontentloaded'});
+    await settle(control);
     await control.addStyleTag({content:`
       html.bd-cold-lab body.home-page .main {width:1180px!important;align-items:flex-start!important}
       html.bd-cold-lab body.home-page .home-info h1 {font-size:75.2px!important}

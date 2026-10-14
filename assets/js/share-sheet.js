@@ -112,15 +112,27 @@
     }
   }
 
-  function setWechatView(root, open) {
+  function setWechatView(root, open, restoreFocus) {
     var options = root.querySelector("[data-share-options]");
     var view = root.querySelector("[data-share-wechat]");
     if (!options || !view) return;
     var payload = getSharePayload(root);
+    if (open && !root.__shareWechatFocus && options.contains(document.activeElement)) {
+      root.__shareWechatFocus = document.activeElement;
+    }
     options.hidden = open;
     view.hidden = !open;
     root.classList.toggle("is-wechat-view", open);
-    if (!open) return;
+    if (!open) {
+      if (restoreFocus) {
+        var focusables = getFocusableElements(options);
+        var previous = root.__shareWechatFocus;
+        var option = focusables.indexOf(previous) !== -1 ? previous : focusables[0];
+        if (option) option.focus();
+      }
+      delete root.__shareWechatFocus;
+      return;
+    }
 
     var title = view.querySelector("[data-share-wechat-title]");
     var guide = view.querySelector("[data-share-wechat-guide]");
@@ -151,13 +163,15 @@
     var selectors = [
       "button:not([disabled])",
       "a[href]",
-      "input:not([disabled])",
+      "input:not([disabled]):not([type='hidden'])",
       "select:not([disabled])",
       "textarea:not([disabled])",
       "[tabindex]:not([tabindex='-1'])"
     ].join(",");
     return Array.prototype.slice.call(scope.querySelectorAll(selectors)).filter(function (el) {
-      return !el.hasAttribute("hidden");
+      if (el.tabIndex < 0 || el.closest("[hidden], [inert], [aria-hidden='true']")) return false;
+      var style = window.getComputedStyle(el);
+      return style.display !== "none" && style.visibility !== "hidden" && style.visibility !== "collapse" && el.getClientRects().length > 0;
     });
   }
 
@@ -193,7 +207,7 @@
 
   function closeSheet(root) {
     var sheet = root.querySelector("[data-share-sheet]");
-    if (!sheet) return;
+    if (!sheet || root.dataset.shareOpened !== "true") return;
     sheet.hidden = true;
     sheet.setAttribute("aria-hidden", "true");
     delete root.dataset.shareOpened;
@@ -201,7 +215,7 @@
     if (trigger) trigger.setAttribute("aria-expanded", "false");
     syncBodyLock();
     var restoreTarget = root.__shareLastFocus;
-    if (restoreTarget && typeof restoreTarget.focus === "function") {
+    if (restoreTarget && restoreTarget.isConnected && typeof restoreTarget.focus === "function") {
       restoreTarget.focus();
     }
   }
@@ -212,7 +226,7 @@
     });
   }
 
-  function handleShareAction(root, action) {
+  function handleShareAction(root, action, source) {
     var payload = getSharePayload(root);
     var encodedUrl = encodeURIComponent(payload.url);
     var encodedTitle = encodeURIComponent(payload.title);
@@ -232,13 +246,14 @@
       return;
     }
     if (action === "wechat") {
+      root.__shareWechatFocus = source || document.activeElement;
       var canUseNativeShare = !isWechatBrowser && navigator.share && window.matchMedia && window.matchMedia("(pointer: coarse)").matches;
       if (canUseNativeShare) {
         navigator.share({ title: payload.title, text: payload.title, url: payload.shortUrl }).then(function () {
           closeSheet(root);
         }).catch(function (error) {
           if (error && error.name === "AbortError") return;
-          setWechatView(root, true);
+          if (root.dataset.shareOpened === "true") setWechatView(root, true);
         });
       } else {
         setWechatView(root, true);
@@ -288,14 +303,14 @@
     if (actionBtn) {
       var actionRoot = actionBtn.closest("[data-share-root]");
       if (!actionRoot) return;
-      handleShareAction(actionRoot, actionBtn.getAttribute("data-share-action"));
+      handleShareAction(actionRoot, actionBtn.getAttribute("data-share-action"), actionBtn);
       return;
     }
 
     var wechatBack = event.target.closest("[data-share-wechat-back]");
     if (wechatBack) {
       var wechatRoot = wechatBack.closest("[data-share-root]");
-      if (wechatRoot) setWechatView(wechatRoot, false);
+      if (wechatRoot) setWechatView(wechatRoot, false, true);
     }
   });
 
@@ -316,7 +331,10 @@
     var last = focusables[focusables.length - 1];
     var active = document.activeElement;
 
-    if (event.shiftKey && active === first) {
+    if (focusables.indexOf(active) === -1) {
+      event.preventDefault();
+      (event.shiftKey ? last : first).focus();
+    } else if (event.shiftKey && active === first) {
       event.preventDefault();
       last.focus();
     } else if (!event.shiftKey && active === last) {

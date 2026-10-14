@@ -1,10 +1,38 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" fill="none">
-  <rect width="1200" height="630" fill="#F4F4F2"/>
-  <line x1="64" y1="88" x2="1136" y2="88" stroke="#1B1D25" stroke-width="3"/>
-  <line x1="64" y1="540" x2="1136" y2="540" stroke="#1B1D25" stroke-width="3"/>
-  <rect x="120" y="166" width="300" height="300" rx="20" fill="#D3E4F7"/>
-  <text x="460" y="226" fill="#111319" font-size="84" font-family="Bree Serif, Georgia, serif">BlueDog's Blog</text>
-  <text x="460" y="318" fill="#585D69" font-size="40" font-family="Manrope, Arial, sans-serif">Progress, Not Perfection</text>
-  <text x="460" y="404" fill="#111319" font-size="56" font-family="Bree Serif, Georgia, serif">[Article Title]</text>
-  <text x="460" y="454" fill="#585D69" font-size="28" font-family="Manrope, Arial, sans-serif">[YYYY-MM-DD] · [Tag1] [Tag2]</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">BlueDog editorial cover — ORIGINAL ANALYSIS</title>
+  <desc id="desc">Editable cover master. Replace title, topic, date, author and content ID with verified article metadata. The topic motif is editorial illustration.</desc>
+  <g id="background"><rect width="1200" height="630" fill="#f4f4f2"/></g>
+  <g id="brand">
+    <rect x="72" y="65" width="6" height="26" fill="#315c78"/>
+    <text id="brand-name" x="96" y="85" font-family="Arial" font-size="28" font-weight="700" fill="#11151c">BlueDog’s Blog</text>
+    <text id="brand-strapline" x="827" y="84" font-family="Arial" font-size="18" font-weight="400" fill="#56616a">RESEARCH · NOTES · PRACTICE</text>
+    <line x1="72" y1="122" x2="1128" y2="122" stroke="#c9cecf" stroke-width="1"/>
+  </g>
+  <g id="metadata">
+    <text id="content-type" x="72" y="172" font-family="Arial" font-size="21" font-weight="700" fill="#315c78">ORIGINAL ANALYSIS</text>
+    <text id="publish-date" x="976" y="172" font-family="Arial" font-size="21" font-weight="400" fill="#56616a">YYYY.MM.DD</text>
+  </g>
+  <g id="article-title" font-family="PingFang SC" font-size="60" font-weight="600" fill="#11151c">
+    <text id="title-line-1" x="72" y="284">文章标题第一行</text>
+    <text id="title-line-2" x="72" y="362">文章标题第二行</text>
+    <text id="title-line-3" x="72" y="440">必要时使用第三行</text>
+  </g>
+  <g id="topic-motif" fill="none" stroke="#315c78" stroke-width="2">
+    <line x1="804" y1="190" x2="804" y2="484" stroke="#c9cecf" stroke-width="1"/>
+    <rect x="852" y="226" width="240" height="194" rx="8" fill="#e8edef" stroke="none"/>
+    <path d="M866 238V420" stroke-dasharray="5 7"/>
+    <path d="M882 280H948V368H1062 M948 280H1056" stroke-width="3"/>
+    <path d="M1006 338V396 M997 338H1015 M997 396H1015" stroke="#c9cecf"/>
+    <g id="evidence-nodes" fill="#f4f4f2" stroke-width="3">
+      <circle cx="882" cy="280" r="8"/><circle cx="948" cy="280" r="8"/>
+      <circle cx="1056" cy="280" r="8"/><circle cx="1062" cy="368" r="8"/>
+    </g>
+    <text id="topic-label" x="886" y="473" font-family="Arial" font-size="16" font-weight="700" fill="#315c78" stroke="none">ARTICLE TOPIC</text>
+  </g>
+  <g id="footer">
+    <line x1="72" y1="522" x2="1128" y2="522" stroke="#c9cecf" stroke-width="1"/>
+    <text id="author" x="72" y="572" font-family="Arial" font-size="21" font-weight="400" fill="#11151c">BlueDog</text>
+    <text id="content-id" x="514" y="572" font-family="Arial" font-size="16" font-weight="400" fill="#56616a">ARCHIVE / [ID]</text>
+    <text id="domain" x="975" y="572" font-family="Arial" font-size="21" font-weight="400" fill="#56616a">bluedog.website</text>
+  </g>
 </svg>

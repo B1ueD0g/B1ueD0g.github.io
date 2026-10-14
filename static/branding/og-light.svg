@@ -1,11 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="t d">
-  <title id="t">BlueDog's Blog Open Graph Light</title>
-  <desc id="d">Light brand card for BlueDog's Blog social sharing.</desc>
-  <rect width="1200" height="630" fill="#f4f4f2"/>
-  <rect x="72" y="70" width="1056" height="490" rx="20" fill="none" stroke="#181d28" stroke-width="3"/>
-  <text x="112" y="240" font-family="Rubik Burned, Bree Serif, serif" font-size="88" fill="#101521">BlueDog's Blog</text>
-  <line x1="112" y1="286" x2="1088" y2="286" stroke="#181d28" stroke-width="3"/>
-  <text x="112" y="374" font-family="Bree Serif, serif" font-size="60" fill="#101521">He is Exploring Everything.</text>
-  <text x="112" y="460" font-family="Manrope, sans-serif" font-size="34" fill="#424a5a">Progress, Not Perfection</text>
-  <text x="112" y="520" font-family="Manrope, sans-serif" font-size="28" fill="#5f6878">bluedog.website</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+<title id="title">BlueDog’s Blog — light brand card</title><desc id="desc">Research, notes and practice from BlueDog.</desc>
+<g id="background"><rect width="1200" height="630" fill="#f4f4f2"/></g>
+<g id="brand" font-family="Arial" fill="#11151c"><rect x="72" y="65" width="6" height="26" fill="#315c78"/><text x="96" y="85" font-size="28" font-weight="700">BlueDog’s Blog</text><line x1="72" y1="122" x2="1128" y2="122" stroke="#c9cecf"/></g>
+<g id="motto" font-family="Arial" font-size="72" font-weight="700" fill="#11151c"><text x="72" y="254">He is Exploring</text><text x="72" y="344">Everything.</text></g>
+<g id="tagline" font-family="Arial"><text x="76" y="426" font-size="30" fill="#315c78">Progress, Not Perfection</text></g>
+<g id="footer" font-family="Arial" font-size="21"><line x1="72" y1="522" x2="1128" y2="522" stroke="#c9cecf"/><text x="72" y="572" fill="#11151c">BlueDog</text><text x="975" y="572" fill="#56616a">bluedog.website</text></g>
 </svg>

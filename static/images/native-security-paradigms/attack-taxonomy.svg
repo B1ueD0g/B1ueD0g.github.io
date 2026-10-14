@@ -1,12 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
   <title id="title">Attack taxonomy under NbSP OVTP ARCP</title>
   <desc id="desc">A conceptual table classifying attacks by bypass, reachability and audit visibility.</desc>
-  <rect width="1280" height="720" fill="#f8fafc"/>
-  <text x="70" y="74" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="34" font-weight="700" fill="#142235">从“攻击类型”到“范式责任”的映射</text>
-  <text x="70" y="112" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="18" fill="#536171">分类不是为了贴标签，而是为了明确防守方应该先修门、补证据，还是改经济账。</text>
+  <rect width="1280" height="720" fill="#f4f4f2"/>
+  <text x="70" y="74" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="34" font-weight="700" fill="#11151c">从“攻击类型”到“范式责任”的映射</text>
+  <text x="70" y="112" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="18" fill="#56616a">分类不是为了贴标签，而是为了明确防守方应该先修门、补证据，还是改经济账。</text>
 
   <g font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif">
-    <rect x="70" y="160" width="1140" height="92" rx="14" fill="#172434"/>
+    <rect x="70" y="160" width="1140" height="92" rx="14" fill="#11151c"/>
     <text x="104" y="214" font-size="24" font-weight="700" fill="#fff">判定维度</text>
     <text x="306" y="194" font-size="18" fill="#dbe8f2">B(g)：是否绕过控制点</text>
     <text x="306" y="226" font-size="18" fill="#dbe8f2">R(g)：绕过后触达域有多大</text>
@@ -29,13 +29,13 @@
     <text x="334" y="488" font-size="16" font-weight="700" fill="#8b4f12">主责：NbSP + OVTP</text>
     <text x="334" y="520" font-size="15" fill="#66503a">修边界，也要补证据。</text>
 
-    <rect x="530" y="290" width="210" height="270" rx="14" fill="#edf4ff" stroke="#3d72ad" stroke-width="2"/>
-    <text x="564" y="332" font-size="26" font-weight="700" fill="#245b91">B2-</text>
-    <text x="564" y="370" font-size="18" fill="#385c7c">部分绕过但可见</text>
-    <text x="564" y="406" font-size="16" fill="#385c7c">边界被突破，</text>
-    <text x="564" y="432" font-size="16" fill="#385c7c">响应窗口仍存在。</text>
-    <text x="564" y="488" font-size="16" font-weight="700" fill="#245b91">主责：检测与应急</text>
-    <text x="564" y="520" font-size="15" fill="#385c7c">压缩攻击窗口。</text>
+    <rect x="530" y="290" width="210" height="270" rx="14" fill="#e8edef" stroke="#315c78" stroke-width="2"/>
+    <text x="564" y="332" font-size="26" font-weight="700" fill="#315c78">B2-</text>
+    <text x="564" y="370" font-size="18" fill="#315c78">部分绕过但可见</text>
+    <text x="564" y="406" font-size="16" fill="#315c78">边界被突破，</text>
+    <text x="564" y="432" font-size="16" fill="#315c78">响应窗口仍存在。</text>
+    <text x="564" y="488" font-size="16" font-weight="700" fill="#315c78">主责：检测与应急</text>
+    <text x="564" y="520" font-size="15" fill="#315c78">压缩攻击窗口。</text>
 
     <rect x="760" y="290" width="210" height="270" rx="14" fill="#eaf8f5" stroke="#2b8a72" stroke-width="2"/>
     <text x="794" y="332" font-size="26" font-weight="700" fill="#176854">B1</text>
@@ -54,6 +54,6 @@
     <text x="1024" y="520" font-size="15" fill="#574a71">改写攻防成本比。</text>
   </g>
 
-  <rect x="70" y="608" width="1140" height="54" rx="14" fill="#172434"/>
+  <rect x="70" y="608" width="1140" height="54" rx="14" fill="#11151c"/>
   <text x="102" y="642" font-family="Arial, 'PingFang SC', 'Noto Sans CJK SC', sans-serif" font-size="18" fill="#ffffff">实务判断：B3/B2+ 是底线风险，B1 是治理风险，B0 是经济风险；三者需要不同的工程抓手。</text>
 </svg>
