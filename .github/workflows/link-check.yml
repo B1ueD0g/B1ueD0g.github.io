@@ -8,6 +8,9 @@ on:
 jobs:
   lychee:
     runs-on: ubuntu-latest
+    concurrency:
+      group: blog-link-audit
+      cancel-in-progress: false
     steps:
       - name: Checkout
         uses: actions/checkout@v4

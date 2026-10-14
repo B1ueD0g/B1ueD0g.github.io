@@ -1477,7 +1477,7 @@ L5不意味着无人管理，而意味着系统能够在明确责任和边界下
 
 ### E. 云原生、供应链、身份与智能体安全参考
 
-[71] CNCF TAG Security. [Cloud Native Security Whitepaper, Version 2](https://github.com/cncf/tag-security/blob/main/community/resources/security-whitepaper/v2/cloud-native-security-whitepaper.md).
+[71] CNCF TAG Security. [Cloud Native Security Whitepaper, Version 2](https://tag-security.cncf.io/community/resources/security-whitepaper/v2/cloud-native-security-whitepaper/).
 
 [72] OpenID Foundation. [OpenID Connect Core 1.0 incorporating errata set 2](https://openid.net/specs/openid-connect-core-1_0.html).
 

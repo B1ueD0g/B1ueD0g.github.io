@@ -18,6 +18,9 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    concurrency:
+      group: blog-link-audit
+      cancel-in-progress: false
     env:
       HUGO_VERSION: "0.157.0"
       HUGO_ENVIRONMENT: production

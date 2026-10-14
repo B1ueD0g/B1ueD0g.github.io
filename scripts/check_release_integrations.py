@@ -347,6 +347,11 @@ class ReleaseIntegrations(unittest.TestCase):
         config = tomllib.loads((ROOT / ".lychee.toml").read_text())
         self.assertEqual(config["accept"], [200, 206, 301, 302, 307, 308, 403, 429])
         self.assertEqual(config["exclude"], ["^mailto:", "^tel:", "^javascript:", "^#"])
+        self.assertEqual(config["max_concurrency"], 16)
+        self.assertEqual(config["hosts"]["translate.google.com"]["concurrency"], 1)
+        for filename in ("hugo.yml", "link-check.yml"):
+            workflow = (ROOT / ".github/workflows" / filename).read_text()
+            self.assertIn("group: blog-link-audit\n      cancel-in-progress: false", workflow)
 
 
 if __name__ == "__main__":

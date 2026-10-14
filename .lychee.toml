@@ -2,6 +2,9 @@ verbose = "info"
 max_retries = 2
 retry_wait_time = 2
 timeout = 20
+# Bound network pressure rather than accepting temporary server failures.
+max_concurrency = 16
+host_concurrency = 4
 insecure = false
 exclude_all_private = true
 
@@ -14,3 +17,11 @@ exclude = [
   "^javascript:",
   "^#",
 ]
+
+[hosts."translate.google.com"]
+concurrency = 1
+request_interval = "100ms"
+
+[hosts."github.com"]
+concurrency = 2
+request_interval = "200ms"

@@ -56,6 +56,8 @@ IndexNow notification runs after a successful Pages deployment, using the sitema
 
 The 2026-10-14 link maintenance uses the stable VIP journal catalogue for its matching publication record, avoiding expiring signed detail URLs. The retired portknocking domain is retained as historical text because its content has changed; the live reference points to the fwknop author's official tutorial. The LinkedIn URL remains in configuration with `disabled = true` while public access cannot be verified (HTTP 999); disabled entries are omitted from both social controls and structured identity data. The deployment link audit is blocking, with the original accepted status codes and exclusion rules preserved.
 
+Link audits use bounded global/per-host concurrency and a shared job queue across the two workflows, so they do not simultaneously flood the same translation or source service. Temporary HTTP errors remain failures. CNCF references use the official rendered version of the same v2 whitepaper, whose edit link identifies the original Markdown source.
+
 ## Editable cover masters
 
 The source masters are `static/branding/cover-analysis.svg`, `cover-guide.svg` and `cover-reading.svg`. Shared geometry and colors are in `static/branding/cover-system.json`.
