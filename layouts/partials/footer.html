@@ -110,16 +110,60 @@
     var toggle = document.getElementById("theme-toggle");
     if (!toggle) return;
 
-    toggle.addEventListener("click", function () {
-      var html = document.querySelector("html");
-      if (!html) return;
-      if (html.dataset.theme === "dark") {
-        html.dataset.theme = "light";
-        localStorage.setItem("pref-theme", "light");
-      } else {
-        html.dataset.theme = "dark";
-        localStorage.setItem("pref-theme", "dark");
+    var html = document.documentElement;
+    var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    var activeTransition = null;
+    var requestedTheme = html.dataset.theme;
+    var themeSerial = 0;
+
+    toggle.addEventListener("click", function (event) {
+      var serial = ++themeSerial;
+      requestedTheme = requestedTheme === "dark" ? "light" : "dark";
+      var nextTheme = requestedTheme;
+      function applyTheme() {
+        if (serial !== themeSerial) return;
+        html.dataset.theme = nextTheme;
+        try { localStorage.setItem("pref-theme", nextTheme); } catch (error) {}
+        toggle.setAttribute("aria-pressed", nextTheme === "dark" ? "true" : "false");
+        toggle.setAttribute("aria-label", nextTheme === "dark" ? "Switch to light theme" : "Switch to dark theme");
+        toggle.setAttribute("title", nextTheme === "dark" ? "Switch to light theme (Alt + T)" : "Switch to dark theme (Alt + T)");
       }
+      if (activeTransition) activeTransition.skipTransition();
+      if (reduceMotion.matches || !document.startViewTransition || !html.animate) {
+        activeTransition = null;
+        html.classList.remove("bd-theme-reveal");
+        applyTheme();
+        return;
+      }
+      var rect = toggle.getBoundingClientRect();
+      var x = event.detail ? event.clientX : rect.left + rect.width / 2;
+      var y = event.detail ? event.clientY : rect.top + rect.height / 2;
+      var radius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+      html.classList.add("bd-theme-reveal");
+      try {
+        var transition = document.startViewTransition(applyTheme);
+        activeTransition = transition;
+        transition.ready.then(function () {
+          if (serial !== themeSerial || reduceMotion.matches) {
+            transition.skipTransition();
+            return;
+          }
+          html.animate({clipPath: ["circle(0px at " + x + "px " + y + "px)", "circle(" + radius + "px at " + x + "px " + y + "px)"]},
+            {duration: 480, easing: "cubic-bezier(.22,1,.36,1)", pseudoElement: "::view-transition-new(root)"});
+        }).catch(function () {});
+        transition.finished.catch(function () {}).then(function () {
+          if (activeTransition !== transition) return;
+          activeTransition = null;
+          html.classList.remove("bd-theme-reveal");
+        });
+      } catch (error) {
+        activeTransition = null;
+        html.classList.remove("bd-theme-reveal");
+        applyTheme();
+      }
+    });
+    if (reduceMotion.addEventListener) reduceMotion.addEventListener("change", function () {
+      if (reduceMotion.matches && activeTransition) activeTransition.skipTransition();
     });
   })();
 </script>

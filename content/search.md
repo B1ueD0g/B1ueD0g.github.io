@@ -5,4 +5,6 @@ description: "BlueDog Blog 站内搜索页，可按关键词和标签检索文�
 summary: "站内搜索"
 placeholder: "搜索文章"
 robotsNoIndex: true
+sitemap:
+  disable: true
 ---

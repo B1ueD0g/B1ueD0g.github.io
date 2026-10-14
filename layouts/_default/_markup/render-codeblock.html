@@ -1,0 +1,3 @@
+{{- /* Preserve source code when a reader opens an automatic page translation. */ -}}
+{{- $highlighted := transform.Highlight .Inner .Type .Options -}}
+{{- replaceRE "<pre\\b" "<pre translate=\"no\"" $highlighted | safeHTML -}}

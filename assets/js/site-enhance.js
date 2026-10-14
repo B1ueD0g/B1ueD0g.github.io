@@ -149,6 +149,46 @@
       });
     }
 
+    function setupEditorialMotion() {
+      var root = document.documentElement;
+      var hero = document.querySelector(".home-info");
+      var media = window.matchMedia("(min-width: 1101px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)");
+      var frame = 0;
+      var point = null;
+      function reset() {
+        if (frame) window.cancelAnimationFrame(frame);
+        frame = 0;
+        point = null;
+        root.removeAttribute("data-bd-motion");
+        if (!hero) return;
+        ["--bd-pointer-x", "--bd-pointer-y", "--bd-field-x", "--bd-field-y"].forEach(function (name) {
+          hero.style.removeProperty(name);
+        });
+      }
+      if (!hero) return;
+      hero.addEventListener("pointermove", function (event) {
+        if (!media.matches || document.hidden || event.pointerType === "touch") return;
+        point = {x: event.clientX, y: event.clientY};
+        if (frame) return;
+        frame = window.requestAnimationFrame(function () {
+          frame = 0;
+          if (!point || !media.matches || document.hidden) return;
+          var bounds = hero.getBoundingClientRect();
+          var x = Math.max(0, Math.min(1, (point.x - bounds.left) / Math.max(1, bounds.width)));
+          var y = Math.max(0, Math.min(1, (point.y - bounds.top) / Math.max(1, bounds.height)));
+          hero.style.setProperty("--bd-pointer-x", (x * 100).toFixed(2) + "%");
+          hero.style.setProperty("--bd-pointer-y", (y * 100).toFixed(2) + "%");
+          hero.style.setProperty("--bd-field-x", ((x - .5) * 16).toFixed(2) + "px");
+          hero.style.setProperty("--bd-field-y", ((y - .5) * 12).toFixed(2) + "px");
+          root.setAttribute("data-bd-motion", "active");
+        });
+      }, {passive: true});
+      hero.addEventListener("pointerleave", reset);
+      window.addEventListener("pagehide", reset);
+      document.addEventListener("visibilitychange", function () { if (document.hidden) reset(); });
+      if (media.addEventListener) media.addEventListener("change", reset);
+    }
+
     function setupSearchShortcut() {
       document.addEventListener("keydown", function (event) {
         if (event.key !== "/") return;
@@ -1084,6 +1124,7 @@
     setupGeneratedA11yLabels();
     setupColdLabSystem();
     setupRevealOnScroll();
+    setupEditorialMotion();
     setupSearchShortcut();
     setupReadingProgress();
     setupEditorialTocRail();

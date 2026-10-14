@@ -28,3 +28,6 @@
     document.body.appendChild(script);
   })();
 </script>
+
+{{- $languageSwitch := resources.Get "js/language-switch.js" | minify | fingerprint -}}
+<script defer src="{{ $languageSwitch.RelPermalink }}" integrity="{{ $languageSwitch.Data.Integrity }}" crossorigin="anonymous"></script>

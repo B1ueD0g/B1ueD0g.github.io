@@ -11,12 +11,21 @@
         {{- with .Description }}
         <div class="post-description">{{ . }}</div>
         {{- end }}
+        {{- if not $isResearch }}
         <div class="about-hero-topics" aria-label="Primary research areas">
           <span>Security Research</span>
           <span>Internet Standards</span>
           <span>Technical Writing</span>
         </div>
+        {{- end }}
       </div>
+      {{- if $isResearch }}
+      <div class="about-hero-topics" aria-label="Primary research areas">
+        <span>Security Research</span>
+        <span>Internet Standards</span>
+        <span>Technical Writing</span>
+      </div>
+      {{- end }}
       <div class="about-hero-connect">
         <div class="about-social">
           {{- partial "social_icons.html" (dict "align" "center") -}}

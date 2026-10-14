@@ -52,6 +52,9 @@ jobs:
       - name: Install Node dependencies
         run: npm ci
 
+      - name: Validate release integrations
+        run: python3 scripts/check_release_integrations.py
+
       - name: Validate post metadata quality
         run: python3 scripts/check_metadata_quality.py
 
@@ -74,6 +77,7 @@ jobs:
         continue-on-error: true
         uses: lycheeverse/lychee-action@v2
         with:
+          lycheeVersion: v0.24.2
           fail: true
           args: >
             --config .lychee.toml
@@ -95,25 +99,13 @@ jobs:
       - name: Run Lighthouse CI quality gate
         run: lhci autorun --config=.lighthouserc.json
 
-      - name: Submit sitemap URLs to IndexNow
-        continue-on-error: true
-        env:
-          INDEXNOW_ENABLED: "true"
-          INDEXNOW_HOST: "bluedog.website"
-          INDEXNOW_KEY: "4bae4031fdb246e2a0ca3d0ad07fdace"
-          INDEXNOW_KEY_LOCATION: "https://bluedog.website/4bae4031fdb246e2a0ca3d0ad07fdace.txt"
-          INDEXNOW_ENDPOINT: "https://api.indexnow.org/indexnow"
-        run: |
-          if [ "${INDEXNOW_ENABLED}" != "true" ]; then
-            echo "IndexNow is disabled."
-            exit 0
-          fi
-          python3 scripts/submit_indexnow.py \
-            --sitemap public/sitemap.xml \
-            --host "${INDEXNOW_HOST}" \
-            --key "${INDEXNOW_KEY}" \
-            --key-location "${INDEXNOW_KEY_LOCATION}" \
-            --endpoint "${INDEXNOW_ENDPOINT}"
+      - name: Upload sitemap for post-deployment IndexNow notification
+        uses: actions/upload-artifact@v4
+        with:
+          name: indexnow-sitemap
+          path: public/sitemap.xml
+          if-no-files-found: error
+          retention-days: 1
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
@@ -130,3 +122,37 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  indexnow:
+    needs: deploy
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout notification script
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Download the sitemap from this deployment
+        uses: actions/download-artifact@v4
+        with:
+          name: indexnow-sitemap
+          path: public
+
+      - name: Verify published key and submit sitemap URLs to IndexNow
+        env:
+          INDEXNOW_HOST: "bluedog.website"
+          INDEXNOW_KEY: "7baa35b46459468eb9eeed80b9885b5b"
+          INDEXNOW_KEY_LOCATION: "https://bluedog.website/7baa35b46459468eb9eeed80b9885b5b.txt"
+          INDEXNOW_ENDPOINT: "https://www.bing.com/indexnow"
+        run: |
+          python3 scripts/submit_indexnow.py \
+            --sitemap public/sitemap.xml \
+            --host "${INDEXNOW_HOST}" \
+            --key "${INDEXNOW_KEY}" \
+            --key-location "${INDEXNOW_KEY_LOCATION}" \
+            --endpoint "${INDEXNOW_ENDPOINT}"
