@@ -42,7 +42,7 @@ cover:
 
 ### 软件工具清单
 
-1. Kali官方镜像：https://kali.download/arm-images/kali-2025.2/kali-linux-2025.2-raspberry-pi-arm64.img.xz
+1. Kali 2025.2 官方历史镜像：[kali-linux-2025.2-raspberry-pi-arm64.img.xz](https://old.kali.org/arm-images/kali-2025.2/kali-linux-2025.2-raspberry-pi-arm64.img.xz)
 2. 树莓派官方启动盘制作工具：https://downloads.raspberrypi.org/imager/
 3. VNC工具：https://www.realvnc.com/en/connect/download/viewer/（笔者个人推荐）
 4. FRP：https://github.com/fatedier/frp

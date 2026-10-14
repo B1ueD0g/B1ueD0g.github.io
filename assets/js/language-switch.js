@@ -33,6 +33,11 @@
     function updateLinks() {
       var page = currentPage();
       if (!page) return false;
+      var proxyHost = page.hostname.replace(/\./g, "-") + ".translate.goog";
+      var requested = new URLSearchParams(window.location.search).get("_x_tr_tl");
+      var active = window.location.hostname === proxyHost && (requested === "en" || requested === "de") ? requested : "zh-CN";
+      original.toggleAttribute("aria-current", active === "zh-CN");
+      if (active === "zh-CN") original.setAttribute("aria-current", "page");
       original.href = page.href;
       links.forEach(function (link) {
         var language = link.getAttribute("data-language-target");
@@ -47,6 +52,8 @@
         translated.searchParams.set("u", page.href);
         link.href = translated.href;
         link.removeAttribute("aria-disabled");
+        if (language === active) link.setAttribute("aria-current", "page");
+        else link.removeAttribute("aria-current");
       });
       return true;
     }
@@ -67,13 +74,25 @@
         event.preventDefault();
         return;
       }
-      if (link.hasAttribute("data-language-target")) close(true);
+      if (link.hasAttribute("aria-current")) event.preventDefault();
+      close(true);
     });
     document.addEventListener("keydown", function (event) {
       if (event.key === "Escape" && root.open) {
         event.preventDefault();
         close(true);
       }
+      if (!root.contains(document.activeElement)) return;
+      var items = Array.from(root.querySelectorAll("a[href]"));
+      if (["ArrowDown", "ArrowUp", "Home", "End"].indexOf(event.key) < 0) return;
+      event.preventDefault();
+      root.open = true;
+      var index = items.indexOf(document.activeElement);
+      if (event.key === "Home") index = 0;
+      else if (event.key === "End") index = items.length - 1;
+      else if (index < 0) index = event.key === "ArrowDown" ? 0 : items.length - 1;
+      else index = (index + (event.key === "ArrowDown" ? 1 : -1) + items.length) % items.length;
+      items[index].focus();
     });
     document.addEventListener("click", function (event) {
       if (root.open && !root.contains(event.target)) close(root.contains(document.activeElement));

@@ -8,12 +8,10 @@
     </svg>
   </summary>
   <div class="language-panel">
-    <p>整页自动翻译 · Google Translate</p>
     <nav aria-label="页面语言">
-      <a data-language-original href="{{ $canonical }}" lang="zh-CN" aria-current="page">中文原文</a>
-      <a data-language-target="en" href="{{ printf "https://translate.google.com/translate?sl=zh-CN&tl=en&u=%s" ($canonical | urlquery) }}" lang="en" target="_blank" rel="noopener noreferrer">English <span aria-hidden="true">↗</span></a>
-      <a data-language-target="de" href="{{ printf "https://translate.google.com/translate?sl=zh-CN&tl=de&u=%s" ($canonical | urlquery) }}" lang="de" target="_blank" rel="noopener noreferrer">Deutsch <span aria-hidden="true">↗</span></a>
+      <a data-language-original href="{{ $canonical }}" lang="zh-CN" aria-current="page"><span>中文</span><span class="language-check" aria-hidden="true">✓</span></a>
+      <a data-language-target="en" href="{{ printf "https://translate.google.com/translate?sl=zh-CN&tl=en&u=%s" ($canonical | urlquery) }}" lang="en" target="_blank" rel="noopener noreferrer" aria-label="English"><span>English</span><span class="language-check" aria-hidden="true">✓</span></a>
+      <a data-language-target="de" href="{{ printf "https://translate.google.com/translate?sl=zh-CN&tl=de&u=%s" ($canonical | urlquery) }}" lang="de" target="_blank" rel="noopener noreferrer" aria-label="Deutsch"><span>Deutsch</span><span class="language-check" aria-hidden="true">✓</span></a>
     </nav>
-    <p>中文原页会保留</p>
   </div>
 </details>

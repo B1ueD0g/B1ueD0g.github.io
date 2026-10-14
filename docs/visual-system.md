@@ -4,7 +4,7 @@ Updated: 2026-10-14
 
 ## Visual direction
 
-The site uses an editorial research style: paper white, deep-sea blue, a warmer signal accent and quiet rules. Home introduces the author and a reading starting point, with an original orbital field illustration. Articles favors scanning. Research presents selected public work before the full record. About keeps the personal narrative and existing facts.
+The site uses an editorial research style: paper white, deep-sea blue, a warmer signal accent and quiet rules. Home introduces the author and a reading starting point, with an original orbital field illustration. Articles favors scanning. Research begins directly with the full public record; duplicated featured cards and ornamental record numbers are omitted. About keeps the personal narrative and existing facts, with a light English section index.
 
 ## Typography and surfaces
 
@@ -32,21 +32,21 @@ The site uses an editorial research style: paper white, deep-sea blue, a warmer 
 
 Research keeps its title and full introduction across the desktop header. Topic labels and social controls share the next row; the introduction keeps its normal type size. Mobile wraps the introduction naturally and stacks topic labels above the social controls. Publication, preprint and individual draft status wording remains explicit.
 
-## Lost signal station
+## A small 404 walk
 
-The 404 page is a small reading-discovery interaction. Three keyboard-accessible beacons reveal existing articles selected from Hugo metadata. Repeated activation does not double-count a beacon. Reset restores a predictable focus position. Random reading chooses a real article from the current archive; the native link points to an existing article before JavaScript loads.
+The 404 page is a real seven-by-five tile game. A navy dog with an orange scarf walks around bushes and collects three reading stars. Direction keys, WASD and four 44px direction buttons control the same production state. Map boundaries and bushes block movement; revisiting a collected star does not increase the score. All three stars are reachable. Finishing reveals a real article drawn from the current Hugo archive. Start/replay restores the original map and keyboard focus.
 
-Home, Articles, GET search and three article links remain available without JavaScript. The orbital illustration is native SVG. Its CSS and JavaScript load on the 404 page only. Reduced motion removes the decorative transitions. The signal language is a playful metaphor, not a network status diagnostic.
+The visual direction uses a small paper island, sage stepping stones, a blue mailbox and golden stars, with a Canva illustration as art reference. The implementation is editable native SVG and page-local CSS/JavaScript. Step hops and collection bursts are finite, event-driven animations; reduced motion or a hidden page cancels them. The game captures direction keys only while its board or controls have focus. Search inputs and whole-page keyboard scrolling keep their normal behavior. Home, Articles, GET search, skip-game navigation and three real article links remain available without JavaScript.
 
 ## Whole-page translation
 
-The header offers Chinese source, English and German. English and German open the current public page in [Google Translate's website translation service](https://support.google.com/translate/answer/2534559?hl=en), in a new tab so the source stays available. The menu labels this as automatic translation. It does not create independently reviewed language editions, alternate SEO pages or a translation account.
+The header offers three concise choices: 中文, English and Deutsch, with a check on the current language. English and German open the current public page in [Google Translate's website translation service](https://support.google.com/translate/answer/2534559?hl=en), in a new tab so the source stays available. Choosing the current language closes the menu without loading it again. Keyboard users can use Tab, arrow keys, Home, End and Escape. The translated proxy marks its actual English or German state. These are automatic translations rather than independently reviewed language editions or alternate SEO pages.
 
 Native links work without JavaScript. Enhancement preserves the current search query and section fragment, excludes the provider's own `_x_tr_*` parameters and keeps the public canonical origin. The site does not load a translation widget or contact Google until the reader chooses a translated version. Preformatted source code is marked `translate="no"` in server-rendered HTML; code, keyboard labels and math are also protected during enhancement.
 
 ## Release integrations
 
-Both link-check workflows pin Lychee v0.24.2. The configuration keeps `verbose = "info"`; boolean verbosity is rejected by that version. Local offline fixtures verify both the repaired configuration and missing-link failure behavior.
+Both link-check workflows pin Lychee v0.24.2 and resolve root-relative links against the absolute generated `public` directory; both use Hugo 0.157.0. The configuration keeps `verbose = "info"`; boolean verbosity is rejected by that version. Local offline fixtures verify the repaired configuration, root-relative assets and missing-link failure behavior. The Safari mask icon has a real monochrome SVG asset. Historical article links are repaired at their source: moved official resources use verified replacements, while unavailable historical references remain explicitly identified as non-clickable original addresses. DOI values remain visible, and article titles link to their publication records. Bot protection or third-party certificate failures remain distinguishable from missing local files and are not silently accepted.
 
 IndexNow notification runs after a successful Pages deployment, using the sitemap artifact from that same build. The script validates host, key, key-file scope and public key contents before sending. It preserves response bodies on errors and returns nonzero for rejected or unsuccessful submissions. HTTP 200 means received; HTTP 202 means received with key validation pending. Neither confirms crawling or indexing. A new public verification file is used while the older file remains available. The endpoint is an [official participating IndexNow endpoint](https://www.indexnow.org/faq), with no silent fallback after failure.
 

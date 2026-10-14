@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <title>BlueDog</title>
+  <g fill="#000" fill-rule="evenodd">
+    <path d="M7 13h12c8 0 12 4 12 10 0 4-2 7-5 8 5 2 7 5 7 10 0 7-5 11-13 11H7V13zm7 7v9h5c4 0 5-2 5-5s-2-4-5-4h-5zm0 15v10h6c4 0 6-2 6-5s-2-5-6-5h-6z"/>
+    <path d="M36 13h9c11 0 17 7 17 19S56 52 45 52h-9V13zm7 7v25h2c7 0 10-4 10-13s-3-12-10-12h-2z"/>
+  </g>
+</svg>

@@ -87,8 +87,11 @@ const insideViewport = (rect, width, label) => {
             const r = e.getBoundingClientRect();
             return e.contains(document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2));
           })), `Popover content is covered by the header navigation at ${width} ${theme}`);
-          assert((await panel.textContent()).includes('整页自动翻译 · Google Translate'));
-          assert((await panel.textContent()).includes('中文原页会保留'));
+          assert.equal(await panel.locator('p').count(), 0, 'Language menu should contain choices without explanatory copy');
+          assert.deepEqual(await panel.locator('a > span:first-child').allTextContents(), ['中文', 'English', 'Deutsch']);
+          assert.equal(await panel.locator('[aria-current="page"]').count(), 1);
+          assert(await panel.locator('[data-language-original]').evaluate(e => e.hasAttribute('aria-current')));
+          assert((await panel.boundingBox()).height <= 160, 'Three-choice popover contains excessive spacing');
           const links = root.locator('a');
           for (let linkIndex = 0; linkIndex < 3; linkIndex++) {
             const box = await links.nth(linkIndex).boundingBox();
@@ -98,6 +101,16 @@ const insideViewport = (rect, width, label) => {
           assert(await root.locator('[data-language-original]').evaluate(e => e === document.activeElement), 'Native Tab did not reach original page');
           await page.keyboard.press('Tab');
           assert(await root.locator('[data-language-target="en"]').evaluate(e => e === document.activeElement));
+          await page.keyboard.press('End');
+          assert(await root.locator('[data-language-target="de"]').evaluate(e => e === document.activeElement));
+          await page.keyboard.press('ArrowDown');
+          assert(await root.locator('[data-language-original]').evaluate(e => e === document.activeElement));
+          const beforeOriginal = page.url();
+          await page.keyboard.press('Enter');
+          assert.equal(page.url(), beforeOriginal, 'Choosing the current language navigated the original page');
+          assert(!(await root.evaluate(e => e.open)));
+          await summary.press('ArrowUp');
+          assert(await root.locator('[data-language-target="de"]').evaluate(e => e === document.activeElement));
           await page.keyboard.press('Escape');
           assert(!(await root.evaluate(e => e.open)));
           assert(await summary.evaluate(e => e === document.activeElement), 'Escape did not restore globe focus');
@@ -173,6 +186,13 @@ const insideViewport = (rect, width, label) => {
     await proxy.goto('https://bluedog-website.translate.goog/?q=Agent%20Security&_x_tr_sl=zh-CN&_x_tr_tl=de#read');
     const technicalText = await proxy.locator('pre,code,kbd,samp,.katex,.MathJax').allTextContents();
     await proxy.addScriptTag({ content: script });
+    assert.equal(await proxy.locator('[aria-current="page"]').getAttribute('data-language-target'), 'de', 'Translated page did not mark its current language');
+    await proxy.locator('summary').click();
+    const proxyUrl = proxy.url();
+    const beforeCurrent = googleRequests;
+    await proxy.locator('[data-language-target="de"]').click();
+    assert.equal(proxy.url(), proxyUrl);
+    assert.equal(googleRequests, beforeCurrent, 'Choosing active German launched another translation');
     checkTranslation(await proxy.locator('[data-language-target="de"]').getAttribute('href'), 'de', origin + '/?q=Agent%20Security#read');
     assert.equal(await proxy.locator('[data-language-original]').getAttribute('href'), origin + '/?q=Agent%20Security#read');
     assert.deepEqual(await proxy.locator('pre,code,kbd,samp,.katex,.MathJax').allTextContents(), technicalText);

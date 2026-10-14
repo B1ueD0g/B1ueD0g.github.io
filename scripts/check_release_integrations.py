@@ -220,6 +220,9 @@ class ReleaseIntegrations(unittest.TestCase):
             text = (ROOT / ".github/workflows" / filename).read_text()
             actions = re.findall(r"lycheeverse/lychee-action@v2\n\s+with:\n\s+lycheeVersion:\s*(\S+)", text)
             self.assertEqual(actions, ["v0.24.2"], filename)
+            self.assertIn('--root-dir "${{ github.workspace }}/public"', text, filename)
+        link_workflow = (ROOT / ".github/workflows/link-check.yml").read_text()
+        self.assertIn('hugo-version: "0.157.0"', link_workflow)
         text = (ROOT / ".github/workflows/hugo.yml").read_text()
         build, notification = job(text, "build"), job(text, "indexnow")
         self.assertNotIn("scripts/submit_indexnow.py", build)
@@ -234,6 +237,16 @@ class ReleaseIntegrations(unittest.TestCase):
         location = re.search(r'INDEXNOW_KEY_LOCATION: "([^"]+)"', notification).group(1)
         self.assertEqual(location, f"https://bluedog.website/{key}.txt")
         self.assertEqual((ROOT / "static" / f"{key}.txt").read_bytes(), key.encode("ascii"))
+        site = tomllib.loads((ROOT / "hugo.toml").read_text())
+        self.assertEqual(site["params"]["indexNow"]["key"], key)
+        self.assertEqual(site["params"]["indexNow"]["keyLocation"], location)
+        self.assertIn(site["params"]["indexNow"]["endpoint"], notification)
+        mask = ROOT / "static" / site["params"]["assets"]["safari_pinned_tab"].lstrip("/")
+        import xml.etree.ElementTree as ET
+        self.assertTrue(mask.is_file(), "Safari mask icon references a missing asset")
+        svg = ET.parse(mask).getroot()
+        self.assertEqual(svg.tag, "{http://www.w3.org/2000/svg}svg")
+        self.assertGreater(len(svg.findall(".//{http://www.w3.org/2000/svg}path")), 0)
 
 
 if __name__ == "__main__":

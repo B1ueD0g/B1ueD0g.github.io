@@ -81,6 +81,7 @@ jobs:
           fail: true
           args: >
             --config .lychee.toml
+            --root-dir "${{ github.workspace }}/public"
             --no-progress
             "public/**/*.html"
             "public/**/*.xml"

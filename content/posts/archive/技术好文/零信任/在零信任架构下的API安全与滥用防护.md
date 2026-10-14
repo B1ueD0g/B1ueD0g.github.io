@@ -42,7 +42,7 @@ cover:
 
 ![企业微信截图_17013248322346](https://raw.githubusercontent.com/B1ueD0g/Picture/main/img/企业微信截图_17013248322346.png)
 
-图：API安全威胁的来源-[谷歌云的API安全报告](https://cloud.google.com/resources/api-security-research-report?ref=hackernoon.com)
+图：API安全威胁的来源-[谷歌云 2022 年 API 安全研究报告（PDF）](https://services.google.com/fh/files/misc/google_cloud_api_security_research_report.pdf)
 
 根据OWASP的[2023年API安全前十大风险](https://owasp.org/API-Security/)报告，API滥用可能导致的风险同传统的安全威胁一样严重。滥用者利用合法的访问权限，以合法用户的身份进行操作，这种行为在系统日志中往往与正常活动难以区分，给传统的侵入检测系统带来了巨大的挑战。在零信任架构下，每一次访问尝试都要经过严格的信任评估，这本质上要求我们对API安全采取更为主动和全面的防护措施。除了持续的监控和评估外，组织需要采用更高级的数据分析方法，比如行为分析和机器学习技术，以识别和防范API滥用。例如，Akamai提出，通过强大的计算能力，[SaaS模型](https://www.akamai.com/glossary/what-is-software-as-a-service)能够分析大规模的数据集，从而有效地识别API使用中的异常行为，这是实现零信任中连续验证原则的关键环节。
 

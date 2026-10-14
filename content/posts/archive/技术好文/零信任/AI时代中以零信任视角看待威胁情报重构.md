@@ -70,7 +70,7 @@ cover:
 |                    领会（Understanding）                     |                    理解（Comprehension）                     |
 | 艺术的、富有想象力的（“假使…将会怎么样?”）、哲学的（“为什么?”） |           现实的（“什么是？”）、科学的（“如何？”）           |
 |                       白日梦、心不在焉                       |                          工作、注意                          |
-| 富有洞察力（[顿悟时刻](https://zh.wikipedia.org/w/index.php?title=Eureka_effect&action=edit&redlink=1)，Aha moment）、激进、新颖 |                 循规蹈矩、 渐进式、重复乏味                  |
+| 富有洞察力（顿悟时刻，Aha moment）、激进、新颖 |                 循规蹈矩、 渐进式、重复乏味                  |
 |                      平行、同步、非线性                      |                       串行、循序、线性                       |
 | [自上而下](https://zh.wikipedia.org/wiki/自上而下和自下而上設計)、整体、宏观 | [自下而上](https://zh.wikipedia.org/wiki/自上而下和自下而上設計)、基础、细节 |
 |                    眼界、范围、脉络、视角                    |                       目的、目标、要求                       |
@@ -85,7 +85,7 @@ cover:
 | 直觉（[迈尔斯-布里格斯性格分类法](https://zh.wikipedia.org/wiki/邁爾斯-布里格斯性格分類法)） |               思维(迈尔斯-布里格斯性格分类法)                |
 |                             本能                             |                             专业                             |
 |                  “右脑”、“横向思维”、“移情”                  |                 “左脑”、“垂直思维”、“系统化”                 |
-| [预设模式网络](https://zh.wikipedia.org/wiki/預設模式網路)（神经科学） | [任务正激活网络](https://zh.wikipedia.org/w/index.php?title=任務正激活網路&action=edit&redlink=1)（神经科学） |
+| [预设模式网络](https://zh.wikipedia.org/wiki/預設模式網路)（神经科学） | 任务正激活网络（神经科学） |
 | [联结主义](https://zh.wikipedia.org/wiki/聯結主義)([认知科学](https://zh.wikipedia.org/wiki/認知科學)) | [计算主义](https://zh.wikipedia.org/wiki/心灵计算理论)(认知科学) |
 |      [神经网络](https://zh.wikipedia.org/wiki/神經網路)      | 可与[数位逻辑](https://zh.wikipedia.org/wiki/数字电路)相比较. |
 |        难以透过测试进行测量。 （请参阅创造力评估。）         |                 不完善地以IQ测验来进行测量。                 |

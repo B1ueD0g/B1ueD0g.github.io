@@ -38,7 +38,7 @@ SPA通过减少暴露的服务端口，以及使用动态、单一数据包进�
 
 ## 0x02 环境介绍&配置
 
-使用`Ubuntu 20.04`环境进行搭建[ubuntu 镜像下载地址 点击下载](https://mirrors.aliyun.com/ubuntu-releases/focal/ubuntu-20.04.6-desktop-amd64.iso)，依赖源为清华源镜像
+使用`Ubuntu 20.04`环境进行搭建[Ubuntu 20.04.6 官方镜像下载页](https://releases.ubuntu.com/20.04.6/)，依赖源为清华源镜像
 
 网络地址规划&系统密码：
 
@@ -201,7 +201,7 @@ wknop -n 192.168.31.211
 
 [3]CVE-2012-4436：https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2012-4436
 
-[4]CVE-2012-4435https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2012-4435
+[4]CVE-2012-4435：https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2012-4435
 
 [5]CVE-2012-4434：https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2012-4434
 

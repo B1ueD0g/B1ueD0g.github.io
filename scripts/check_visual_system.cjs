@@ -17,12 +17,53 @@ const names = ['home', 'articles', 'about', 'research', 'search', 'article', 'co
 const readableNav = data => assert(data.every(x => x.font >= 12 && x.height >= 44),
   `Unreadable mobile section navigation: ${JSON.stringify(data)}`);
 
+async function checkResearchLists(page, width) {
+  const data = await page.evaluate(() => {
+    const rect = e => { const r=e.getBoundingClientRect(); return {x:r.x,y:r.y,width:r.width,height:r.height}; };
+    const contentX = e => { const c=getComputedStyle(e); return e.getBoundingClientRect().x+parseFloat(c.paddingLeft)+parseFloat(c.borderLeftWidth); };
+    const records=[...document.querySelectorAll('.research-pro .about-record-list li')];
+    const works=[...document.querySelectorAll('.research-pro .about-work-item')];
+    return {
+      selected:document.querySelectorAll('.research-selected,.research-selected-item').length,
+      indexNodes:document.querySelectorAll('.research-pro .about-record-index,.research-pro .about-work-item[data-index]').length,
+      pseudo:[...records,...works].flatMap(e=>['::before','::after'].map(p=>getComputedStyle(e,p).content)),
+      records:records.filter(e=>e.getClientRects().length).map(e=>({row:rect(e),contentX:contentX(e),copy:rect(e.querySelector('.about-record-copy'))})),
+      works:works.filter(e=>e.getClientRects().length).map(e=>({row:rect(e),contentX:contentX(e),columns:getComputedStyle(e).gridTemplateColumns.split(/\s+/).map(Number.parseFloat),gap:parseFloat(getComputedStyle(e).columnGap),type:rect(e.querySelector('.about-work-type')),main:rect(e.querySelector('.about-work-main')),typeFont:parseFloat(getComputedStyle(e.querySelector('.about-work-type')).fontSize),titleFont:parseFloat(getComputedStyle(e.querySelector('.about-work-title')).fontSize)})),
+      dois:[...document.querySelectorAll('#research-papers .research-doi')].map(e=>e.textContent.trim()).sort(),
+      doiLinks:document.querySelectorAll('#research-papers a.research-doi-link').length,
+      paperLinks:[...document.querySelectorAll('#research-papers .about-record-copy')].map(e=>e.querySelector(':scope > a')?.href || '')
+    };
+  });
+  assert.equal(data.selected,0,'Removed Selected Work section returned');
+  assert.equal(data.indexNodes,0,'Research retained decorative index nodes');
+  assert(data.pseudo.every(x=>['none','normal','""'].includes(x)),`Research generated decorative list content: ${JSON.stringify(data.pseudo)}`);
+  assert(data.records.every(r=>Math.abs(r.copy.x-r.contentX)<=1),'Research records retain an empty index column');
+  assert(data.works.length>0,'Research work panel has no visible rows');
+  for(const row of data.works) {
+    assert(Math.abs(row.type.x-row.contentX)<=1,'Work type does not start at the content edge');
+    assert(row.typeFont>=14.07&&row.titleFont>=16,'Research work type/title was reduced below its original readable size');
+    if(width>700) {
+      assert.equal(row.columns.length,2,'Work row retains an index column');
+      assert(Math.abs(row.main.x-(row.contentX+row.columns[0]+row.gap))<=1,'Work title does not follow the type column');
+      assert(row.main.width>=row.row.width*0.7,'Work title lost its content width');
+    } else {
+      assert.equal(row.columns.length,1,'Mobile work row retains an empty column');
+      assert(Math.abs(row.main.x-row.contentX)<=1,'Mobile work title is indented into an empty column');
+      assert(row.main.y>=row.type.y+row.type.height-1,'Mobile work type and title overlap');
+    }
+  }
+  assert.equal(data.doiLinks,0,'DOI values must be plain identifiers');
+  assert(data.paperLinks.every(href=>/^https?:/.test(href)),'Paper title lost its source link');
+  return data;
+}
+
 (async () => {
   await fs.mkdir(out, {recursive:true});
   const browser = await chromium.launch({channel:'chrome', headless:true});
   const results = [];
   const pageErrors = [];
   const coldLoads = [];
+  const expectedDOIs=[...(await fs.readFile(path.join(__dirname,'../data/about.yaml'),'utf8')).matchAll(/^\s+doi:\s*"([^"]+)"/gm)].map(m=>m[1]).sort();
   try {
     for (const width of [1440, 390]) {
       for (const theme of ['light', 'dark']) {
@@ -55,9 +96,45 @@ const readableNav = data => assert(data.every(x => x.font >= 12 && x.height >= 4
           if(i===4) assert.equal(metrics.scrollY,0,'Search initialization scrolled the page');
           if(width===390 && metrics.nav.length) readableNav(metrics.nav);
           if(width===390 && i===0) assert(metrics.firstArticleTop<784,'First article is still too far below the mobile fold');
+          if(i===2) {
+            const profileLinks=page.locator('.about-profile-nav a');
+            assert.deepEqual(await profileLinks.allTextContents(),['Profile','Highlights','Credentials','Honors','Now']);
+            assert(metrics.nav.every(n=>n.font>=13&&n.height>=44),'Profile index is unreadable');
+            for(let section=0;section<5;section++) {
+              const href=await profileLinks.nth(section).getAttribute('href');
+              await profileLinks.nth(section).click();
+              await page.waitForFunction(hash=>location.hash===hash,href);
+              assert(await page.locator(href).evaluate(e=>{const r=e.getBoundingClientRect();return r.top<innerHeight&&r.bottom>0;}),'Profile index did not reveal its target');
+            }
+            await page.evaluate(()=>window.scrollTo(0,0));
+            assert(await page.locator('#about-identity').isVisible(),'About identity content disappeared');
+            assert(await page.locator('#about-highlights').isVisible(),'About highlights content disappeared');
+          }
           if(i===3) {
-            assert.equal(await page.locator('.research-selected-item').count(),2);
-            assert(await page.locator('.research-selected').evaluate(e=>Math.abs(e.getBoundingClientRect().width-e.parentElement.getBoundingClientRect().width)<2),'Selected Work does not span the profile');
+            const sectionLinks=page.locator('.about-section-nav a');
+            assert.equal(await sectionLinks.count(),4,'Research lost its four section links');
+            for(let section=0;section<4;section++) {
+              const href=await sectionLinks.nth(section).getAttribute('href');
+              assert.equal(await page.locator(href).count(),1,'Research section target is missing');
+              await sectionLinks.nth(section).click();
+              await page.waitForFunction(hash=>location.hash===hash,href);
+              const top=await page.locator(href).evaluate(e=>e.getBoundingClientRect().top);
+              assert(top>=0&&top<=260,'Research section navigation did not reveal its target');
+            }
+            metrics.researchPanels=[];
+            const workTabs=page.locator('.about-work-tab');
+            for(let tab=0;tab<await workTabs.count();tab++) {
+              await workTabs.nth(tab).click();
+              await page.waitForTimeout(350);
+              const panel=await checkResearchLists(page,width);
+              assert.deepEqual(panel.dois,expectedDOIs,'Paper DOI identifiers changed');
+              metrics.researchPanels.push(panel);
+            }
+            await workTabs.first().click();
+            await page.waitForTimeout(350);
+            await page.evaluate(()=>window.scrollTo(0,document.querySelector('#about-works').getBoundingClientRect().top+scrollY-90));
+            await page.screenshot({path:path.join(out,`research-works-${width}-${theme}.png`)});
+            await page.evaluate(()=>window.scrollTo(0,0));
           }
           await page.screenshot({path:path.join(out,`${names[i]}-${width}-${theme}.png`)});
           results.push({route:routes[i],theme,...metrics});
@@ -139,6 +216,8 @@ const readableNav = data => assert(data.every(x => x.font >= 12 && x.height >= 4
     for(let i=0;i<3;i++) {
       await tabs.nth(i).click();
       assert.equal(await tabs.nth(i).getAttribute('aria-selected'),'true');
+      await page.waitForTimeout(350);
+      await checkResearchLists(page,1440);
     }
     await page.goto(base+'/search/',{waitUntil:'domcontentloaded'});
     await page.waitForSelector('html.bd-ready');
@@ -191,8 +270,9 @@ const readableNav = data => assert(data.every(x => x.font >= 12 && x.height >= 4
       }
     }
     await page.setViewportSize({width:390,height:844});
-    await page.goto(base+'/about/',{waitUntil:'domcontentloaded'});
+    await page.goto(base+'/research/',{waitUntil:'domcontentloaded'});
     await page.waitForSelector('html.bd-ready');
+    assert.equal(await page.locator('.about-section-nav a').count(),4,'Research navigation negative control has no targets');
     const navMetrics = () => page.locator('.about-section-nav a').evaluateAll(es=>es.map(e=>({font:parseFloat(getComputedStyle(e).fontSize),height:e.getBoundingClientRect().height})));
     readableNav(await navMetrics());
     await page.locator('.about-section-nav a').evaluateAll(es=>es.forEach(e=>e.style.setProperty('font-size','8px','important')));
