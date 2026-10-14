@@ -7,6 +7,8 @@ import importlib.util
 import io
 import json
 import re
+import shlex
+import subprocess
 import sys
 import tempfile
 import threading
@@ -71,6 +73,74 @@ def job(text, name):
     if not match:
         raise AssertionError(f"Workflow job missing: {name}")
     return match.group(1)
+
+
+def workflow_lychee_args(text, workspace):
+    """Read the action's actual folded args without a YAML dependency."""
+    action = text.split("uses: lycheeverse/lychee-action@v2\n", 1)[1]
+    match = re.search(r"(?m)^(?P<indent> +)args: >\n(?P<lines>(?:(?P=indent) +[^\n]*(?:\n|$))+)", action)
+    if not match:
+        raise AssertionError("Lychee action is missing folded args")
+    arguments = " ".join(line.strip() for line in match.group("lines").splitlines())
+    arguments = arguments.replace("${{ github.workspace }}", workspace)
+    return arguments, shlex.split(arguments)
+
+
+def action_shell_args(arguments):
+    """Reproduce v2 entrypoint's eval with a harmless argv-capture function."""
+    script = 'lychee() { printf "%s\\0" "$@"; }; ARGS="$1"; shift; eval lychee ${ARGS}'
+    result = subprocess.run(["bash", "-c", script, "lychee-action-fixture", arguments,
+                             "SHELL_EXPANSION_CANARY"], capture_output=True, check=True)
+    return result.stdout.decode().rstrip("\0").split("\0")
+
+
+def check_lychee_workflow_fixtures(binary):
+    """Exercise parsed workflow args with the pinned binary; no external requests."""
+    version = subprocess.check_output([str(binary), "--version"], text=True).strip()
+    if version != "lychee 0.24.2":
+        raise AssertionError(f"Expected pinned lychee 0.24.2, got {version}")
+    receipts = []
+    with tempfile.TemporaryDirectory(prefix="bluedog-lychee-remap-") as directory:
+        workspace = Path(directory)
+        public = workspace / "public"
+        (public / "assets").mkdir(parents=True)
+        (public / "assets" / "current.css").write_text("body{color:inherit}")
+        sources = {
+            "present": '<a href="https://bluedog.website/assets/current.css">absolute</a>'
+                       '<a href="/assets/current.css">root-relative</a>'
+                       '<a href="https://bluedog.website/assets/current.css?v=2">query</a>',
+            "missing": '<a href="https://bluedog.website/assets/missing.css">missing</a>',
+            "foreign": '<a href="https://bluedog.website.evil.invalid/assets/current.css">foreign</a>',
+        }
+        for name, content in sources.items():
+            (workspace / f"{name}.html").write_text(content)
+        for filename in ("hugo.yml", "link-check.yml"):
+            text = (ROOT / ".github/workflows" / filename).read_text()
+            arguments, parsed = workflow_lychee_args(text, str(workspace))
+            if action_shell_args(arguments) != parsed:
+                raise AssertionError(f"Action shell expanded workflow args: {filename}")
+            # Replace only production input globs with bounded local fixtures.
+            core = parsed[:parsed.index("--no-progress") + 1]
+            for case, expected in (("present", 0), ("missing", 2)):
+                report = workspace / f"{filename}-{case}.json"
+                command = [str(binary), *core, "--offline", "--cache=false", "--format", "json",
+                           "--output", str(report), str(workspace / f"{case}.html")]
+                result = subprocess.run(command, cwd=ROOT, capture_output=True, text=True, timeout=10)
+                if result.returncode != expected:
+                    raise AssertionError(f"{filename} {case}: {result.returncode}: {result.stderr}")
+                data = json.loads(report.read_text())
+                if case == "present" and (data["successful"] != 3 or data["remaps"] != 2):
+                    raise AssertionError(f"{filename}: present links were not checked/remapped: {data}")
+                if case == "missing" and data["errors"] != 1:
+                    raise AssertionError(f"{filename}: missing local file did not fail: {data}")
+                receipts.append({"workflow": filename, "case": case, "exit_code": result.returncode,
+                                 "successful": data["successful"], "errors": data["errors"], "remaps": data["remaps"]})
+            result = subprocess.run([str(binary), *core, "--dump", str(workspace / "foreign.html")],
+                                    cwd=ROOT, capture_output=True, text=True, timeout=10)
+            if result.returncode or "https://bluedog.website.evil.invalid/assets/current.css" not in result.stdout or "file:" in result.stdout:
+                raise AssertionError(f"{filename}: foreign origin was remapped: {result.stdout} {result.stderr}")
+            receipts.append({"workflow": filename, "case": "foreign_not_remapped", "exit_code": 0})
+    return {"lychee_version": version, "network_requests": 0, "fixtures": receipts}
 
 
 class ReleaseIntegrations(unittest.TestCase):
@@ -213,6 +283,24 @@ class ReleaseIntegrations(unittest.TestCase):
         self.assertIn("HTTP 403", stderr)
         self.assertEqual(len([event for event in self.server.events if event[0] == "POST"]), 1)
 
+    def test_same_origin_remap_survives_action_shell_parsing(self):
+        workspace = "/fixture/workspace"
+        expected = r"^https://bluedog[.]website/(.*)$ file://" + workspace + "/public/$1"
+        for filename in ("hugo.yml", "link-check.yml"):
+            with self.subTest(workflow=filename):
+                text = (ROOT / ".github/workflows" / filename).read_text()
+                arguments, parsed = workflow_lychee_args(text, workspace)
+                self.assertEqual(parsed.count("--remap"), 1)
+                self.assertEqual(parsed[parsed.index("--remap") + 1], expected)
+                self.assertEqual(parsed[parsed.index("--root-dir") + 1], workspace + "/public")
+                # lychee-action@v2 uses eval, so shlex alone cannot prove $1 survives.
+                self.assertEqual(action_shell_args(arguments), parsed)
+                quoted = "'" + expected + "'"
+                self.assertIn(quoted, arguments)
+                polluted = action_shell_args(arguments.replace(quoted, '"' + expected + '"'))
+                self.assertNotEqual(polluted[polluted.index("--remap") + 1], expected)
+                self.assertIn("SHELL_EXPANSION_CANARY", polluted[polluted.index("--remap") + 1])
+
     def test_pinned_lychee_and_post_deployment_wiring(self):
         config = tomllib.loads((ROOT / ".lychee.toml").read_text())
         self.assertEqual(config["verbose"], "info")
@@ -250,4 +338,9 @@ class ReleaseIntegrations(unittest.TestCase):
 
 
 if __name__ == "__main__":
+    if "--lychee-binary" in sys.argv:
+        position = sys.argv.index("--lychee-binary")
+        binary = Path(sys.argv[position + 1]).resolve()
+        del sys.argv[position:position + 2]
+        print(json.dumps(check_lychee_workflow_fixtures(binary), indent=2))
     unittest.main(verbosity=2)

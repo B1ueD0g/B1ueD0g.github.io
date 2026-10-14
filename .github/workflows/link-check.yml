@@ -34,6 +34,7 @@ jobs:
           args: >
             --config .lychee.toml
             --root-dir "${{ github.workspace }}/public"
+            --remap '^https://bluedog[.]website/(.*)$ file://${{ github.workspace }}/public/$1'
             --no-progress
             "content/**/*.md"
             "public/**/*.html"
