@@ -391,7 +391,7 @@
           var currentPanel = panels.find(function (panel) {
             return !panel.hidden;
           });
-          if (currentPanel === nextPanel && !config.force) return;
+          if (currentPanel === nextPanel) return;
 
           var previousHeight = panelWrap ? panelWrap.getBoundingClientRect().height : 0;
           if (transitionTimer) window.clearTimeout(transitionTimer);
@@ -453,7 +453,12 @@
             activate(tabs[nextIndex].dataset.target, { focus: true });
           });
         });
-        activate((tabs.find(function (tab) { return tab.classList.contains("is-active"); }) || tabs[0]).dataset.target, { force: true });
+        // Hugo already renders the selected panel and tab state. Measuring and
+        // reanimating that same panel here forces layout of the whole offscreen
+        // works list during page load; only a real tab change needs that work.
+        panels.forEach(function (panel) {
+          panel.setAttribute("aria-hidden", panel.hidden ? "true" : "false");
+        });
       })();
     </script>
     {{- end }}

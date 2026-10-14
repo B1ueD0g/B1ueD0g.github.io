@@ -254,8 +254,10 @@ works:
     url: "https://www.photon.ac.cn/thesisDetails#10.3788/gzxb20265505.0529001&lang=zh"
   - type: "研究-期刊论文"
     title: "虚拟服务探测驱动的网络安全设备健康诊断"
-    note: "吴徽、卜宋博 · 保密科学技术，2025(9)：55–60"
-    url: "https://qikan.cqvip.com/Qikan/Article/Detail?id=7202244677"
+    note: "吴徽、卜宋博 · 保密科学技术，2025(9)：55–60 · 维普期刊目录"
+    # Legacy article ID 7202244677: qikan.cqvip.com/Qikan/Article/Detail?id=7202244677.
+    # The current article detail URL is signed and expires; this stable catalogue includes the same record.
+    url: "https://www.cqvip.com/journal/71313X/71313X/2025"
   - type: "研究-期刊论文"
     title: "常见高危Web漏洞原理及检测技术分析与研究"
     note: "卜宋博、葛小虎 · 电子技术与软件工程，2021(2)"

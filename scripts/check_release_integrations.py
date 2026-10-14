@@ -336,6 +336,18 @@ class ReleaseIntegrations(unittest.TestCase):
         self.assertEqual(svg.tag, "{http://www.w3.org/2000/svg}svg")
         self.assertGreater(len(svg.findall(".//{http://www.w3.org/2000/svg}path")), 0)
 
+    def test_research_budget_and_blocking_link_gate(self):
+        text = (ROOT / ".github/workflows/hugo.yml").read_text()
+        build = job(text, "build")
+        self.assertNotIn("continue-on-error", build)
+        self.assertLess(build.index("lhci autorun"), build.index("python3 scripts/check_research_performance.py"))
+        lighthouse = json.loads((ROOT / ".lighthouserc.json").read_text())
+        self.assertEqual(lighthouse["ci"]["collect"]["numberOfRuns"], 3)
+        self.assertEqual(lighthouse["ci"]["assert"]["assertions"]["total-blocking-time"][1]["maxNumericValue"], 200)
+        config = tomllib.loads((ROOT / ".lychee.toml").read_text())
+        self.assertEqual(config["accept"], [200, 206, 301, 302, 307, 308, 403, 429])
+        self.assertEqual(config["exclude"], ["^mailto:", "^tel:", "^javascript:", "^#"])
+
 
 if __name__ == "__main__":
     if "--lychee-binary" in sys.argv:

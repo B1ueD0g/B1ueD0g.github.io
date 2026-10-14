@@ -54,7 +54,9 @@ cover:
 - 2003
 - 65501
 
-如果服务器监视此敲门序列，则会重新配置数据包过滤器，以允许来自发出该序列的 IP 地址的 SSH 连接。利用数据包过滤器提供的连接跟踪机制（如 Netfilter 中的 conntrack 系统），即使敲门服务器创建的初始规则在超时后被删除，SSH 会话仍然可以保持建立状态。端口敲门序列可以加密，许多实现已在 http://www.portknocking.org 上列出。有关端口敲门操作的图形表示，请参见图 1。
+如果服务器监视此敲门序列，则会重新配置数据包过滤器，以允许来自发出该序列的 IP 地址的 SSH 连接。利用数据包过滤器提供的连接跟踪机制（如 Netfilter 中的 conntrack 系统），即使敲门服务器创建的初始规则在超时后被删除，SSH 会话仍然可以保持建立状态。端口敲门序列可以加密，许多实现曾在 `www.portknocking.org` 上列出。有关端口敲门操作的图形表示，请参见图 1。
+
+> 链接维护（2026-10-14）：原域名当前已变为与本文无关的内容，取消跳转。端口敲门与单包授权的原理和实现，可参阅本文作者 Michael Rash 的 [fwknop 官方教程](https://www.cipherdyne.org/fwknop/docs/fwknop-tutorial.html)。
 
 ![image-20240227122807716](https://raw.githubusercontent.com/B1ueD0g/Picture/main/202402271228746.png)
 

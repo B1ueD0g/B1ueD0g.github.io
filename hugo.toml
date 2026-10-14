@@ -131,6 +131,8 @@ url = "https://x.com/B1ueD0g_Fun"
 name = "linkedin"
 title = "LinkedIn"
 url = "https://www.linkedin.com/in/b1ued0g/"
+# Public access cannot be verified (HTTP 999); retain the address without publishing an unverified entry.
+disabled = true
 
 [[params.socialIcons]]
 name = "github"

@@ -77,7 +77,6 @@ jobs:
         run: hugo --gc --minify
 
       - name: Check links in generated site
-        continue-on-error: true
         uses: lycheeverse/lychee-action@v2
         with:
           lycheeVersion: v0.24.2
@@ -103,6 +102,9 @@ jobs:
 
       - name: Run Lighthouse CI quality gate
         run: lhci autorun --config=.lighthouserc.json
+
+      - name: Require all three Research runs within the TBT budget
+        run: python3 scripts/check_research_performance.py
 
       - name: Upload sitemap for post-deployment IndexNow notification
         uses: actions/upload-artifact@v4

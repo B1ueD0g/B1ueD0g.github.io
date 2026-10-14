@@ -1,5 +1,5 @@
 <div class="social-icons{{ with .align }} social-icons-{{ . }}{{ end }}">
-  {{- range site.Params.socialIcons -}}
+  {{- range where site.Params.socialIcons "disabled" "ne" true -}}
     {{- $rawURL := trim .url " " -}}
     {{- $iconLabel := (.title | default .name) | title -}}
     {{- $iconName := trim .name " " | lower -}}

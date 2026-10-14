@@ -32,6 +32,8 @@ The site uses an editorial research style: paper white, deep-sea blue, a warmer 
 
 Research keeps its title and full introduction across the desktop header. Topic labels and social controls share the next row; the introduction keeps its normal type size. Mobile wraps the introduction naturally and stacks topic labels above the social controls. Publication, preprint and individual draft status wording remains explicit.
 
+Research startup keeps the Works panel rendered by Hugo, synchronizing accessibility state without measuring or animating the same panel again. Real tab changes retain the finite height transition and keyboard controls. CI requires all three Research Lighthouse TBT measurements to stay within the existing 200 ms budget.
+
 ## A small 404 walk
 
 The 404 page is a seeded seven-by-five island game. Each new island changes its paths, bushes, stars, mailbox, optional bone and paired violet portals. Free exploration and a move-budget challenge share the same movement rules. The dog collects three reading stars and then delivers them to the mailbox. A portal jump costs one move and never bounces recursively; a bone gives 50 points and three extra challenge moves, once only. Blocking a bush or boundary does not consume a move. The challenge budget comes from the shortest legal delivery route plus a small margin, without requiring the optional bone. Delivery on the final move wins.
@@ -51,6 +53,8 @@ Native links work without JavaScript. Enhancement preserves the current search q
 Both link-check workflows pin Lychee v0.24.2 and resolve root-relative links against the absolute generated `public` directory; both use Hugo 0.157.0. Anchored remapping sends same-origin absolute URLs to that same local build, so a new page or asset is checked before deployment rather than requested from the previous live release. The remap argument is single-quoted to retain the literal `$1` capture through the action's shell parsing. The configuration keeps `verbose = "info"`; boolean verbosity is rejected by that version. Local offline fixtures verify the repaired configuration, root-relative assets and missing-link failure behavior. The Safari mask icon has a real monochrome SVG asset. Historical article links are repaired at their source: moved official resources use verified replacements, while unavailable historical references remain explicitly identified as non-clickable original addresses. DOI values remain visible, and article titles link to their publication records. Bot protection or third-party certificate failures remain distinguishable from missing local files and are not silently accepted.
 
 IndexNow notification runs after a successful Pages deployment, using the sitemap artifact from that same build. The script validates host, key, key-file scope and public key contents before sending. It preserves response bodies on errors and returns nonzero for rejected or unsuccessful submissions. HTTP 200 means received; HTTP 202 means received with key validation pending. Neither confirms crawling or indexing. A new public verification file is used while the older file remains available. The endpoint is an [official participating IndexNow endpoint](https://www.indexnow.org/faq), with no silent fallback after failure.
+
+The 2026-10-14 link maintenance uses the stable VIP journal catalogue for its matching publication record, avoiding expiring signed detail URLs. The retired portknocking domain is retained as historical text because its content has changed; the live reference points to the fwknop author's official tutorial. The LinkedIn URL remains in configuration with `disabled = true` while public access cannot be verified (HTTP 999); disabled entries are omitted from both social controls and structured identity data. The deployment link audit is blocking, with the original accepted status codes and exclusion rules preserved.
 
 ## Editable cover masters
 
@@ -79,6 +83,8 @@ node scripts/check_not_found.cjs --base-url http://127.0.0.1:8767 --output-dir /
 node scripts/check_not_found_engine.cjs
 node scripts/check_language_switch.cjs --base-url http://127.0.0.1:8767 --output-dir /path/to/private/language-qa --playwright-module /path/to/installed/playwright
 python3 scripts/check_release_integrations.py
+python3 scripts/check_research_performance.py --reports-dir .lighthouseci
+node scripts/check_research_interactions.cjs --base-url http://127.0.0.1:8767 --output-dir /path/to/private/research-qa --playwright-module /path/to/installed/playwright
 ```
 
 The visual check covers Home, Articles, About, Research, Search and two representative articles at 1440px and 390px, light and dark themes. It checks overflow, heading fit, readable section navigation, first-article placement, reduced motion, Research shelf width, TOC focus across viewport changes, share subview focus, Works tabs and search success/empty states. It also checks local code-block scrolling and mobile share-panel bounds. Cold-load cases delay enhancement by 0, 250 and 1000ms; the mobile homepage must remain usable with JavaScript disabled. Its unreadable-navigation negative control must be rejected. The original home composition test checks eleven viewports in both themes and rejects the old underscaled composition.

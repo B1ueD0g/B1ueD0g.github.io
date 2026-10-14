@@ -3,7 +3,7 @@
 {{- $personID := printf "%s#person" $homeURL -}}
 {{- $personName := site.Params.schema.personName | default "Songbo Bu" -}}
 {{- $socialLinks := slice -}}
-{{- range site.Params.SocialIcons -}}
+{{- range where site.Params.SocialIcons "disabled" "ne" true -}}
   {{- if in (slice "x" "linkedin" "github" "telegram") (lower .name) -}}
     {{- $socialLinks = $socialLinks | append .url -}}
   {{- end -}}
