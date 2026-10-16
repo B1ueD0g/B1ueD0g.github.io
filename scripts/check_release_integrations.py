@@ -23,6 +23,21 @@ SPEC = importlib.util.spec_from_file_location("submit_indexnow", ROOT / "scripts
 indexnow = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(indexnow)
 KEY = "local-indexnow-key-20261014"
+MIIT_URL = "https://beian.miit.gov.cn/"
+MIIT_EXCLUSION = r"^https://beian[.]miit[.]gov[.]cn/$"
+MIIT_NONMATCHES = [
+    "http://beian.miit.gov.cn/",
+    "https://beian.miit.gov.cn/other",
+    "https://beian.miit.gov.cn/?check=1",
+    "https://beian.miit.gov.cn/#other",
+    "https://miit.gov.cn/",
+    "https://sub.beian.miit.gov.cn/",
+    "https://beian.miit.gov.cn.example.com/",
+    "https://beianxmiitygovzcn.com/",
+    "https://beian.miit.gov.cn:444/",
+    "https://someone@beian.miit.gov.cn/",
+    "https://www.microsoft.com/",
+]
 
 
 class FixtureHandler(BaseHTTPRequestHandler):
@@ -38,6 +53,8 @@ class FixtureHandler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         self.server.events.append(("GET", self.path))
+        if self.path.startswith("/status/"):
+            return self.respond(int(self.path.rsplit("/", 1)[-1]), b"local link-status fixture")
         if self.path == "/bad-key.txt":
             return self.respond(200, b"wrong-public-key")
         if self.path == "/bom-key.txt":
@@ -141,6 +158,63 @@ def check_lychee_workflow_fixtures(binary):
                 raise AssertionError(f"{filename}: foreign origin was remapped: {result.stdout} {result.stderr}")
             receipts.append({"workflow": filename, "case": "foreign_not_remapped", "exit_code": 0})
     return {"lychee_version": version, "network_requests": 0, "fixtures": receipts}
+
+
+def check_lychee_miit_exception(binary):
+    """Prove the exact exclusion and unrelated HTTP failures with the real checker."""
+    receipts = []
+    server = ThreadingHTTPServer(("127.0.0.1", 0), FixtureHandler)
+    server.events = []
+    worker = threading.Thread(target=server.serve_forever, daemon=True)
+    worker.start()
+    origin = f"http://127.0.0.1:{server.server_port}"
+    try:
+        with tempfile.TemporaryDirectory(prefix="bluedog-miit-exception-") as directory:
+            workspace = Path(directory)
+            (workspace / "public").mkdir()
+            boundary = workspace / "boundary.html"
+            # These forms normalize to the same HTTPS root, rather than new exceptions.
+            roots = [MIIT_URL, "https://beian.miit.gov.cn", "https://beian.miit.gov.cn:443/"]
+            boundary.write_text("".join(f'<a href="{url}">link</a>' for url in roots + MIIT_NONMATCHES))
+            failures = workspace / "failures.html"
+            failures.write_text(f'<a href="{MIIT_URL}">filing</a>' + "".join(
+                f'<a href="https://fixture.example.com/{status}">failure</a>' for status in (404, 500, 521)))
+            for filename in ("hugo.yml", "link-check.yml"):
+                _, parsed = workflow_lychee_args((ROOT / ".github/workflows" / filename).read_text(), str(workspace))
+                core = parsed[:parsed.index("--no-progress") + 1]
+                result = subprocess.run([str(binary), *core, "--dump", str(boundary)],
+                                        cwd=ROOT, capture_output=True, text=True, timeout=10)
+                if result.returncode:
+                    raise AssertionError(result.stderr)
+                rows = result.stdout.splitlines()
+                source = f" ({boundary})"
+                excluded = {line.removesuffix(" [excluded]").removesuffix(source)
+                            for line in rows if line.endswith(" [excluded]")}
+                checked = {line.removesuffix(source) for line in rows if not line.endswith(" [excluded]")}
+                if excluded != {MIIT_URL} or checked != set(MIIT_NONMATCHES):
+                    raise AssertionError(f"{filename}: exclusion escaped the canonical root: {rows}")
+                report = workspace / f"{filename}-http-errors.json"
+                server.events.clear()
+                # Map only these fixture URLs to localhost. Production private-IP and
+                # retry settings are overridden only for this bounded local test.
+                command = [str(binary), *core, "--cache=false", "--max-retries", "0",
+                           "--exclude-all-private=false", "--timeout", "2", "--remap",
+                           rf"^https://fixture[.]example[.]com/(.*)$ {origin}/status/$1",
+                           "--format", "json", "--output", str(report), str(failures)]
+                result = subprocess.run(command, cwd=ROOT, capture_output=True, text=True, timeout=10)
+                data = json.loads(report.read_text())
+                if result.returncode != 2 or data["errors"] != 3 or data["successful"] != 0:
+                    raise AssertionError(f"{filename}: other HTTP errors stopped failing: {data}")
+                if sorted(server.events) != [("GET", f"/status/{status}") for status in (404, 500, 521)]:
+                    raise AssertionError(f"{filename}: unexpected fixture traffic: {server.events}")
+                receipts.append({"workflow": filename, "only_excluded_url": sorted(excluded),
+                                 "checked_boundary_urls": len(checked), "http_errors": data["errors"],
+                                 "exit_code": result.returncode, "local_requests": len(server.events)})
+    finally:
+        server.shutdown()
+        server.server_close()
+        worker.join(timeout=2)
+    return receipts
 
 
 class ReleaseIntegrations(unittest.TestCase):
@@ -346,7 +420,10 @@ class ReleaseIntegrations(unittest.TestCase):
         self.assertEqual(lighthouse["ci"]["assert"]["assertions"]["total-blocking-time"][1]["maxNumericValue"], 200)
         config = tomllib.loads((ROOT / ".lychee.toml").read_text())
         self.assertEqual(config["accept"], [200, 206, 301, 302, 307, 308, 403, 429])
-        self.assertEqual(config["exclude"], ["^mailto:", "^tel:", "^javascript:", "^#"])
+        self.assertEqual(config["exclude"], ["^mailto:", "^tel:", "^javascript:", "^#", MIIT_EXCLUSION])
+        self.assertTrue(re.search(MIIT_EXCLUSION, MIIT_URL))
+        for url in MIIT_NONMATCHES:
+            self.assertFalse(re.search(MIIT_EXCLUSION, url), url)
         self.assertEqual(config["max_concurrency"], 16)
         self.assertEqual(config["hosts"]["translate.google.com"]["concurrency"], 1)
         for filename in ("hugo.yml", "link-check.yml"):
@@ -359,5 +436,7 @@ if __name__ == "__main__":
         position = sys.argv.index("--lychee-binary")
         binary = Path(sys.argv[position + 1]).resolve()
         del sys.argv[position:position + 2]
-        print(json.dumps(check_lychee_workflow_fixtures(binary), indent=2))
+        receipts = check_lychee_workflow_fixtures(binary)
+        receipts["miit_exception"] = check_lychee_miit_exception(binary)
+        print(json.dumps(receipts, indent=2))
     unittest.main(verbosity=2)

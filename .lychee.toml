@@ -16,6 +16,9 @@ exclude = [
   "^tel:",
   "^javascript:",
   "^#",
+  # Required official filing link returns HTTP 521 to automated checks.
+  # Skip only this canonical root URL; all other URLs/status rules stay checked.
+  "^https://beian[.]miit[.]gov[.]cn/$",
 ]
 
 [hosts."translate.google.com"]
