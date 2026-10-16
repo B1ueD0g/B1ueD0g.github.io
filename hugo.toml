@@ -121,6 +121,7 @@ Content = ""
 [params.footer]
 hideCopyright = true
 text = "Progress, Not Perfection"
+icp = "陕ICP备2025069809号-1"
 
 [[params.socialIcons]]
 name = "x"

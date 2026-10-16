@@ -1,5 +1,13 @@
 <footer class="custom-min-footer">
-  <p>{{ site.Params.footer.text | default "Progress, Not Perfection" }}</p>
+  <div class="footer-inner">
+    <p>{{ site.Params.footer.text | default "Progress, Not Perfection" }}</p>
+    {{- with site.Params.footer.icp }}
+    <a class="footer-icp notranslate" href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer" lang="zh-CN" translate="no">
+      <span>{{ . }}</span>
+      <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 12 12 4M4 4h8v8" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+    {{- end }}
+  </div>
 </footer>
 
 <div id="copy-toast" class="copy-toast" role="status" aria-live="polite" aria-atomic="true"></div>

@@ -9365,6 +9365,17 @@ html.bd-cold-lab body.home-page .home-atlas-action { font-size: 0.75rem !importa
 body.home-page .custom-min-footer { position: static !important; margin: 0 !important; padding: 24px 16px !important; border-top: 1px solid var(--bd-ui-border) !important; background: transparent !important; }
 body.home-page .custom-min-footer p { font-size: 1.05rem !important; color: var(--bd-ui-muted) !important; }
 
+/* Shared colophon: keep the filing legible without competing with the page. */
+.custom-min-footer { border-top: 1px solid var(--bd-ui-border); padding: 18px 16px; }
+.footer-inner { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 0 32px; }
+.custom-min-footer .footer-inner > p { font-size: 1.05rem; color: var(--bd-ui-muted); }
+.footer-icp { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; color: var(--bd-ui-muted); font: 400 13px/1.5 var(--bd-font-ui); white-space: nowrap; pointer-events: auto; text-decoration: none; text-underline-offset: 4px; }
+.footer-icp:hover { color: var(--bd-ui-accent); text-decoration: underline; }
+.footer-icp:focus-visible { outline: 2px solid var(--bd-ui-accent); outline-offset: -2px; border-radius: 2px; }
+@media (max-width: 600px) {
+  .footer-inner { flex-direction: column; }
+}
+
 article.about-single.about-pro .about-hero {
   background: var(--bd-ui-surface) !important;
   border: 1px solid var(--bd-ui-border) !important;
@@ -9535,7 +9546,7 @@ article.post-single.post-single-editorial .editorial-content { line-height: 1.85
   html.bd-cold-lab body.home-page .home-stream-tags { display: none !important; }
   html.bd-cold-lab body.home-page .home-atlas-list a { min-height: clamp(44px, calc(3.3svh + 11px), 48px) !important; }
   html.bd-cold-lab body.home-page .home-atlas-name { font-size: clamp(0.8rem, 0.9vw, 1.05rem) !important; line-height: 1.4 !important; }
-  html.bd-cold-lab body.home-page .custom-min-footer { flex: 0 0 auto; padding: 14px 16px !important; }
+  html.bd-cold-lab body.home-page .custom-min-footer { flex: 0 0 auto; padding: 1px 16px !important; }
 }
 
 @media (min-width: 1101px) and (max-width: 1240px) {
