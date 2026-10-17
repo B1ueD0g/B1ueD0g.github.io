@@ -126,8 +126,14 @@
     <section class="about-block about-block-security" id="about-security">
       <h2>{{ .title }}</h2>
       <p class="about-ietf-intro">{{ .intro }}</p>
+      {{- $publicItems := slice }}
+      {{- range .items }}
+        {{- if and (eq .state "published") (not .closed_at) (not .withdrawn_at) }}
+          {{- $publicItems = $publicItems | append . }}
+        {{- end }}
+      {{- end }}
       <div class="security-featured-grid">
-        {{- range .items }}
+        {{- range $publicItems }}
         {{- if .cve_url }}
         {{- $parts := split .title " · " }}
         <article class="security-featured-card">
@@ -143,7 +149,7 @@
       </div>
       <h3 class="security-directory-title">GitHub Security Advisories</h3>
       <div class="security-directory">
-        {{- $items := .items }}
+        {{- $items := $publicItems }}
         {{- range $vendor := slice (dict "name" "Privasys" "prefix" "https://github.com/Privasys/") (dict "name" "Veraison" "prefix" "https://github.com/veraison/") (dict "name" "Cocos AI" "prefix" "https://github.com/ultravioletrs/cocos/") (dict "name" "Contrast" "prefix" "https://github.com/edgelesssys/contrast/") }}
         {{- $entries := slice }}
         {{- range $items }}
@@ -239,7 +245,7 @@
     {{- end }}
     {{- if $isResearch }}
     {{- with $aboutData.works }}
-    {{- $published := where . "type" "in" (slice "编写-书籍" "翻译-书籍" "编制-标准" "媒体-发布" "媒体-测评" "编写-文章") -}}
+    {{- $published := where . "type" "in" (slice "编写-书籍" "翻译-书籍" "编制-标准" "媒体-发布" "媒体-测评" "媒体-访谈" "编写-文章") -}}
     {{- $inProgress := where . "type" "in" (slice "编写-书籍（待出版）" "翻译-书籍（待出版）" "编制-标准（待发布）") -}}
     {{- $translatedReferences := where . "type" "in" (slice "翻译-标准" "翻译-白皮书" "翻译-报告") -}}
     {{- $defaultPanel := "published" -}}
@@ -273,7 +279,7 @@
       <div class="about-work-panels">
         {{- if gt (len $published) 0 }}
         <section class="about-work-panel{{ if eq $defaultPanel "published" }} is-active{{ end }}" id="about-work-panel-published" role="tabpanel" data-panel="published" aria-label="已发布成果物"{{ if ne $defaultPanel "published" }} hidden{{ end }}>
-          {{- range $group := slice (dict "title" "Standards · 团体标准" "types" (slice "编制-标准")) (dict "title" "Books · 书籍" "types" (slice "编写-书籍" "翻译-书籍")) (dict "title" "Writing & Media · 文章与媒体测评" "types" (slice "编写-文章" "媒体-发布" "媒体-测评")) }}
+          {{- range $group := slice (dict "title" "Standards · 团体标准" "types" (slice "编制-标准")) (dict "title" "Books · 书籍" "types" (slice "编写-书籍" "翻译-书籍")) (dict "title" "Writing & Media · 文章、访谈与测评" "types" (slice "编写-文章" "媒体-发布" "媒体-测评" "媒体-访谈")) }}
           <h3>{{ $group.title }}</h3>
           <ul class="about-work-list">
             {{- range $index, $item := where $published "type" "in" $group.types }}

@@ -1,0 +1,19 @@
+{
+  "checked_at": "2026-10-17",
+  "security_inventory": "docs/public-security-audit-2026-10-17.json",
+  "security_display_policy": "Only published, non-closed, non-withdrawn advisories with verified accepted B1ueD0g Finder credit belong in the public portfolio. Closed and unpublished reports are neither displayed nor described. One vendor source occurs once, whether displayed as CVE or GHSA.",
+  "media": {
+    "title": "“软件已死”之前：法律能给AI逆向划出边界吗",
+    "url": "https://www.21jingji.com/article/20261016/herald/5d12e0e42c82436ee83e08034b4bcf92.html",
+    "mobile_url": "https://m.21jingji.com/article/20261016/herald/5d12e0e42c82436ee83e08034b4bcf92.html",
+    "published_at": "2026-10-16T18:16:52+08:00",
+    "publisher": "21世纪经济报道",
+    "journalist": "王俊",
+    "credited_person": "卜宋博",
+    "role": "受访分析者",
+    "type": "媒体-访谈",
+    "placement": "Research & Works / Standards, Books & Writing / 已发布 / Writing & Media",
+    "evidence": "Official mobile HTML canonical points to the desktop URL. Desktop URL returns HTTP 200, identifies applicable-device=pc and uses a self-referencing canonical. Article body quotes 卜宋博; its reporter byline and JSON-LD author identify 王俊.",
+    "boundary": "The portfolio links to the original publisher. No newspaper authorship, full-text republication, new affiliation or reuse of publisher images is claimed. Public page omits internal attribution-audit prose."
+  }
+}

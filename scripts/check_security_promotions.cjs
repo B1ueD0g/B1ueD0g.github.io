@@ -30,12 +30,13 @@ function validateInventory(actual, expectedIds, expectedSources, promotions) {
 
 (async () => {
   const ledger = JSON.parse(await fs.readFile(path.join(__dirname, '../docs/profile-refresh-2026-10-04.json'), 'utf8'));
-  const records = ledger.records.filter(r => r.section === 'security');
+  const inventory = JSON.parse(await fs.readFile(path.join(__dirname, '../docs/public-security-audit-2026-10-17.json'), 'utf8'));
+  const records = inventory.records;
   const promotions = ledger.security_promotions;
   assert.deepEqual(promotions.map(p => p.cve).sort(), Array.from({length:5}, (_, i) => `CVE-2026-${108265 + i}`));
-  const expectedIds = records.filter(r => r.id.startsWith('CVE-')).map(r => r.id);
+  const expectedIds = records.filter(r => r.cve_id).map(r => r.cve_id);
   const expectedSources = records.map(r => r.url);
-  const directory = records.filter(r => !r.id.startsWith('CVE-'));
+  const directory = records.filter(r => !r.cve_id);
   const browser = await chromium.launch({channel:'chrome', headless:true});
   const results = [];
   await fs.mkdir(output, {recursive:true});

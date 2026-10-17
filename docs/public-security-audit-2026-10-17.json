@@ -1,0 +1,561 @@
+{
+  "checked_at": "2026-10-17T10:31:07+08:00",
+  "coverage": {
+    "account": "B1ueD0g",
+    "repositories": [
+      "Privasys/enclave-os-mini",
+      "Privasys/rustls",
+      "Privasys/go",
+      "Privasys/enclave-os-virtual",
+      "Privasys/ra-tls-clients",
+      "edgelesssys/contrast",
+      "ultravioletrs/cocos",
+      "veraison/services"
+    ],
+    "method": "Authenticated GitHub REST repository security-advisory inventory, fully paginated; only public published records with B1ueD0g accepted Finder credit retained.",
+    "notifications": {
+      "since": "2026-10-01T00:00:00Z",
+      "all": true,
+      "paginated": true,
+      "advisory_related_count": 10,
+      "observed_types": [
+        "AdvisoryCredit",
+        "RepositoryAdvisory"
+      ],
+      "repositories": [
+        "veraison/services"
+      ],
+      "new_repositories": []
+    },
+    "qualifying_public_records": 30,
+    "cve_records": 7,
+    "ghsa_only_records": 23,
+    "initial_blog_records": 29,
+    "new_qualifying_ids": [
+      "GHSA-86rg-3pxr-6h8c"
+    ],
+    "existing_blog_closed_or_withdrawn_count": 0,
+    "new_cve_assignments_for_existing_blog_records": 0,
+    "new_record_anonymous_public_api_verified": true
+  },
+  "boundary": [
+    "Scoped inventory of eight previously relevant repositories plus repositories actually observed in advisory-related notifications since 2026-10-01; this is not an exhaustive search across all GitHub repositories.",
+    "Closed, withdrawn, and unpublished draft advisories are excluded; their private identifiers and technical details are not retained here.",
+    "Public advisories without an accepted Finder credit for B1ueD0g are not treated as personal findings.",
+    "A published advisory without a CVE is retained as a GHSA; lack of a CVE is not evidence that CVE allocation was rejected.",
+    "State and personal attribution verification only; no new vulnerability reproduction or exploit validation was performed.",
+    "GitHub advisory publication timestamps are retained in UTC; CVE identifiers are verified as current advisory metadata rather than as new publication timestamps."
+  ],
+  "records": [
+    {
+      "closed_at": null,
+      "credit": {
+        "state": "accepted",
+        "type": "finder",
+        "user": "B1ueD0g"
+      },
+      "cve_id": null,
+      "ghsa_id": "GHSA-376m-h37w-4rvq",
+      "published_at": "2026-09-24T14:14:39Z",
+      "repo": "edgelesssys/contrast",
+      "state": "published",
+      "summary": "Node installer leaves the host containerd configuration world-writable (0666), allowing local privilege escalation",
+      "url": "https://github.com/edgelesssys/contrast/security/advisories/GHSA-376m-h37w-4rvq",
+      "withdrawn_at": null,
+      "display_title": "GHSA-376m-h37w-4rvq · Contrast 权限配置"
+    },
+    {
+      "closed_at": null,
+      "credit": {
+        "state": "accepted",
+        "type": "finder",
+        "user": "B1ueD0g"
+      },
+      "cve_id": null,
+      "ghsa_id": "GHSA-322v-xwfj-63cm",
+      "published_at": "2026-09-19T16:10:01Z",
+      "repo": "Privasys/enclave-os-mini",
+      "state": "published",
+      "summary": "enclave-os-mini: JWT signatures were not verified in builds without the wasm feature",
+      "url": "https://github.com/Privasys/enclave-os-mini/security/advisories/GHSA-322v-xwfj-63cm",
+      "withdrawn_at": null,
+      "display_title": "GHSA-322v-xwfj-63cm · Privasys JWT 验证"
+    },
+    {
+      "closed_at": null,
+      "credit": {
+        "state": "accepted",
+        "type": "finder",
+        "user": "B1ueD0g"
+      },
+      "cve_id": null,
+      "ghsa_id": "GHSA-4755-rh6c-694j",
+      "published_at": "2026-09-19T16:09:55Z",
+      "repo": "Privasys/enclave-os-mini",
+      "state": "published",
+      "summary": "enclave-os-mini: the first FIDO2 user of a WASM app was granted the app admin role",
+      "url": "https://github.com/Privasys/enclave-os-mini/security/advisories/GHSA-4755-rh6c-694j",
+      "withdrawn_at": null,
+      "display_title": "GHSA-4755-rh6c-694j · Privasys enclave-os-mini · 首用户管理员授权"
+    },
+    {
+      "closed_at": null,
+      "credit": {
+        "state": "accepted",
+        "type": "finder",
+        "user": "B1ueD0g"
+      },
+      "cve_id": "CVE-2026-108265",
+      "ghsa_id": "GHSA-49qm-4pj3-w2c6",
+      "published_at": "2026-09-03T14:52:22Z",
+      "repo": "Privasys/enclave-os-mini",
+      "state": "published",
+      "summary": "enclave-os-mini: RA-TLS challenge certificates were not bound to the TLS session",
+      "url": "https://github.com/Privasys/enclave-os-mini/security/advisories/GHSA-49qm-4pj3-w2c6",
+      "withdrawn_at": null,
+      "display_title": "CVE-2026-108265 · Privasys enclave-os-mini · RA-TLS 挑战证书绑定"
+    },
+    {
+      "closed_at": null,
+      "credit": {
+        "state": "accepted",
+        "type": "finder",
+        "user": "B1ueD0g"
+      },
+      "cve_id": null,
+      "ghsa_id": "GHSA-6f8q-88mv-c8vr",
+      "published_at": "2026-09-19T16:09:54Z",
+      "repo": "Privasys/enclave-os-mini",
+      "state": "published",
+      "summary": "enclave-os-mini: time-based security checks used host-supplied time",
+      "url": "https://github.com/Privasys/enclave-os-mini/security/advisories/GHSA-6f8q-88mv-c8vr",
+      "withdrawn_at": null,
+      "display_title": "GHSA-6f8q-88mv-c8vr · Privasys enclave-os-mini · 安全时效校验"
+    },
+    {
+      "closed_at": null,
+      "credit": {
+        "state": "accepted",
+        "type": "finder",
+        "user": "B1ueD0g"
+      },
+      "cve_id": null,
+      "ghsa_id": "GHSA-6j47-3cm6-9cg6",
+      "published_at": "2026-09-19T16:10:00Z",
+      "repo": "Privasys/enclave-os-mini",
+      "state": "published",
+      "summary": "enclave-os-mini: vault wrap accepted a caller-supplied AES-GCM nonce, allowing nonce reuse",
+      "url": "https://github.com/Privasys/enclave-os-mini/security/advisories/GHSA-6j47-3cm6-9cg6",
+      "withdrawn_at": null,
+      "display_title": "GHSA-6j47-3cm6-9cg6 · Privasys enclave-os-mini · AES-GCM nonce 控制"
+    },
+    {
+      "closed_at": null,
+      "credit": {
+        "state": "accepted",
+        "type": "finder",
+        "user": "B1ueD0g"
+      },
+      "cve_id": null,
+      "ghsa_id": "GHSA-f96w-jjf8-xpw3",
+      "published_at": "2026-09-19T16:09:58Z",
+      "repo": "Privasys/enclave-os-mini",
+      "state": "published",
+      "summary": "enclave-os-mini: wasmtime_mmap_remap wrote out of bounds and reported success without remapping",
+      "url": "https://github.com/Privasys/enclave-os-mini/security/advisories/GHSA-f96w-jjf8-xpw3",
+      "withdrawn_at": null,
+      "display_title": "GHSA-f96w-jjf8-xpw3 · Privasys enclave-os-mini · Wasmtime 适配层越界写入"
+    },
+    {
+      "closed_at": null,
+      "credit": {
+        "state": "accepted",
+        "type": "finder",
+        "user": "B1ueD0g"
+      },
+      "cve_id": null,
+      "ghsa_id": "GHSA-fmrx-fjqw-37gp",
+      "published_at": "2026-09-19T16:09:53Z",
+      "repo": "Privasys/enclave-os-mini",
+      "state": "published",
+      "summary": "enclave-os-mini: one app's outbound fetch could stall every app on the enclave",
+      "url": "https://github.com/Privasys/enclave-os-mini/security/advisories/GHSA-fmrx-fjqw-37gp",
+      "withdrawn_at": null,
+      "display_title": "GHSA-fmrx-fjqw-37gp · Privasys enclave-os-mini · 出站请求阻塞全部应用"
+    },
+    {
+      "closed_at": null,
+      "credit": {
+        "state": "accepted",
+        "type": "finder",
+        "user": "B1ueD0g"
+      },
+      "cve_id": null,
+      "ghsa_id": "GHSA-fqrx-3wc2-4g49",
+      "published_at": "2026-09-19T16:09:59Z",
+      "repo": "Privasys/enclave-os-mini",
+      "state": "published",
+      "summary": "enclave-os-mini: sealed KV value AAD did not bind the key identity, letting a malicious host swap stored values",
+      "url": "https://github.com/Privasys/enclave-os-mini/security/advisories/GHSA-fqrx-3wc2-4g49",
+      "withdrawn_at": null,
+      "display_title": "GHSA-fqrx-3wc2-4g49 · Privasys enclave-os-mini · 密封 KV 键值绑定"
+    },
+    {
+      "closed_at": null,
+      "credit": {
+        "state": "accepted",
+        "type": "finder",
+        "user": "B1ueD0g"
+      },
+      "cve_id": null,
+      "ghsa_id": "GHSA-m9p9-3hxp-4j6j",
+      "published_at": "2026-09-19T16:10:00Z",
+      "repo": "Privasys/enclave-os-mini",
+      "state": "published",
+      "summary": "enclave-os-mini: unvalidated FIDO2 user handle could overwrite reserved role keys and escalate to app admin",
+      "url": "https://github.com/Privasys/enclave-os-mini/security/advisories/GHSA-m9p9-3hxp-4j6j",
+      "withdrawn_at": null,
+      "display_title": "GHSA-m9p9-3hxp-4j6j · Privasys enclave-os-mini · FIDO2 角色键覆盖"
+    },
+    {
+      "closed_at": null,
+      "credit": {
+        "state": "accepted",
+        "type": "finder",
+        "user": "B1ueD0g"
+      },
+      "cve_id": null,
+      "ghsa_id": "GHSA-mrgr-34cc-fcg8",
+      "published_at": "2026-09-19T16:09:57Z",
+      "repo": "Privasys/enclave-os-mini",
+      "state": "published",
+      "summary": "enclave-os-mini: FIDO2 clone detection was bypassed by an authenticator reporting a zero sign count",
+      "url": "https://github.com/Privasys/enclave-os-mini/security/advisories/GHSA-mrgr-34cc-fcg8",
+      "withdrawn_at": null,
+      "display_title": "GHSA-mrgr-34cc-fcg8 · Privasys enclave-os-mini · FIDO2 克隆检测绕过"
+    },
+    {
+      "closed_at": null,
+      "credit": {
+        "state": "accepted",
+        "type": "finder",
+        "user": "B1ueD0g"
+      },
+      "cve_id": null,
+      "ghsa_id": "GHSA-ppc4-fg56-x397",
+      "published_at": "2026-09-19T16:09:52Z",
+      "repo": "Privasys/enclave-os-mini",
+      "state": "published",
+      "summary": "enclave-os-mini: the funded-sponsor control envelope was accepted without authentication",
+      "url": "https://github.com/Privasys/enclave-os-mini/security/advisories/GHSA-ppc4-fg56-x397",
+      "withdrawn_at": null,
+      "display_title": "GHSA-ppc4-fg56-x397 · Privasys enclave-os-mini · 资助方消息认证"
+    },
+    {
+      "closed_at": null,
+      "credit": {
+        "state": "accepted",
+        "type": "finder",
+        "user": "B1ueD0g"
+      },
+      "cve_id": null,
+      "ghsa_id": "GHSA-qqq3-6c47-684v",
+      "published_at": "2026-09-19T16:09:56Z",
+      "repo": "Privasys/enclave-os-mini",
+      "state": "published",
+      "summary": "enclave-os-mini: the configure gate admitted any caller for an app loaded without an app id or owners team",
+      "url": "https://github.com/Privasys/enclave-os-mini/security/advisories/GHSA-qqq3-6c47-684v",
+      "withdrawn_at": null,
+      "display_title": "GHSA-qqq3-6c47-684v · Privasys enclave-os-mini · 配置授权绕过"
+    },
+    {
+      "closed_at": null,
+      "credit": {
+        "state": "accepted",
+        "type": "finder",
+        "user": "B1ueD0g"
+      },
+      "cve_id": null,
+      "ghsa_id": "GHSA-wqf9-jfmm-f68v",
+      "published_at": "2026-09-19T16:09:57Z",
+      "repo": "Privasys/enclave-os-mini",
+      "state": "published",
+      "summary": "enclave-os-mini: JWT exp claim was optional, giving accepted tokens no upper bound on lifetime",
+      "url": "https://github.com/Privasys/enclave-os-mini/security/advisories/GHSA-wqf9-jfmm-f68v",
+      "withdrawn_at": null,
+      "display_title": "GHSA-wqf9-jfmm-f68v · Privasys enclave-os-mini · JWT 有效期约束"
+    },
+    {
+      "closed_at": null,
+      "credit": {
+        "state": "accepted",
+        "type": "finder",
+        "user": "B1ueD0g"
+      },
+      "cve_id": null,
+      "ghsa_id": "GHSA-xxr6-w252-4ggx",
+      "published_at": "2026-09-19T16:09:53Z",
+      "repo": "Privasys/enclave-os-mini",
+      "state": "published",
+      "summary": "enclave-os-mini: an unterminated HTTP header section could exhaust the enclave heap",
+      "url": "https://github.com/Privasys/enclave-os-mini/security/advisories/GHSA-xxr6-w252-4ggx",
+      "withdrawn_at": null,
+      "display_title": "GHSA-xxr6-w252-4ggx · Privasys enclave-os-mini · HTTP 请求堆内存耗尽"
+    },
+    {
+      "closed_at": null,
+      "credit": {
+        "state": "accepted",
+        "type": "finder",
+        "user": "B1ueD0g"
+      },
+      "cve_id": "CVE-2026-108268",
+      "ghsa_id": "GHSA-p5fp-g94g-g9m9",
+      "published_at": "2026-09-03T14:52:24Z",
+      "repo": "Privasys/enclave-os-virtual",
+      "state": "published",
+      "summary": "enclave-os-virtual: RA-TLS challenge certificates were not bound to the TLS session",
+      "url": "https://github.com/Privasys/enclave-os-virtual/security/advisories/GHSA-p5fp-g94g-g9m9",
+      "withdrawn_at": null,
+      "display_title": "CVE-2026-108268 · Privasys enclave-os-virtual · RA-TLS 挑战证书绑定"
+    },
+    {
+      "closed_at": null,
+      "credit": {
+        "state": "accepted",
+        "type": "finder",
+        "user": "B1ueD0g"
+      },
+      "cve_id": "CVE-2026-108267",
+      "ghsa_id": "GHSA-7jfw-53rm-phh2",
+      "published_at": "2026-09-03T14:52:18Z",
+      "repo": "Privasys/go",
+      "state": "published",
+      "summary": "Privasys Go fork: RA-TLS challenge mode did not bind attestation evidence to the TLS session",
+      "url": "https://github.com/Privasys/go/security/advisories/GHSA-7jfw-53rm-phh2",
+      "withdrawn_at": null,
+      "display_title": "CVE-2026-108267 · Privasys Go fork · RA-TLS 会话绑定"
+    },
+    {
+      "closed_at": null,
+      "credit": {
+        "state": "accepted",
+        "type": "finder",
+        "user": "B1ueD0g"
+      },
+      "cve_id": "CVE-2026-108269",
+      "ghsa_id": "GHSA-5qrc-v874-mxvx",
+      "published_at": "2026-09-03T14:52:20Z",
+      "repo": "Privasys/ra-tls-clients",
+      "state": "published",
+      "summary": "ra-tls-clients: RA-TLS challenge verifier accepted quotes not bound to the TLS session",
+      "url": "https://github.com/Privasys/ra-tls-clients/security/advisories/GHSA-5qrc-v874-mxvx",
+      "withdrawn_at": null,
+      "display_title": "CVE-2026-108269 · Privasys ra-tls-clients · RA-TLS 远程证明验证"
+    },
+    {
+      "closed_at": null,
+      "credit": {
+        "state": "accepted",
+        "type": "finder",
+        "user": "B1ueD0g"
+      },
+      "cve_id": "CVE-2026-108266",
+      "ghsa_id": "GHSA-j6qv-435v-r492",
+      "published_at": "2026-09-03T13:11:43Z",
+      "repo": "Privasys/rustls",
+      "state": "published",
+      "summary": "Privasys rustls fork: RA-TLS challenge mode did not bind attestation evidence to the TLS session",
+      "url": "https://github.com/Privasys/rustls/security/advisories/GHSA-j6qv-435v-r492",
+      "withdrawn_at": null,
+      "display_title": "CVE-2026-108266 · Privasys rustls fork · RA-TLS 会话绑定"
+    },
+    {
+      "closed_at": null,
+      "credit": {
+        "state": "accepted",
+        "type": "finder",
+        "user": "B1ueD0g"
+      },
+      "cve_id": "CVE-2026-92701",
+      "ghsa_id": "GHSA-4px3-wj2x-xx47",
+      "published_at": "2026-08-16T17:13:15Z",
+      "repo": "ultravioletrs/cocos",
+      "state": "published",
+      "summary": "Cocos AI intra-handshake attested TLS implementation is vulnerable to session-misbinding attacks for Intel TDX verifier path",
+      "url": "https://github.com/ultravioletrs/cocos/security/advisories/GHSA-4px3-wj2x-xx47",
+      "withdrawn_at": null,
+      "display_title": "CVE-2026-92701 · Cocos AI / Intel TDX"
+    },
+    {
+      "closed_at": null,
+      "credit": {
+        "state": "accepted",
+        "type": "finder",
+        "user": "B1ueD0g"
+      },
+      "cve_id": "CVE-2026-92702",
+      "ghsa_id": "GHSA-4r6g-mp48-j2rw",
+      "published_at": "2026-08-16T17:12:07Z",
+      "repo": "ultravioletrs/cocos",
+      "state": "published",
+      "summary": "Cocos AI intra-handshake attested TLS implementation can accept Evidence with nil, empty, or omitted reportData in the AMD SEV-SNP path",
+      "url": "https://github.com/ultravioletrs/cocos/security/advisories/GHSA-4r6g-mp48-j2rw",
+      "withdrawn_at": null,
+      "display_title": "CVE-2026-92702 · Cocos AI / AMD SEV-SNP"
+    },
+    {
+      "closed_at": null,
+      "credit": {
+        "state": "accepted",
+        "type": "finder",
+        "user": "B1ueD0g"
+      },
+      "cve_id": null,
+      "ghsa_id": "GHSA-j7r9-wq7m-6hcp",
+      "published_at": "2026-08-16T17:12:54Z",
+      "repo": "ultravioletrs/cocos",
+      "state": "published",
+      "summary": "Cocos AI post-handshake attested TLS implementation can accept stale root evidence with a fresh TLS binder",
+      "url": "https://github.com/ultravioletrs/cocos/security/advisories/GHSA-j7r9-wq7m-6hcp",
+      "withdrawn_at": null,
+      "display_title": "GHSA-j7r9-wq7m-6hcp · Cocos AI · 握手后证明绑定"
+    },
+    {
+      "closed_at": null,
+      "credit": {
+        "state": "accepted",
+        "type": "finder",
+        "user": "B1ueD0g"
+      },
+      "cve_id": null,
+      "ghsa_id": "GHSA-86rg-3pxr-6h8c",
+      "published_at": "2026-10-16T15:20:05Z",
+      "repo": "veraison/services",
+      "state": "published",
+      "summary": "Parsec signed evidence nonce was not compared against session nonce",
+      "url": "https://github.com/veraison/services/security/advisories/GHSA-86rg-3pxr-6h8c",
+      "withdrawn_at": null,
+      "display_title": "GHSA-86rg-3pxr-6h8c · Veraison · Parsec 会话 nonce 绑定"
+    },
+    {
+      "closed_at": null,
+      "credit": {
+        "state": "accepted",
+        "type": "finder",
+        "user": "B1ueD0g"
+      },
+      "cve_id": null,
+      "ghsa_id": "GHSA-9rfg-55gm-hwvw",
+      "published_at": "2026-10-01T04:45:01Z",
+      "repo": "veraison/services",
+      "state": "published",
+      "summary": "Unbounded evidence size might cause memory-exhaustion DoS",
+      "url": "https://github.com/veraison/services/security/advisories/GHSA-9rfg-55gm-hwvw",
+      "withdrawn_at": null,
+      "display_title": "GHSA-9rfg-55gm-hwvw · Veraison · 证明数据大小限制"
+    },
+    {
+      "closed_at": null,
+      "credit": {
+        "state": "accepted",
+        "type": "finder",
+        "user": "B1ueD0g"
+      },
+      "cve_id": null,
+      "ghsa_id": "GHSA-ccfw-q8vr-cww3",
+      "published_at": "2026-10-01T04:45:51Z",
+      "repo": "veraison/services",
+      "state": "published",
+      "summary": "KV Store might log senstive values ",
+      "url": "https://github.com/veraison/services/security/advisories/GHSA-ccfw-q8vr-cww3",
+      "withdrawn_at": null,
+      "display_title": "GHSA-ccfw-q8vr-cww3 · Veraison · KV 存储敏感值日志泄露"
+    },
+    {
+      "closed_at": null,
+      "credit": {
+        "state": "accepted",
+        "type": "finder",
+        "user": "B1ueD0g"
+      },
+      "cve_id": null,
+      "ghsa_id": "GHSA-cxxj-pvvx-6xcv",
+      "published_at": "2026-10-01T04:48:12Z",
+      "repo": "veraison/services",
+      "state": "published",
+      "summary": "Management API returned internal errors",
+      "url": "https://github.com/veraison/services/security/advisories/GHSA-cxxj-pvvx-6xcv",
+      "withdrawn_at": null,
+      "display_title": "GHSA-cxxj-pvvx-6xcv · Veraison · 管理接口内部错误信息泄露"
+    },
+    {
+      "closed_at": null,
+      "credit": {
+        "state": "accepted",
+        "type": "finder",
+        "user": "B1ueD0g"
+      },
+      "cve_id": null,
+      "ghsa_id": "GHSA-ffg7-hfjp-rj7v",
+      "published_at": "2026-10-01T04:47:08Z",
+      "repo": "veraison/services",
+      "state": "published",
+      "summary": "Veraison might store invalid policies",
+      "url": "https://github.com/veraison/services/security/advisories/GHSA-ffg7-hfjp-rj7v",
+      "withdrawn_at": null,
+      "display_title": "GHSA-ffg7-hfjp-rj7v · Veraison · 策略有效性校验"
+    },
+    {
+      "closed_at": null,
+      "credit": {
+        "state": "accepted",
+        "type": "finder",
+        "user": "B1ueD0g"
+      },
+      "cve_id": null,
+      "ghsa_id": "GHSA-jj9v-7353-35cv",
+      "published_at": "2026-10-01T04:43:40Z",
+      "repo": "veraison/services",
+      "state": "published",
+      "summary": "RIOT scheme trust anchor can be bypassed",
+      "url": "https://github.com/veraison/services/security/advisories/GHSA-jj9v-7353-35cv",
+      "withdrawn_at": null,
+      "display_title": "GHSA-jj9v-7353-35cv · Veraison · RIOT 信任锚绕过"
+    },
+    {
+      "closed_at": null,
+      "credit": {
+        "state": "accepted",
+        "type": "finder",
+        "user": "B1ueD0g"
+      },
+      "cve_id": null,
+      "ghsa_id": "GHSA-pv6g-4385-q8c8",
+      "published_at": "2026-10-01T04:49:38Z",
+      "repo": "veraison/services",
+      "state": "published",
+      "summary": "CoRIM certificate validation in provisioning API included system CA certificates",
+      "url": "https://github.com/veraison/services/security/advisories/GHSA-pv6g-4385-q8c8",
+      "withdrawn_at": null,
+      "display_title": "GHSA-pv6g-4385-q8c8 · Veraison · CoRIM 证书信任链校验"
+    },
+    {
+      "closed_at": null,
+      "credit": {
+        "state": "accepted",
+        "type": "finder",
+        "user": "B1ueD0g"
+      },
+      "cve_id": null,
+      "ghsa_id": "GHSA-q46g-34w4-vhmp",
+      "published_at": "2026-10-01T04:42:35Z",
+      "repo": "veraison/services",
+      "state": "published",
+      "summary": "tpm-enacttrust: malformed input causes DOS",
+      "url": "https://github.com/veraison/services/security/advisories/GHSA-q46g-34w4-vhmp",
+      "withdrawn_at": null,
+      "display_title": "GHSA-q46g-34w4-vhmp · Veraison · TPM 畸形输入拒绝服务"
+    }
+  ]
+}
