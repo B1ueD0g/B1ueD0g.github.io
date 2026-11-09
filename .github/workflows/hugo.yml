@@ -83,10 +83,13 @@ jobs:
         run: python3 scripts/check_public_portfolio.py
 
       - name: Check links in generated site
+        id: release-links
         uses: lycheeverse/lychee-action@v2
         with:
           lycheeVersion: v0.24.2
-          fail: true
+          fail: false
+          format: json
+          output: ${{ runner.temp }}/release-links.json
           args: >
             --config .lychee.toml
             --root-dir "${{ github.workspace }}/public"
@@ -96,6 +99,11 @@ jobs:
             "public/**/*.xml"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Enforce the release link gate
+        env:
+          LYCHEE_EXIT_CODE: ${{ steps.release-links.outputs.exit_code }}
+        run: python3 scripts/check_release_links.py "$RUNNER_TEMP/release-links.json" "$LYCHEE_EXIT_CODE"
 
       - name: Build Pagefind index
         run: npm run index:search

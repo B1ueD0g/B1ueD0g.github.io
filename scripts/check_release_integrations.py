@@ -18,6 +18,8 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 sys.dont_write_bytecode = True
+from check_release_links import STANDARDS_504_URLS, classify
+
 ROOT = Path(__file__).resolve().parents[1]
 SPEC = importlib.util.spec_from_file_location("submit_indexnow", ROOT / "scripts/submit_indexnow.py")
 indexnow = importlib.util.module_from_spec(SPEC)
@@ -126,7 +128,8 @@ def check_lychee_workflow_fixtures(binary):
             "present": '<a href="https://bluedog.website/assets/current.css">absolute</a>'
                        '<a href="/assets/current.css">root-relative</a>'
                        '<a href="https://bluedog.website/assets/current.css?v=2">query</a>',
-            "missing": '<a href="https://bluedog.website/assets/missing.css">missing</a>',
+            "missing": '<a href="https://bluedog.website/assets/current.css">present</a>'
+                       '<a href="https://bluedog.website/assets/missing.css">missing</a>',
             "foreign": '<a href="https://bluedog.website.evil.invalid/assets/current.css">foreign</a>',
         }
         for name, content in sources.items():
@@ -150,6 +153,9 @@ def check_lychee_workflow_fixtures(binary):
                     raise AssertionError(f"{filename}: present links were not checked/remapped: {data}")
                 if case == "missing" and data["errors"] != 1:
                     raise AssertionError(f"{filename}: missing local file did not fail: {data}")
+                failures, deferred = classify(data, result.returncode)
+                if len(failures) != int(case == "missing") or deferred:
+                    raise AssertionError(f"Release gate disagrees with Lychee for {filename} {case}")
                 receipts.append({"workflow": filename, "case": case, "exit_code": result.returncode,
                                  "successful": data["successful"], "errors": data["errors"], "remaps": data["remaps"]})
             result = subprocess.run([str(binary), *core, "--dump", str(workspace / "foreign.html")],
@@ -414,6 +420,10 @@ class ReleaseIntegrations(unittest.TestCase):
         text = (ROOT / ".github/workflows/hugo.yml").read_text()
         build = job(text, "build")
         self.assertNotIn("continue-on-error", build)
+        self.assertIn("format: json", build)
+        self.assertIn("steps.release-links.outputs.exit_code", build)
+        self.assertLess(build.index("python3 scripts/check_release_links.py"), build.index("actions/upload-pages-artifact"))
+        self.assertIn("fail: true", (ROOT / ".github/workflows/link-check.yml").read_text())
         self.assertLess(build.index("lhci autorun"), build.index("python3 scripts/check_research_performance.py"))
         lighthouse = json.loads((ROOT / ".lighthouserc.json").read_text())
         self.assertEqual(lighthouse["ci"]["collect"]["numberOfRuns"], 3)
@@ -429,6 +439,33 @@ class ReleaseIntegrations(unittest.TestCase):
         for filename in ("hugo.yml", "link-check.yml"):
             workflow = (ROOT / ".github/workflows" / filename).read_text()
             self.assertIn("group: blog-link-audit\n      cancel-in-progress: false", workflow)
+
+    def test_release_gate_defers_only_the_verified_gateway_failures(self):
+        url = sorted(STANDARDS_504_URLS)[0]
+        report = {
+            "detailed_stats": True, "successful": 5, "errors": 1, "timeouts": 0,
+            "error_map": {"public/research/index.html": [{"url": url, "status": {"code": 504}}]},
+            "timeout_map": {},
+        }
+        self.assertEqual(classify(report, 2), ([], {url}))
+        records = report["error_map"]["public/research/index.html"]
+        for link, code in ((url, 404), (url, 500), (url + "&other=1", 504),
+                           ("https://another.example/standard", 504), ("file:///public/missing.css", None)):
+            with self.subTest(link=link, code=code):
+                records.append({"url": link, "status": {"code": code}})
+                report["errors"] = 2
+                self.assertEqual(classify(report, 2), ([(link, code)], {url}))
+                records.pop()
+        with self.assertRaisesRegex(ValueError, "incomplete"):
+            classify(report, 2)
+        report["errors"] = 1
+        with self.assertRaisesRegex(ValueError, "disagree"):
+            classify(report, 0)
+        with self.assertRaisesRegex(ValueError, "unexpected"):
+            classify(report, 1)
+        report["timeouts"] = 1
+        report["timeout_map"] = {"public/research/index.html": [{"url": url, "status": {}}]}
+        self.assertEqual(classify(report, 2), ([(url, None)], {url}))
 
 
 if __name__ == "__main__":
