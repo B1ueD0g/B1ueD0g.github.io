@@ -28,3 +28,7 @@ request_interval = "100ms"
 [hosts."github.com"]
 concurrency = 2
 request_interval = "200ms"
+
+[hosts."www.ttbz.org.cn"]
+concurrency = 1
+request_interval = "500ms"
